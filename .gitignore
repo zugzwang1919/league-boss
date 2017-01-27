@@ -1,6 +1,6 @@
 /.vscode
 /server/node_modules
 /web/node_modules
-/web/app/*.js
-/web/app/*.map
+/web/**/*.js
+/web/**/*.map
 /web/.vscode
