@@ -1,0 +1,50 @@
+<div *ngIf="user">
+  <h2>{{user.name}} Profile</h2>
+  <table class="key-value">
+    <tr>
+      <td class="key">
+        <label>id: </label>
+      </td>
+      <td>
+        {{user.id}}
+      </td>
+    </tr>
+
+    <tr>
+      <td class="key">
+        <label>name: </label>
+      </td>
+      <td>
+        <input [(ngModel)]="user.name" placeholder="name"/>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="key">
+        <label> user name: </label>
+      </td>
+      <td>
+        <input [(ngModel)]="user.username" placeholder="user name"/>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="key">
+        <label> password: </label>
+      </td>
+      <td>
+        <input [(ngModel)]="user.password" placeholder="password"/>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="key">
+        <label> email address: </label>
+      </td>
+      <td>
+        <input [(ngModel)]="user.emailAddress" placeholder="email address"/>
+      </td>
+    </tr>
+
+  </table>
+</div>
