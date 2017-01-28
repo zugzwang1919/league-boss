@@ -1,6 +1,9 @@
 /.vscode
-/server/node_modules
-/web/node_modules
+/**/*.log
+/**/.vscode
+/*/node_modules
+
+# ignore generated .js & .map files
+# i'm sure this will eventually bite me
 /web/**/*.js
 /web/**/*.map
-/web/.vscode
