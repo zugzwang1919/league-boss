@@ -8,9 +8,9 @@ import { UserService }from './user-service.service';
 @Component({
   selector: 'my-app',
   template: `
-    <div *ngIf="displayedId">
+    <div>
       <label> Select a User by Id: </label>
-      <input [(ngModel)]="displayedId" placeholder="id" (blur)="setSelectedUserData()" (keyup.enter)="setSelectedUserData()"/>
+      <input [(ngModel)]="displayedId" placeholder="id"  (keyup.enter)="setSelectedUserData()" (blur)="setSelectedUserData()"/>
     <div>
     <my-user-detail [user]="selectedUser"></my-user-detail>
     `
@@ -19,19 +19,14 @@ import { UserService }from './user-service.service';
 export class AppComponent { 
   displayedId: String;
   selectedUser: User;
-  users: User[];
   constructor(
     private userService: UserService,
   ){}
 
   ngOnInit(): void {
-    this.userService.getUsers().
-      then(users => {
-        this.users = users;
-        this.userService.getUser(1).then(user => {
-            this.selectedUser = user;
-            this.displayedId = String(this.selectedUser.id) });
-      })
+    this.userService.getUser(1).then(user => {
+        this.selectedUser = user;
+        this.displayedId = String(this.selectedUser.id) });
   }
 
   setSelectedUserData(): void {
