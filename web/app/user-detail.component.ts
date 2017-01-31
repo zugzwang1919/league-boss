@@ -27,10 +27,13 @@ export class UserDetailComponent {
 
   ngOnInit(): void {
     // Set some defaults immediately
+    // We'll only execute this code when the user asks for a new UserDetailComponent to be created.
+    // Modifications to the UserDetailComponent are handled in the subscribe() below.
     this.user = new User();
     this.action = 'create';
     
-    // Handle the "Create" request
+    // Handle the request to begin the "Create", "Edit", (and someday "View") process
+    // Based on the subscribe below, we'll constantly monitor changes to the URL 
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
         console.log("Examining segments in URL within user-detail.component.  Segments = " + segments);

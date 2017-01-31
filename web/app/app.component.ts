@@ -8,12 +8,13 @@ import { UserService }from './user-service.service';
 @Component({
   selector: 'my-app',
   template: `
-    <div >
-      <label> Select a User by Id: </label>
-      <input [(ngModel)]="displayedId" placeholder="id"  />
-      <button (click)="editDetails()">Edit Details</button>
-    <div>
-    <div style="text-align: center">
+    <div style="text-align: center">  
+      <div >
+        <label> Select a User by Id: </label>
+        <input [(ngModel)]="displayedId" placeholder="id"  />
+        <button (click)="editDetails()">Edit Details</button>
+      <div>
+    
       <br>
       <p>... OR ... </p>
       <br>

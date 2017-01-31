@@ -5,60 +5,62 @@
   <div style="text-align: center" *ngIf="(action == 'create')">
   <h2>Create New User</h2>
   </div>
-  <table class="key-value">
-    <tr *ngIf="(action != 'create')">
-      <td class="key">
-        <label>id: </label>
-      </td>
-      <td>
-        {{user.id}}
-      </td>
-    </tr>
+  <div>
+    <table style="margin: 0 auto" class="key-value" >
+      <tr *ngIf="(action != 'create')">
+        <td class="key">
+          <label>id: </label>
+        </td>
+        <td>
+          {{user.id}}
+        </td>
+      </tr>
 
-    <tr>
-      <td class="key">
-        <label>name: </label>
-      </td>
-      <td>
-        <input [(ngModel)]="user.name" placeholder="name"/>
-      </td>
-    </tr>
+      <tr>
+        <td class="key">
+          <label>name: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="user.name" placeholder="name"/>
+        </td>
+      </tr>
 
-    <tr>
-      <td class="key">
-        <label> user name: </label>
-      </td>
-      <td>
-        <input [(ngModel)]="user.userName" placeholder="user name"/>
-      </td>
-    </tr>
+      <tr>
+        <td class="key">
+          <label> user name: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="user.userName" placeholder="user name"/>
+        </td>
+      </tr>
 
-    <tr>
-      <td class="key">
-        <label> password: </label>
-      </td>
-      <td>
-        <input [(ngModel)]="user.password" placeholder="password"/>
-      </td>
-    </tr>
+      <tr>
+        <td class="key">
+          <label> password: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="user.password" placeholder="password"/>
+        </td>
+      </tr>
 
-    <tr *ngIf="(action == 'create')">
-      <td class="key">
-        <label> confirm password: </label>
-      </td>
-      <td>
-        <input [(ngModel)]="user.confirmPassword" placeholder="confirm password"/>
-      </td>
-    </tr>
+      <tr *ngIf="(action == 'create')">
+        <td class="key">
+          <label> confirm password: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="user.confirmPassword" placeholder="confirm password"/>
+        </td>
+      </tr>
 
-    <tr>
-      <td class="key">
-        <label> email address: </label>
-      </td>
-      <td>
-        <input [(ngModel)]="user.emailAddress" placeholder="email address"/>
-      </td>
-    </tr>
+      <tr>
+        <td class="key">
+          <label> email address: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="user.emailAddress" placeholder="email address"/>
+        </td>
+      </tr>
 
-  </table>
+    </table>
+  </div>
 </div>
