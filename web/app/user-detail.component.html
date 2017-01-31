@@ -1,7 +1,12 @@
-<div *ngIf="user">
+<div>
+  <div style="text-align: center" *ngIf="(action != 'create')">
   <h2>{{user.name}} Profile</h2>
+  </div>
+  <div style="text-align: center" *ngIf="(action == 'create')">
+  <h2>Create New User</h2>
+  </div>
   <table class="key-value">
-    <tr>
+    <tr *ngIf="(action != 'create')">
       <td class="key">
         <label>id: </label>
       </td>
@@ -34,6 +39,15 @@
       </td>
       <td>
         <input [(ngModel)]="user.password" placeholder="password"/>
+      </td>
+    </tr>
+
+    <tr *ngIf="(action == 'create')">
+      <td class="key">
+        <label> confirm password: </label>
+      </td>
+      <td>
+        <input [(ngModel)]="user.confirmPassword" placeholder="confirm password"/>
       </td>
     </tr>
 

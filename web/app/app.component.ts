@@ -1,5 +1,5 @@
 import { Component }  from '@angular/core';
-
+import { Router }     from '@angular/router';
 
 import { User }       from './user';
 import { UserService }from './user-service.service';
@@ -8,41 +8,45 @@ import { UserService }from './user-service.service';
 @Component({
   selector: 'my-app',
   template: `
-    <div>
+    <div >
       <label> Select a User by Id: </label>
-      <input [(ngModel)]="displayedId" placeholder="id"  (keyup.enter)="setSelectedUserData()" (blur)="setSelectedUserData()"/>
+      <input [(ngModel)]="displayedId" placeholder="id"  />
+      <button (click)="editDetails()">Edit Details</button>
     <div>
-    <my-user-detail [user]="selectedUser"></my-user-detail>
+    <div style="text-align: center">
+      <br>
+      <p>... OR ... </p>
+      <br>
+      <button (click)="createNew()">Create New User</button>
+      <br>
+      <br>
+      <hr>
+      <br>
+      <br>
+    </div>
+    
+    <router-outlet></router-outlet>
     `
 })
 
 export class AppComponent { 
   displayedId: String;
-  selectedUser: User;
   constructor(
+    private router: Router,
     private userService: UserService,
   ){}
 
+
   ngOnInit(): void {
-    this.userService.getUser(1).then(user => {
-        this.selectedUser = user;
-        this.displayedId = String(this.selectedUser.id) });
+    this.displayedId = "";
   }
 
-  setSelectedUserData(): void {
-    console.log("Looking for user id = " + this.displayedId);
-    this.userService.getUser(Number(this.displayedId)).then(user => {
-      if (user == null) {
-        console.log("user id " + this.displayedId + " was not found.")
-        alert("That user could not be found.");
-        // reset the displayedId if the specified id could not be found.
-        this.displayedId = String(this.selectedUser.id); 
-      }  
-      else {
-        this.selectedUser = user;
-        this.displayedId = String(this.selectedUser.id); 
-      }
-    });
+  
+  editDetails(): void {
+    this.router.navigate(['/user', this.displayedId]);  
   }
-
+  
+  createNew(): void {
+    this.router.navigate(['/user/create']);  
+  }
 }

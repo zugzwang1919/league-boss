@@ -1,21 +1,17 @@
 /* Master Styles */
+body {
+  color: cornflowerblue;
+}
 h1 {
-  color: orange;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 250%;
 }
 h2, h3 {
-  color: blue;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: lighter;
 }
 body {
-  color: green;
   margin: 2em;
-}
-
-table.key-value {
-  color: cornflowerblue;
 }
 
 table.key-value td {

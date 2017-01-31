@@ -24,14 +24,14 @@ export class UserService {
       });
   }
   getUser(id: Number): Promise<User> {
-    console.log("Looking for User with an id of " + id);
+    console.log("Inside UserService: Starting to look for User with an id of " + id);
     //return Promise.resolve(this.buildUserFromHttpResponse(undefined));
     
     return new Promise( resolve => {
       this.http.get('http://localhost:1919/user/' + id)
       .toPromise()
       .then((res: Response) => resolve(this.buildUserFromHttpResponse(id, res)))
-      .catch((error: Response) => resolve(null))
+      .catch((error: Response) => resolve(new User()))
     })
       
   } 
@@ -40,10 +40,10 @@ export class UserService {
     if (res.ok === false) {
       console.log("Yuck!  Looks like that did not work.  We were trying to retrieve a user id of " + id);
       console.log("We received a status code of " + res.status);
-      return null;
+      return new User();
     }
     else {
-      console.log("Successfully found user id " + id);
+      console.log("Inside UserService: Successfully found user id " + id);
       var u: User = res.json()
       return u;
     }
