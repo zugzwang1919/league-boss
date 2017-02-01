@@ -1,8 +1,9 @@
-/* jshint indent: 2 */
+var Sequelize = require("Sequelize");
 
 module.exports = function(){
     return {
-         definition : function(sequelize, Sequelize) {
+         definition : function() {
+            var sequelize = require('./index.js');
             return sequelize.define('user', {
               name: {
                 type: Sequelize.STRING
