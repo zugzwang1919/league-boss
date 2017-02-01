@@ -16,7 +16,7 @@ var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 app.use(bodyParser.json());
 
-// I had to add this to allow localhost:3000 to talk to localhost:1919
+// I had to add this to allow javascript served from localhost:3000 to talk to localhost:1919
 // Can't say that I truly understand it
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
