@@ -32,5 +32,3 @@ app.use('/user', userRoutes);
 app.listen(1919)
 
 
-
-module.exports = app;
