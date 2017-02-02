@@ -3,6 +3,8 @@ var express = require('express');
 var router  = express.Router();
 var userModelUtils = require('../model/user');
 var User = userModelUtils().definition();
+var userLogicUtils = require('../logic/user-logic');
+var restUtils = require('./rest-util.js');
 
 
 
@@ -27,20 +29,31 @@ router.get('/:userId', function (req, res) {
 });
 
 router.post('/create', function(req, res) {
-  console.log("name found in body = " + req.body.name);
-  console.log("username found in body = " + req.body.username);
-  console.log("password found in body = " + req.body.password);
-  console.log("emailAddress found in body = " + req.body.emailAddress);
+  console.log("user-rest createUser: name found in body = " + req.body.name);
+  console.log("user-rest createUser: userName found in body = " + req.body.userName);
+  console.log("user-rest createUser: password found in body = " + req.body.password);
+  console.log("user-rest createUser: emailAddress found in body = " + req.body.emailAddress);
 
-  User.create({
-      name: req.body.name,
-      userName: req.body.userName,
-      password: req.body.password,
-      emailAddress: req.body.emailAddress,
-    })
-    .then(function() {
-      console.log(req.body.userName + " was successfully created.");
-      res.sendStatus(200);
-  });
+  userLogicUtils().createUser({
+    name: req.body.name,
+    userName: req.body.userName,
+    password: req.body.password,
+    emailAddress: req.body.emailAddress,
+  
+    },
+    function (err, data) {
+      if (err) {
+        console.log("user-rest createUser callback has been entered.  An error occurred.");
+        console.log("error message = " + data);
+        res.statusCode = 400;
+        res.json(restUtils().buildJSONfromMessage(data));
+      }
+      else {
+        console.log("user-rest createUser callback has been entered. Everything was fine.");
+        res.statusCode = 200;
+        res.json(restUtils().buildJSONfromMessage("Success!"));  
+      }
+  }) ;
+
 });
 module.exports = router;
