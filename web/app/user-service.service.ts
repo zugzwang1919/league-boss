@@ -1,40 +1,41 @@
 import { Injectable } from '@angular/core';
-import { Http }       from '@angular/http';
-import { Response }   from '@angular/http';
+import { Http } from '@angular/http';
+import { Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { User }       from "./user";
-import { USERS }      from './mock-users';
+import { User } from "./user";
+import { USERS } from './mock-users';
 
 @Injectable()
 export class UserService {
 
   constructor(
     private http: Http,
-  ){}
+  ) { }
 
-  getUsers(): Promise<User[]> {
-   return Promise.resolve(USERS);
-  }   
-  getUsersSlowly(): Promise<User[]> {
-    return new Promise(resolve => {
-      // Simulate server latency with 5 second delay
-      setTimeout(() => resolve(this.getUsers()), 5000);
-      });
-  }
   getUser(id: Number): Promise<User> {
     console.log("Inside UserService: Starting to look for User with an id of " + id);
     //return Promise.resolve(this.buildUserFromHttpResponse(undefined));
-    
-    return new Promise( resolve => {
+
+    return new Promise(resolve => {
       this.http.get('http://localhost:1919/user/' + id)
-      .toPromise()
-      .then((res: Response) => resolve(this.buildUserFromHttpResponse(id, res)))
-      .catch((error: Response) => resolve(new User()))
+        .toPromise()
+        .then((res: Response) => resolve(this.buildUserFromHttpResponse(id, res)))
+        .catch((error: Response) => resolve(new User()))
     })
-      
-  } 
+  }
+
+  createUser(user: User): Promise<String> {
+    console.log("Inside UserService:  Beginning 'Create User' process");
+    return new Promise(resolve => {
+      this.http.post('http://localhost:1919/user/create', user)
+        .toPromise()
+        .then((res: Response) => resolve(this.getMessageFromHttpResponse(res)))
+        .catch((error: Response) => resolve(this.getMessageFromHttpResponse(error))
+        )
+    })
+  }
 
   private buildUserFromHttpResponse(id: Number, res: Response): User {
     if (res.ok === false) {
@@ -47,6 +48,11 @@ export class UserService {
       var u: User = res.json()
       return u;
     }
-    
+  }
+
+  private getMessageFromHttpResponse(res: Response): String {
+    console.log("Examining response.  We received " + res);
+    console.log("Looking for message in response.  We received:  " + res.json().message);
+    return res.json().message;
   }
 }

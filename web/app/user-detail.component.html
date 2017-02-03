@@ -1,8 +1,11 @@
-<div>
-  <div style="text-align: center" *ngIf="(action != 'create')">
-  <h2>{{user.name}} Profile</h2>
+<div style="text-align: center">
+  <div *ngIf="(action != 'create')">
+  <h2>Profile for {{user.userName}}</h2>
   </div>
-  <div style="text-align: center" *ngIf="(action == 'create')">
+  <div class="message-box" *ngIf="message">
+  <h4>{{message}}</h4>
+  </div>  </div>
+  <div *ngIf="(action == 'create')">
   <h2>Create New User</h2>
   </div>
   <div>
@@ -63,4 +66,8 @@
 
     </table>
   </div>
+  <br>
+  <div *ngIf="(action == 'create')">
+    <button (click)="createNewUser()">Create</button>
+  <div>
 </div>

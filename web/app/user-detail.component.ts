@@ -17,6 +17,7 @@ export class UserDetailComponent {
 
   user: User;
   action: String;
+  message: String;
 
 
   constructor(
@@ -36,6 +37,7 @@ export class UserDetailComponent {
     // Based on the subscribe below, we'll constantly monitor changes to the URL 
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
+        this.message = null;
         console.log("Examining segments in URL within user-detail.component.  Segments = " + segments);
         if (segments[1].toString() == 'create') {
           this.user = new User();
@@ -47,10 +49,19 @@ export class UserDetailComponent {
               this.user = user;
               this.action = 'edit';
               if (user.id == null)
-                alert("The specified user could not be found.  Try another Id.");
-            })        
+                  this.message = "The specified user could not be found.  Try another Id.";            
+              })        
         }
       })      
+  }
+
+  createNewUser(): void {
+    console.log("Beginning the process of creating a new user.");
+    this.userService.createUser(this.user)
+      .then(message => {
+        console.log("Message received from create = " + message);
+        this.message = message;
+      })
   }
 
 }

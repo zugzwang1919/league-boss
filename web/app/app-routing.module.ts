@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserDetailComponent }  from './user-detail.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/user/1', pathMatch: 'full' },
+  { path: '', redirectTo: '/user/create', pathMatch: 'full' },
   { path: 'user/:id', component: UserDetailComponent },
   { path: 'user/create', component: UserDetailComponent },
   { path: 'user', component: UserDetailComponent },
