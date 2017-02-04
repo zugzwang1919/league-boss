@@ -6,31 +6,35 @@ module.exports = function () {
     findUser: function (userData, callback) {
     },
     createUser: function (userData, callback) {
-      console.log("user-logic - createUser has been called.");
+      console.log("user-logic.create() - createUser has been called.");
       // Ensure all of the required inputs are present
-      if (userData.name == null ||
-        userData.userName == null ||
+      if (userData.userName == null ||
         userData.password == null ||
         userData.emailAddress == null) {
 
-        callback(true, "One of the required user attributes is missing.");
+        callback(true, "At least one of the required user attributes is missing.");
         return;
       }
-      // Maybe should check to see if the user already exists
-      
-      
+
       // If we're here, we should be able to create a user, so...
       // Create the user
       User.create({
-        name: userData.name,
         userName: userData.userName,
         password: userData.password,
         emailAddress: userData.emailAddress,
       })
-        .then(function () {
-          console.log(userData.userName + " was successfully created.");
+        .then(user => {
+          console.log("user-logic.create() " + userData.userName + " was successfully created.");
           callback(null, null);
-        });   
+        })
+        .catch(err => {
+          var errorMessage = "A Sequelize error has occurred.  Error Name: " + err.name + ".  Error Message: " + err.message;
+          console.log("user-logic.create() - " + errorMessage);
+          if (err.name === 'SequelizeUniqueConstraintError')
+            errorMessage = "The requested user name already exists."
+          
+          callback(true, errorMessage);
+        })
     }
   };
 }

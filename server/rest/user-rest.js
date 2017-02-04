@@ -15,7 +15,6 @@ router.get('/:userId', function (req, res) {
         if (user != null) {
           console.log("Inside then!!!")
           console.log("User id = " + user.id)
-          console.log("Name = " + user.name)
           console.log("User name = " + user.userName)
           console.log("User password = " + user.password)
           console.log("User email address = " + user.emailAddress)
@@ -29,17 +28,14 @@ router.get('/:userId', function (req, res) {
 });
 
 router.post('/create', function(req, res) {
-  console.log("user-rest createUser: name found in body = " + req.body.name);
   console.log("user-rest createUser: userName found in body = " + req.body.userName);
   console.log("user-rest createUser: password found in body = " + req.body.password);
   console.log("user-rest createUser: emailAddress found in body = " + req.body.emailAddress);
 
   userLogicUtils().createUser({
-    name: req.body.name,
     userName: req.body.userName,
     password: req.body.password,
-    emailAddress: req.body.emailAddress,
-  
+    emailAddress: req.body.emailAddress,  
     },
     function (err, data) {
       if (err) {

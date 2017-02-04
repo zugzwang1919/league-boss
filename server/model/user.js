@@ -5,11 +5,9 @@ module.exports = function(){
          definition : function() {
             var sequelize = require('./index.js');
             return sequelize.define('user', {
-              name: {
-                type: Sequelize.STRING
-              },
               userName: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                unique: true
               },  
               password: {
                 type: Sequelize.STRING
@@ -26,14 +24,12 @@ module.exports = function(){
            User.sync({force: true}). then(function() {
               console.log("Request received to pre-populate Users")
               User.create({
-                name: 'Russ Wolfe',
                 userName: 'RWW',
                 password: 'RWW',
                 emailAddress: 'russ.wolfe@gmail.com',
                 
               })
               User.create({
-                name: 'Tom Brady',
                 userName: 'TB',
                 password: 'TB',
                 emailAddress: 'tom.brady@gmail.com',
