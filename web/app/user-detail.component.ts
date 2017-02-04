@@ -46,8 +46,8 @@ export class UserDetailComponent {
         else {
           this.userService.getUser(+segments[1])
             .then(user => {
-              this.user = user;
               this.action = 'edit';
+              this.user = user;
               if (user.id == null)
                   this.message = "The specified user could not be found.  Try another Id.";            
               })        
@@ -60,6 +60,15 @@ export class UserDetailComponent {
     this.userService.createUser(this.user)
       .then(message => {
         console.log("Message received from create = " + message);
+        this.message = message;
+      })
+  }
+  
+  updateUser(): void {
+    console.log("Beginning the process of updating a user.");
+    this.userService.updateUser(this.user)
+      .then(message => {
+        console.log("Message received from update = " + message);
         this.message = message;
       })
   }

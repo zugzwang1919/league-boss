@@ -1,12 +1,12 @@
 <div style="text-align: center">
   <div *ngIf="(action != 'create')">
-  <h2>Profile for {{user.userName}}</h2>
+    <h2>Profile for {{user.userName}}</h2>
   </div>
   <div class="message-box" *ngIf="message">
-  <h4>{{message}}</h4>
-  </div>  </div>
+    <h4>{{message}}</h4>
+  </div>  
   <div *ngIf="(action == 'create')">
-  <h2>Create New User</h2>
+    <h2>Create New User</h2>
   </div>
   <div>
     <table style="margin: 0 auto" class="key-value" >
@@ -57,8 +57,12 @@
 
     </table>
   </div>
-  <br>
+  <br>  
+  <div *ngIf="(action == 'edit')">
+    <button (click)="updateUser()">Update</button>
+  </div>
   <div *ngIf="(action == 'create')">
     <button (click)="createNewUser()">Create</button>
-  <div>
+  </div>
+  
 </div>

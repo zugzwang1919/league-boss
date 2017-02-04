@@ -37,6 +37,17 @@ export class UserService {
     })
   }
 
+  updateUser(user: User): Promise<String> {
+    console.log("Inside UpdateService:  Beginning 'Update User' process");
+    return new Promise(resolve => {
+      this.http.put('http://localhost:1919/user/' + user.id, user)
+        .toPromise()
+        .then((res: Response) => resolve(this.getMessageFromHttpResponse(res)))
+        .catch((error: Response) => resolve(this.getMessageFromHttpResponse(error))
+        )
+    })
+  }
+
   private buildUserFromHttpResponse(id: Number, res: Response): User {
     if (res.ok === false) {
       console.log("Yuck!  Looks like that did not work.  We were trying to retrieve a user id of " + id);
