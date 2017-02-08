@@ -13,8 +13,6 @@ router.get('/:userId', function (req, res) {
   User.findById(req.params.userId)
     .then(user => {
       if (user != null) {
-        console.log("Inside then!!!")
-        console.log("User id = " + user.id)
         console.log("User name = " + user.userName)
         console.log("User password = " + user.password)
         console.log("User email address = " + user.emailAddress)

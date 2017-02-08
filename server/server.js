@@ -16,6 +16,7 @@ var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 app.use(bodyParser.json());
 
+
 // I had to add this to allow javascript served from localhost:3000 to talk to localhost:1919
 // Can't say that I truly understand it
 app.use(function(req, res, next) {
@@ -28,6 +29,8 @@ app.use(function(req, res, next) {
 // Routes to our REST code
 var userRoutes  = require('./rest/user-rest');
 app.use('/user', userRoutes);
+var loginRoutes = require('./rest/login-rest');
+app.use("/", loginRoutes);
 
 // Finally tell the express to listen on port 1919
 app.listen(1919)
