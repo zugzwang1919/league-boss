@@ -49,6 +49,7 @@ module.exports = function () {
           userName: userData.userName,
           password: userData.password,
           emailAddress: userData.emailAddress,
+          authenticationToken: userData.authenticationToken,
         },
         { where: { id: userData.id } }
       )

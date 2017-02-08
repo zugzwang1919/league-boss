@@ -22,8 +22,8 @@ router.post('/login', function(req, res) {
       }
       else {
         console.log("login-rest login callback has been entered. Everything was fine.");
-        console.log("data.wolfeAuthenticationId = " + data.wolfeAuthenticationId);
-        res.append('Wolfe-Authentication-Id', data.wolfeAuthenticationId);
+        console.log("data.wolfeAuthenticationToken = " + data.wolfeAuthenticationToken);
+        res.append('Wolfe-Authentication-Token', data.wolfeAuthenticationToken);
         res.sendStatus(200);
       }
   }) ;

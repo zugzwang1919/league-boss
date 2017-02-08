@@ -15,7 +15,7 @@ module.exports = function(){
               emailAddress: {
                 type: Sequelize.STRING
               },
-              sessionId: {
+              authenticationToken: {
                 type: Sequelize.STRING
               }  
             }, 
