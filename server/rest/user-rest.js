@@ -8,7 +8,7 @@ var restUtils = require('./rest-util.js');
 
 
 
-router.get('/:userId', function (req, res) {
+router.get('/:userId', restUtils().validateUser, function (req, res) {
   console.log("Request received on server!  Looking for user with an id of " + req.params.userId);
   User.findById(req.params.userId)
     .then(user => {
