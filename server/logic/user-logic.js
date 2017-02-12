@@ -5,12 +5,11 @@ module.exports = function () {
   return {
     findUser: function (userData, callback) {
     },
-    createUser: function (userData, callback) {
+    createUser: function (userData) {
       console.log("user-logic.create() - createUser has been called.");
       // Ensure all of the required inputs are present
       if (!isUserValid(userData)) {
-        callback(true, "At least one of the required user attributes is missing.");
-        return;
+                return Promise.reject("At least one of the required user attributes is missing.");
       }
 
       // If we're here, we should be able to create a user, so...
@@ -22,15 +21,14 @@ module.exports = function () {
       })
         .then(user => {
           console.log("user-logic.create() " + userData.userName + " was successfully created.");
-          callback(null, null);
+          return Promise.resolve(null);
         })
         .catch(err => {
           var errorMessage = "A Sequelize error has occurred.  Error Name: " + err.name + ".  Error Message: " + err.message;
           console.log("user-logic.create() - " + errorMessage);
           if (err.name === 'SequelizeUniqueConstraintError')
             errorMessage = "The requested user name already exists."
-
-          callback(true, errorMessage);
+          return Promise.reject(errorMessage);
         })
     },
     updateUser: function (userData, callback) {

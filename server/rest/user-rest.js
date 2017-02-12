@@ -34,21 +34,21 @@ router.post('/create', function (req, res) {
     userName: req.body.userName,
     password: req.body.password,
     emailAddress: req.body.emailAddress,
-  },
-    function (err, data) {
-      if (err) {
-        console.log("user-rest createUser callback has been entered.  An error occurred.");
-        console.log("error message = " + data);
-        res.statusCode = 400;
-        res.json(restUtils().buildJSONfromMessage(data));
-      }
-      else {
-        console.log("user-rest createUser callback has been entered. Everything was fine.");
-        res.statusCode = 200;
-        res.json(restUtils().buildJSONfromMessage("Success!"));
-      }
-    });
+  })
+    .then(user => {
+      console.log("user-rest createUser callback has been entered. Everything was fine.");
+      res.statusCode = 200;
+      res.json(restUtils().buildJSONfromMessage("Success!"));
+    })
+    .catch(error => {
+      console.log("user-rest createUser callback has been entered.  An error occurred.");
+      console.log("error message = " + error);
+      res.statusCode = 400;
+      res.json(restUtils().buildJSONfromMessage(error));
+
+    })
 });
+
 
 
 router.put('/:userId', function (req, res) {
