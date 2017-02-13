@@ -1,19 +1,17 @@
-module.exports = function() {
-  return {
+module.exports = {
 
-    createGuid: function () {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-    },
-
-    anotherFunction: function() {
-      return false;
+  createGuid: function () {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
     }
-    
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  },
+
+  anotherFunction: function () {
+    return false;
   }
+
 }

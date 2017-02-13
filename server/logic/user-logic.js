@@ -9,12 +9,12 @@ module.exports = function () {
       console.log("user-logic.create() - createUser has been called.");
       // Ensure all of the required inputs are present
       if (!isUserValid(userData)) {
-                return Promise.reject("At least one of the required user attributes is missing.");
+        return Promise.reject("At least one of the required user attributes is missing.");
       }
 
       // If we're here, we should be able to create a user, so...
       // Create the user
-      User.create({
+      return User.create({
         userName: userData.userName,
         password: userData.password,
         emailAddress: userData.emailAddress,
@@ -31,19 +31,17 @@ module.exports = function () {
           return Promise.reject(errorMessage);
         })
     },
-    updateUser: function (userData, callback) {
+    updateUser: function (userData) {
       console.log("user-logic.update() - updateUser has been called.");
 
       // Ensure all of the required inputs are present
       if (!isUserValid(userData)) {
-        callback(true, "At least one of the required user attributes is missing.");
-        return;
+        return Promise.reject("At least one of the required user attributes is missing.");
       }
 
-      // If we're here, we should be able to create a user, so...
-      // Create the user
-      User.update(
-        {
+      // If we're here, we should be able to update a user, so...
+      // Update the user
+      return User.update( {
           userName: userData.userName,
           password: userData.password,
           emailAddress: userData.emailAddress,
@@ -53,14 +51,14 @@ module.exports = function () {
       )
         .then(result => {
           console.log("user-logic.update() " + userData.userName + " was successfully updated.");
-          callback(null, null);
+          return Promise.resolve(null);
         })
         .catch(err => {
           var errorMessage = "A Sequelize error has occurred.  Error Name: " + err.name + ".  Error Message: " + err.message;
           console.log("user-logic.create() - " + errorMessage);
           if (err.name === 'SequelizeUniqueConstraintError')
             errorMessage = "The requested user name already exists."
-          callback(true, errorMessage);
+          return Promise.reject(errorMessage);
         })
     }
   };

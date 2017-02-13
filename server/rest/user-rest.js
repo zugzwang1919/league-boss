@@ -8,7 +8,7 @@ var restUtils = require('./rest-util.js');
 
 
 
-router.get('/:userId', restUtils().validateUser, function (req, res) {
+router.get('/:userId', restUtils.validateUser, function (req, res) {
   console.log("Request received on server!  Looking for user with an id of " + req.params.userId);
   User.findById(req.params.userId)
     .then(user => {
@@ -36,15 +36,15 @@ router.post('/create', function (req, res) {
     emailAddress: req.body.emailAddress,
   })
     .then(user => {
-      console.log("user-rest createUser callback has been entered. Everything was fine.");
+      console.log("user-rest createUser 'then' has been entered. Everything was fine.");
       res.statusCode = 200;
-      res.json(restUtils().buildJSONfromMessage("Success!"));
+      res.json(restUtils.buildJSONfromMessage("Success!"));
     })
-    .catch(error => {
-      console.log("user-rest createUser callback has been entered.  An error occurred.");
-      console.log("error message = " + error);
+    .catch(errorMessage => {
+      console.log("user-rest createUser 'catch' has been entered.  An error occurred.");
+      console.log("error message = " + errorMessage);
       res.statusCode = 400;
-      res.json(restUtils().buildJSONfromMessage(error));
+      res.json(restUtils.buildJSONfromMessage(errorMessage));
 
     })
 });
@@ -61,19 +61,17 @@ router.put('/:userId', function (req, res) {
     userName: req.body.userName,
     password: req.body.password,
     emailAddress: req.body.emailAddress,
-  },
-    function (err, data) {
-      if (err) {
-        console.log("user-rest updateUser callback has been entered.  An error occurred.");
-        console.log("error message = " + data);
-        res.statusCode = 400;
-        res.json(restUtils().buildJSONfromMessage(data));
-      }
-      else {
-        console.log("user-rest createUser callback has been entered. Everything was fine.");
-        res.statusCode = 200;
-        res.json(restUtils().buildJSONfromMessage("Success!"));
-      }
-    });
+  })
+    .then(data => {
+      console.log("user-rest createUser 'then' has been entered. Everything was fine.");
+      res.statusCode = 200;
+      res.json(restUtils.buildJSONfromMessage("Success!"));
+    })
+    .catch(errorMessage => {
+      console.log("user-rest updateUser 'catch' has been entered.  An error occurred.");
+      console.log("error message = " + errorMessage);
+      res.statusCode = 400;
+      res.json(restUtils.buildJSONfromMessage(errorMessage));
+    })
 });
 module.exports = router;
