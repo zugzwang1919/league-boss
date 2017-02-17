@@ -1,8 +1,8 @@
 import { Component }  from '@angular/core';
 import { Router }     from '@angular/router';
 
-import { User }       from './user';
-import { UserService }from './user-service.service';
+import { User }       from './user/user';
+import { UserService }from './user/user-service.service';
 
 
 @Component({
@@ -15,14 +15,15 @@ import { UserService }from './user-service.service';
         <button (click)="editDetails()">Edit Details</button>
       <div>
     
-      <br>
       <p>... OR ... </p>
       <br>
       <button (click)="createNew()">Create New User</button>
       <br>
+      <p>... OR ... </p>
+      <br>      
+      <button (click)="loginNow()">Login</button>
       <br>
       <hr>
-      <br>
       <br>
     </div>
     
@@ -50,4 +51,10 @@ export class AppComponent {
   createNew(): void {
     this.router.navigate(['/user/create']);  
   }
+
+  loginNow(): void {
+    this.router.navigate(['/login']);  
+  }
+
+  
 }

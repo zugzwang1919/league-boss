@@ -6,9 +6,9 @@ import { HttpModule }           from '@angular/http';
 import { AppRoutingModule }     from './app-routing.module';
 
 import { AppComponent }         from './app.component';
-import { UserDetailComponent }  from './user-detail.component';
+import { UserDetailComponent }  from './user/user-detail.component';
 
-import { UserService }          from './user-service.service';
+import { UserService }          from './user/user-service.service';
 
 @NgModule({
   imports:      [ BrowserModule,
