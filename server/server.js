@@ -2,9 +2,9 @@
 
 // Prepopulate the DB... 
 // Comment out these lines most of the time.
-var userModelUtils = require('./model/user');
-var User = userModelUtils().definition();
-userModelUtils().prePopulate(User);
+var UserModelUtils = require('./model/user');
+var User = UserModelUtils.definition();
+UserModelUtils.prePopulate(User);
 
 
 

@@ -1,71 +1,117 @@
 var userModelUtils = require('../model/user');
-var User = userModelUtils().definition();
+var User = userModelUtils.definition();
+var LogicErrors = require('./logic-error');
 
-module.exports = function () {
-  return {
-    findUser: function (userData, callback) {
-    },
-    createUser: function (userData) {
-      console.log("user-logic.create() - createUser has been called.");
-      // Ensure all of the required inputs are present
-      if (!isUserValid(userData)) {
-        return Promise.reject("At least one of the required user attributes is missing.");
-      }
+module.exports = {
 
-      // If we're here, we should be able to create a user, so...
-      // Create the user
-      return User.create({
-        userName: userData.userName,
-        password: userData.password,
-        emailAddress: userData.emailAddress,
-      })
-        .then(user => {
-          console.log("user-logic.create() " + userData.userName + " was successfully created.");
-          return Promise.resolve(null);
-        })
-        .catch(err => {
-          var errorMessage = "A Sequelize error has occurred.  Error Name: " + err.name + ".  Error Message: " + err.message;
-          console.log("user-logic.create() - " + errorMessage);
-          if (err.name === 'SequelizeUniqueConstraintError')
-            errorMessage = "The requested user name already exists."
-          return Promise.reject(errorMessage);
-        })
-    },
-    updateUser: function (userData) {
-      console.log("user-logic.update() - updateUser has been called.");
+  findUserById: function (id) {
+    return findUser({ where: { "id": id } });
+  },
 
-      // Ensure all of the required inputs are present
-      if (!isUserValid(userData)) {
-        return Promise.reject("At least one of the required user attributes is missing.");
-      }
+  findUserByAuthenticationToken: function (token) {
+    return findUser({ where: { "authenticationToken": token } });
+  },
 
-      // If we're here, we should be able to update a user, so...
-      // Update the user
-      return User.update( {
-          userName: userData.userName,
-          password: userData.password,
-          emailAddress: userData.emailAddress,
-          authenticationToken: userData.authenticationToken,
-        },
-        { where: { id: userData.id } }
-      )
-        .then(result => {
-          console.log("user-logic.update() " + userData.userName + " was successfully updated.");
-          return Promise.resolve(null);
-        })
-        .catch(err => {
-          var errorMessage = "A Sequelize error has occurred.  Error Name: " + err.name + ".  Error Message: " + err.message;
-          console.log("user-logic.create() - " + errorMessage);
-          if (err.name === 'SequelizeUniqueConstraintError')
-            errorMessage = "The requested user name already exists."
-          return Promise.reject(errorMessage);
-        })
+  findUserByUserName: function (userName) {
+    return findUser({ where: { "userName": userName } })
+  },
+
+  createUser: function (userData) {
+    console.log("user-logic.create() - createUser has been called.");
+    // Ensure all of the required inputs are present
+    if (!isNewUserValid(userData)) {
+      return Promise.reject(buildIncompleteAttributesError());
     }
-  };
 
-  function isUserValid(userData) {
-    return (userData.userName != null &&
-      userData.password != null &&
-      userData.emailAddress != null)
+    // If we're here, we should be able to create a user, so...
+    // Create the user
+    return User.create({
+      userName: userData.userName,
+      password: userData.password,
+      emailAddress: userData.emailAddress,
+    })
+      .then(user => {
+        console.log("user-logic.create() " + userData.userName + " was successfully created.");
+        return Promise.resolve(null);
+      })
+      .catch(err => { return Promise.reject(buildCleanError(err)); })
+  },
+
+  updateUser: function (userData) {
+    console.log("user-logic.update() - updateUser has been called.");
+
+    // Ensure all of the required inputs are present
+    if (!isExistingUserValid(userData)) {
+      return Promise.reject(buildIncompleteAttributesError());
+    }
+
+    // If we're here, we should be able to update a user, so...
+    // Update the user
+    return User.update({
+      userName: userData.userName,
+      password: userData.password,
+      emailAddress: userData.emailAddress,
+      authenticationToken: userData.authenticationToken,
+    },
+      { where: { id: userData.id } }
+    )
+      .then(result => {
+        console.log("user-logic.update() " + userData.userName + " was successfully updated.");
+        return Promise.resolve(null);
+      })
+      .catch(err => { return Promise.reject(buildCleanError(err)); })
   }
+}
+
+function findUser(whereClause) {
+  console.log("user-logic - looking for user based on " + whereClause);
+  return User.findOne(whereClause)
+    .then(user => {
+      if (user != null) {
+        console.log("user-logic - user found!!!");
+        return Promise.resolve(user)
+      }
+      else {
+        console.log("user-logic - user was not found!!!");
+        return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND);
+      }
+      return user
+    })
+    .catch(err => { return Promise.reject(buildCleanError(err)); })
+}
+
+function isExistingUserValid(userData) {
+  return ( userData.id != null &&
+    userData.userName != null &&
+    userData.password != null &&
+    userData.emailAddress != null)
+}
+
+function isNewUserValid(userData) {
+  return ( userData.userName != null &&
+    userData.password != null &&
+    userData.emailAddress != null)
+}
+
+
+function buildIncompleteAttributesError() {
+  console.log("user-logic - Building error indicating that all required attributes were not specified.")
+  return LogicErrors.buildError(LogicErrors.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.")
+}
+
+function buildCleanError(err) {
+  var cleanError;
+  // Try to clean up expected errors.  
+  // We could see the SequelizeUniqueConstraintError when someone tries to create a new user
+  // or update an existing user and the desired username is already in existence
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    console.log("user-logic - Building error indicating that user already exists.")
+    cleanError = LogicErrors.buildError(LogicErrors.DUPLICATE.name, "The requested user name already exists.");
+  }
+  else {
+    console.log("user-logic - Cleaning up an unexpected error.")
+    cleanError = LogicErrors.firmUpError(err);
+  }
+  return cleanError;
+
 }

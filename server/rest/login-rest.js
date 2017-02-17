@@ -1,29 +1,19 @@
 
 var express = require('express');
 var router = express.Router();
-var loginLogicUtils = require('../logic/login-logic');
-var restUtils = require('./rest-util.js');
-
+var LoginLogic = require('../logic/login-logic');
+var RestResponse = require('./rest-response');
 
 router.post('/login', function (req, res) {
   console.log("login-rest login: username found in body = " + req.body.userName);
   console.log("login-rest login: password found in body = " + req.body.password);
 
-  loginLogicUtils().login({
+  LoginLogic.login({
     userName: req.body.userName,
     password: req.body.password,
   })
-    .then(data => {
-      console.log("login-rest login callback has been entered. Everything was fine.");
-      console.log("data.wolfeAuthenticationToken = " + data.wolfeAuthenticationToken);
-      res.append('Wolfe-Authentication-Token', data.wolfeAuthenticationToken);
-      res.sendStatus(200);
-    })
-    .catch(errorMessage => {
-      console.log("login-rest login callback has been entered.  An error occurred.");
-      console.log("error message = " + errorMessage);
-      res.statusCode = 401;
-      res.json(restUtils.buildJSONfromMessage(errorMessage));
-    });
+    .then(data => { RestResponse.send200WithHeader(res, "Wolfe-Authentication-Token", data.wolfeAuthenticationToken) })
+    // Anytime login fails, we send back the same thing (not trying to provide too much info)
+    .catch(errorMessage => { RestResponse.send401(res) });
 });
 module.exports = router;
