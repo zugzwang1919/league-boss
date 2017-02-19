@@ -1,0 +1,42 @@
+<div style="text-align: center">
+
+  <div >
+    <h2>Login</h2>
+  </div>
+
+  <div class="message-box" *ngIf="message">
+    <h4>{{message}}</h4>
+  </div>  
+
+  <div>
+    <table style="margin: 0 auto" class="key-value" >
+
+      <tr>
+        <td class="key">
+          <label> user name: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="userName" placeholder="user name"/>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">
+          <label> password: </label>
+        </td>
+        <td>
+          <input [(ngModel)]="password" placeholder="password"/>
+        </td>
+      </tr>
+
+
+    </table>
+  </div>
+
+  <br>  
+
+  <div>
+    <button (click)="login()">Login</button>
+  </div>
+  
+</div>

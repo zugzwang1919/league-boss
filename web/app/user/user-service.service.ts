@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
+import { WolfeHttp } from '../common/wolfe-http';
 import { User } from "./user";
-import { USERS } from './mock-users';
+
 
 @Injectable()
 export class UserService {
 
   constructor(
-    private http: Http,
+    private http: WolfeHttp,
   ) { }
 
   getUser(id: Number): Promise<User> {
