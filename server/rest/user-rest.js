@@ -1,15 +1,13 @@
 
 var express = require('express');
 var router = express.Router();
-var userModelUtils = require('../model/user');
-var User = userModelUtils.definition();
 var UserLogic = require('../logic/user-logic');
-var restUtils = require('./rest-util');
+var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
 
 
 
-router.get('/:userId', restUtils.validateUser, function (req, res) {
+router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("Request received on server!  Looking for user with an id of " + req.params.userId);
   console.log("User Id added = " + req.header('Wolfe-User-Id'));
   UserLogic.findUserById(req.params.userId)

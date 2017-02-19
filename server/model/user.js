@@ -16,6 +16,9 @@ module.exports = {
       },
       authenticationToken: {
         type: Sequelize.STRING
+      },
+      authenticationTokenExpiration: {
+        type: Sequelize.DATE
       }
     },
       {

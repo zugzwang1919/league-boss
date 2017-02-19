@@ -52,6 +52,7 @@ module.exports = {
       password: userData.password,
       emailAddress: userData.emailAddress,
       authenticationToken: userData.authenticationToken,
+      authenticationTokenExpiration: userData.authenticationTokenExpiration
     },
       { where: { id: userData.id } }
     )

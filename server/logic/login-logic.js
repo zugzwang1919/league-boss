@@ -1,6 +1,7 @@
 var UserModelUtils = require('../model/user');
 var User = UserModelUtils.definition();
 var MathUtils = require('../common/math-util');
+var DateUtils = require('../common/date-util');
 var UserLogic = require('./user-logic');
 var LogicErrors = require('./logic-error');
 
@@ -17,6 +18,7 @@ module.exports = {
       .then(user => {
         if (user != null && user.password === loginData.password) {
           user.authenticationToken = guid;
+          user.authenticationTokenExpiration = DateUtils.createAuthenticationExpirationDate(); 
           return UserLogic.updateUser(user);
         }
         else {
