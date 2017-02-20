@@ -42,8 +42,8 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
     password: req.body.password,
     emailAddress: req.body.emailAddress,
   })
-    .then(user => { RestResponse.send200(res) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+    .then(user => { RestResponse.send200(res); })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
 });
 
 function ensureSuperUserOrSelf(req, res, next) {
@@ -53,7 +53,7 @@ function ensureSuperUserOrSelf(req, res, next) {
   UserLogic.findUserByAuthenticationToken(token)
     .then(user => {
       foundUser = user;
-      return UserLogic.isSuperUser(foundUser)
+      return UserLogic.isSuperUser(foundUser);
     })
     // Check on SuperUser Status or Self status
     .then(isSuperUser => {
@@ -64,7 +64,7 @@ function ensureSuperUserOrSelf(req, res, next) {
       // Otherwise, this could be a user performing operations on himself
       else {
         // If this user is asking for his own data, that's cool (call next()) 
-        if (foundUser.id == req.params.userId) {
+        if (foundUser.id.toString() === req.params.userId) {
           next();
         }
         // Otherwise, reject the request
@@ -75,7 +75,7 @@ function ensureSuperUserOrSelf(req, res, next) {
     })
     .catch(error => {
       // If anything goes wrong, we're sending back a 403
-      RestResponse.send403(res)
+      RestResponse.send403(res);
     })
 }
 
