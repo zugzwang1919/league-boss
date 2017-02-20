@@ -135,8 +135,8 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Good Login" enabled="true">
-          <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\SuccessfulAdminLoginTestFragment.jmx</stringProp>
+        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Good Login for SuperUser" enabled="true">
+          <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>

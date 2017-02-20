@@ -61,11 +61,21 @@ module.exports = {
         return Promise.resolve(null);
       })
       .catch(err => { return Promise.reject(buildCleanError(err)); })
+  },
+
+  isSuperUser: function (userData) {
+    // for now
+    var result;
+    if (userData.id === 1)
+      result = true;
+    else
+      result = false;
+    console.log("user-logic.isSuperUser - result = " + result);
+    return Promise.resolve(result);
   }
 }
 
 function findUser(whereClause) {
-  console.log("user-logic - looking for user based on " + whereClause);
   return User.findOne(whereClause)
     .then(user => {
       if (user != null) {
@@ -76,20 +86,21 @@ function findUser(whereClause) {
         console.log("user-logic - user was not found!!!");
         return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND);
       }
-      return user
     })
-    .catch(err => { return Promise.reject(buildCleanError(err)); })
+    .catch(err => {
+      return Promise.reject(buildCleanError(err));
+    })
 }
 
 function isExistingUserValid(userData) {
-  return ( userData.id != null &&
+  return (userData.id != null &&
     userData.userName != null &&
     userData.password != null &&
     userData.emailAddress != null)
 }
 
 function isNewUserValid(userData) {
-  return ( userData.userName != null &&
+  return (userData.userName != null &&
     userData.password != null &&
     userData.emailAddress != null)
 }

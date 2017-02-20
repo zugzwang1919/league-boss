@@ -14,6 +14,10 @@ module.exports = {
     sendResponse(res, 401, buildJSONfromMessage("Authentication failed."))
   },
 
+  send403: function(res) {
+    sendResponse(res, 403, buildJSONfromMessage("Not Authorized."))
+  },
+
   sendAppropriateResponse: function(res, error) {
     var statusCode;
     switch (error.name) {
