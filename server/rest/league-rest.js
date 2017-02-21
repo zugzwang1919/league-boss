@@ -7,8 +7,8 @@ var RestResponse = require('./rest-response');
 
 
 
-router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
-  console.log("Request received on server!  Looking for user with an id of " + req.params.userId);
+router.get('/:leagueId', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("Request received on server!  Looking for league with an id of " + req.params.leagueId);
   UserLogic.findUserById(req.params.userId)
     .then(user => { RestResponse.send200(res, user) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
