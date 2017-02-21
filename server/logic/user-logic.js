@@ -1,5 +1,5 @@
-var userModelUtils = require('../model/user');
-var User = userModelUtils.definition();
+var DefineUserFunction = require('../model/user');
+var User = DefineUserFunction();
 var LogicErrors = require('./logic-error');
 
 module.exports = {

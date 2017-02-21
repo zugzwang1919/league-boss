@@ -1,5 +1,4 @@
-var UserModelUtils = require('../model/user');
-var User = UserModelUtils.definition();
+
 var MathUtils = require('../common/math-util');
 var DateUtils = require('../common/date-util');
 var UserLogic = require('./user-logic');
