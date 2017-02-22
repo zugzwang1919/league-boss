@@ -1,5 +1,5 @@
-var DefineLeagueFunction = require('../model/league');
-var League = DefineLeagueFunction();
+var DataModel = require('../model/dataModel');
+var League = DataModel.LEAGUE;
 var LogicErrors = require('./logic-error');
 
 module.exports = {
@@ -16,17 +16,27 @@ module.exports = {
       return Promise.reject(buildIncompleteAttributesError());
     }
 
+    var leagueToReturn;
+    
     // If we're here, we should be able to create a league, so...
     // Create the league
     return League.create({
       leagueName: leagueData.leagueName,
       description: leagueData.description,
     })
+
       .then(league => {
         console.log("league-logic.create() " + leagueData.leagueName + " was successfully created.");
-        return Promise.resolve(null);
+        console.log("league-logic.create() - Preparing to add admin");
+        leagueToReturn = league;
+        return league.addAdmin(creatingUserId.userId)
       })
-      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+      .then(stuff => { 
+        return Promise.resolve(leagueToReturn) 
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
   },
 
   updateLeague: function (leagueData) {

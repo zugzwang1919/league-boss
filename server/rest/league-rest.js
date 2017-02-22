@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var UserLogic = require('../logic/user-logic');
+var LeagueLogic = require('../logic/league-logic');
 var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
 
@@ -9,47 +10,69 @@ var RestResponse = require('./rest-response');
 
 router.get('/:leagueId', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("Request received on server!  Looking for league with an id of " + req.params.leagueId);
-  UserLogic.findUserById(req.params.userId)
-    .then(user => { RestResponse.send200(res, user) })
+  LeagueLogic.findLeagueById(req.params.userId)
+    .then(league => { RestResponse.send200(res, league) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
 
 
-router.post('/create', function (req, res) {
-  console.log("user-rest createUser: userName found in body = " + req.body.userName);
-  console.log("user-rest createUser: password found in body = " + req.body.password);
-  console.log("user-rest createUser: emailAddress found in body = " + req.body.emailAddress);
+router.post('/', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("league-rest createLeague: leagueName found in body = " + req.body.leagueName);
 
-  UserLogic.createUser({
-    userName: req.body.userName,
-    password: req.body.password,
-    emailAddress: req.body.emailAddress,
-  })
-    .then(user => { RestResponse.send200(res) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    .then(user => {
+      return LeagueLogic.createLeague(
+        {
+          leagueName: req.body.leagueName,
+          description: req.body.description,
+        },
+        { userId: user.id })
+    })
+    .then(league => { 
+      RestResponse.send200(res, league) 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error) 
+    })
 });
 
 
-router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, function (req, res) {
-  console.log("user-rest updateUser: userName found in body = " + req.body.userName);
-  console.log("user-rest updateUser: password found in body = " + req.body.password);
-  console.log("user-rest updateUser: emailAddress found in body = " + req.body.emailAddress);
+router.put('/:leagueId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
+  console.log("user-rest updateLeague: leagueName found in body = " + req.body.leagueName);
 
-  UserLogic.updateUser({
+  LeagueLogic.updateLeague({
     id: req.body.id,
-    userName: req.body.userName,
-    password: req.body.password,
-    emailAddress: req.body.emailAddress,
+    leagueName: req.body.leagueName,
+    description: req.body.description,
   })
-    .then(user => { RestResponse.send200(res); })
+    .then(league => { RestResponse.send200(res, league); })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
 });
 
-function ensureSuperUserOrSelf(req, res, next) {
-  var token = req.header('Wolfe-Authentication-Token');
+router.post('/:leagueId/player', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
+  console.log("league-rest addPlayer: userId found in body = " + req.body.userId);
+
+  LeagueLogic.addPlayer({
+    userId: req.body.userId,
+  })
+    .then(league => { RestResponse.send200(res, league) })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+});
+
+router.post('/:leagueId/admin', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
+  console.log("league-rest addAddmin: userId found in body = " + req.body.userId);
+
+  LeagueLogic.addAdmin({
+    userId: req.body.userId,
+  })
+    .then(league => { RestResponse.send200(res, league) })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+});
+
+function ensureSuperUserOrLeagueAdmin(req, res, next) {
   var foundUser;
   // Get the user associated with the token
-  UserLogic.findUserByAuthenticationToken(token)
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then(user => {
       foundUser = user;
       return UserLogic.isSuperUser(foundUser);

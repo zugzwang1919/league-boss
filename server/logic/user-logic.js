@@ -1,5 +1,5 @@
-var DefineUserFunction = require('../model/user');
-var User = DefineUserFunction();
+var DataModel = require('../model/dataModel');
+var User = DataModel.USER;
 var LogicErrors = require('./logic-error');
 
 module.exports = {

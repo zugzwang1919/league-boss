@@ -21,7 +21,7 @@ import { UserService }from './user/user-service.service';
       <br>
       <p>... OR ... </p>
       <br>      
-      <button (click)="loginNow()">Login</button>
+      <button (click)="loginNow()">Go To Login</button>
       <br>
       <hr>
       <br>

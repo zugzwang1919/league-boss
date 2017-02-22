@@ -2,47 +2,41 @@
 
 // Prepopulate the DB... 
 // Comment out these lines most of the time.
-var DefineUserFunction = require('./model/user');
-var User = DefineUserFunction();
-var DefineLeagueFunction = require('./model/league');
-var League = DefineLeagueFunction();
+var DataModel = require('./model/dataModel');
+var USER = DataModel.USER;
+var LEAGUE = DataModel.LEAGUE;
+
 
 var user1;
 var user2;
 var league1;
 
 
-User.belongsToMany(League, { as: 'LeagueAsPlayer', through: 'LeaguePlayer' });
-League.belongsToMany(User, { as: 'Player', through: 'LeaguePlayer' });
-
-
 var sequelize = require('./model/index');
 
 sequelize.sync({ force: true })
   .then(function () {
-    return User.create({
+    return USER.create({
       userName: 'RWW',
       password: 'RWW',
       emailAddress: 'russ.wolfe@gmail.com',
-
     })
   })
   .then(user => { 
     user1 = user 
   })
   .then(function () {
-    return User.create({
+    return USER.create({
       userName: 'TB',
       password: 'TB',
       emailAddress: 'tom.brady@gmail.com',
-
     })
   })
   .then(user => { 
     user2 = user 
   })
   .then(function () {
-    return League.create({
+    return LEAGUE.create({
       leagueName: 'NFL Chumps',
       description: 'The worst collection ever of NFL enthusiasts.'
     })
@@ -54,7 +48,9 @@ sequelize.sync({ force: true })
   .then(junk => {
     return league1.addPlayer(user2);
   })
-  .catch(err => {
+  .then(junk => {
+    return league1.addAdmin(user2);
+  }).catch(err => {
     console.log("error name = " + err.name + ".  Error Message = " + err.message)
   })
 
@@ -87,6 +83,8 @@ app.use(function (req, res, next) {
 // Routes to our REST code
 var userRoutes = require('./rest/user-rest');
 app.use('/user', userRoutes);
+var userRoutes = require('./rest/league-rest');
+app.use('/league', userRoutes);
 var loginRoutes = require('./rest/login-rest');
 app.use("/", loginRoutes);
 

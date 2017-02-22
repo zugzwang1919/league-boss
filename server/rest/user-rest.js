@@ -8,32 +8,28 @@ var RestResponse = require('./rest-response');
 
 
 router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
-  console.log("Request received on server!  Looking for user with an id of " + req.params.userId);
+  console.log("user-rest getUser:  Looking for user with an id of " + req.params.userId);
   UserLogic.findUserById(req.params.userId)
     .then(user => { RestResponse.send200(res, user) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
 
 
-router.post('/create', function (req, res) {
+router.post('/', function (req, res) {
   console.log("user-rest createUser: userName found in body = " + req.body.userName);
-  console.log("user-rest createUser: password found in body = " + req.body.password);
-  console.log("user-rest createUser: emailAddress found in body = " + req.body.emailAddress);
 
   UserLogic.createUser({
     userName: req.body.userName,
     password: req.body.password,
     emailAddress: req.body.emailAddress,
   })
-    .then(user => { RestResponse.send200(res) })
+    .then(user => { RestResponse.send200(res, user) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
 
 
 router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, function (req, res) {
   console.log("user-rest updateUser: userName found in body = " + req.body.userName);
-  console.log("user-rest updateUser: password found in body = " + req.body.password);
-  console.log("user-rest updateUser: emailAddress found in body = " + req.body.emailAddress);
 
   UserLogic.updateUser({
     id: req.body.id,
@@ -41,15 +37,14 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
     password: req.body.password,
     emailAddress: req.body.emailAddress,
   })
-    .then(user => { RestResponse.send200(res); })
+    .then(user => { RestResponse.send200(res, user); })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
 });
 
 function ensureSuperUserOrSelf(req, res, next) {
-  var token = req.header('Wolfe-Authentication-Token');
-  var foundUser;
+    var foundUser;
   // Get the user associated with the token
-  UserLogic.findUserByAuthenticationToken(token)
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then(user => {
       foundUser = user;
       return UserLogic.isSuperUser(foundUser);
