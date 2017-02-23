@@ -32,7 +32,7 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
   console.log("user-rest updateUser: userName found in body = " + req.body.userName);
 
   UserLogic.updateUser({
-    id: req.body.id,
+    id: req.params.userId,
     userName: req.body.userName,
     password: req.body.password,
     emailAddress: req.body.emailAddress,

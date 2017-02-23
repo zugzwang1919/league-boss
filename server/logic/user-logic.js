@@ -1,5 +1,7 @@
 var DataModel = require('../model/dataModel');
 var User = DataModel.USER;
+
+var LeagueLogic = require('./league-logic');
 var LogicErrors = require('./logic-error');
 
 module.exports = {
@@ -72,6 +74,19 @@ module.exports = {
       result = false;
     console.log("user-logic.isSuperUser - result = " + result);
     return Promise.resolve(result);
+  },
+
+  isLeagueAdmin: function (userData, leagueId) {
+    var foundLeague
+    var foundUser
+
+    return LeagueLogic.findLeagueById(leagueId)
+    .then(league => { 
+      return league.hasAdmin(userData.id)
+    })
+    .catch(err => { 
+      Promise.reject(buildCleanError(err)) 
+    } )
   }
 }
 

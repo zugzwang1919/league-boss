@@ -10,7 +10,7 @@ var RestResponse = require('./rest-response');
 
 router.get('/:leagueId', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("Request received on server!  Looking for league with an id of " + req.params.leagueId);
-  LeagueLogic.findLeagueById(req.params.userId)
+  LeagueLogic.findLeagueById(req.params.leagueId)
     .then(league => { RestResponse.send200(res, league) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
@@ -28,11 +28,11 @@ router.post('/', RestUtils.ensureAuthenticated, function (req, res) {
         },
         { userId: user.id })
     })
-    .then(league => { 
-      RestResponse.send200(res, league) 
+    .then(league => {
+      RestResponse.send200(res, league)
     })
-    .catch(error => { 
-      RestResponse.sendAppropriateResponse(res, error) 
+    .catch(error => {
+      RestResponse.sendAppropriateResponse(res, error)
     })
 });
 
@@ -41,7 +41,7 @@ router.put('/:leagueId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueA
   console.log("user-rest updateLeague: leagueName found in body = " + req.body.leagueName);
 
   LeagueLogic.updateLeague({
-    id: req.body.id,
+    id: req.params.leagueId,
     leagueName: req.body.leagueName,
     description: req.body.description,
   })
@@ -49,25 +49,47 @@ router.put('/:leagueId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueA
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
 });
 
+
+// Players in this league
+
+router.get('/:leagueId/player', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("league-rest getPlayers:  ");
+  LeagueLogic.getPlayers(req.params.leagueId)
+    .then(players => { RestResponse.send200(res, players) })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+});
+
 router.post('/:leagueId/player', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest addPlayer: userId found in body = " + req.body.userId);
-
-  LeagueLogic.addPlayer({
-    userId: req.body.userId,
-  })
+  LeagueLogic.addPlayer(req.params.leagueId, req.body.userId)
     .then(league => { RestResponse.send200(res, league) })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+});
+
+
+// Admins in this league
+
+router.get('/:leagueId/admin', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("league-rest getAddmins: leagueId found in body = " + req.params.leagueId);
+  LeagueLogic.getAdmins(req.params.leagueId)
+    .then(admins => { RestResponse.send200(res, admins) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
 
 router.post('/:leagueId/admin', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest addAddmin: userId found in body = " + req.body.userId);
-
-  LeagueLogic.addAdmin({
-    userId: req.body.userId,
-  })
+  LeagueLogic.addAdmin(req.params.leagueId, req.body.userId)
     .then(league => { RestResponse.send200(res, league) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
+
+router.delete('/:leagueId/admin/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
+  console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
+  LeagueLogic.removeAdmin(req.params.leagueId, req.params.userId)
+    .then(league => { RestResponse.send200(res, league) })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+});
+
 
 function ensureSuperUserOrLeagueAdmin(req, res, next) {
   var foundUser;
@@ -77,23 +99,17 @@ function ensureSuperUserOrLeagueAdmin(req, res, next) {
       foundUser = user;
       return UserLogic.isSuperUser(foundUser);
     })
-    // Check on SuperUser Status or Self status
     .then(isSuperUser => {
-      // If this is a superuser, we're good to go (call next())
-      if (isSuperUser) {
+      if (isSuperUser)
         next();
-      }
-      // Otherwise, this could be a user performing operations on himself
-      else {
-        // If this user is asking for his own data, that's cool (call next()) 
-        if (foundUser.id.toString() === req.params.userId) {
-          next();
-        }
-        // Otherwise, reject the request
-        else {
-          return Promise.reject({ "name": "NOT_SELF", "message": "User is not self." });
-        }
-      }
+      else
+        return UserLogic.isLeagueAdmin(foundUser, req.params.leagueId)
+    })
+    .then(isLeagueAdmin => {
+      if (isLeagueAdmin)
+        next()
+      else
+        RestResponse.send403(res);
     })
     .catch(error => {
       // If anything goes wrong, we're sending back a 403

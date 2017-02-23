@@ -17,7 +17,7 @@ module.exports = {
     }
 
     var leagueToReturn;
-    
+
     // If we're here, we should be able to create a league, so...
     // Create the league
     return League.create({
@@ -31,11 +31,11 @@ module.exports = {
         leagueToReturn = league;
         return league.addAdmin(creatingUserId.userId)
       })
-      .then(stuff => { 
-        return Promise.resolve(leagueToReturn) 
+      .then(stuff => {
+        return Promise.resolve(leagueToReturn)
       })
-      .catch(err => { 
-        return Promise.reject(LogicErrors.firmUpError(err)); 
+      .catch(err => {
+        return Promise.reject(LogicErrors.firmUpError(err));
       })
   },
 
@@ -61,6 +61,27 @@ module.exports = {
       })
       .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
   },
+
+  getAdmins: function (leagueId) {
+    return this.findLeagueById(leagueId)
+      .then(league => {
+        return league.getAdmin()
+      })
+      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+  },
+
+  addAdmin: function (leagueId, userId) {
+    return this.findLeagueById(leagueId)
+      .then(league => { return league.addAdmin(userId) })
+      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+  },
+
+  removeAdmin: function (leagueId, userId) {
+    return this.findLeagueById(leagueId)
+      .then(league => { return league.removeAdmin(userId) })
+      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+  }
+
 
 }
 
