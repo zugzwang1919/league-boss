@@ -12,7 +12,9 @@ router.post('/login', function (req, res) {
     userName: req.body.userName,
     password: req.body.password,
   })
-    .then(data => { RestResponse.send200WithHeader(res, "Wolfe-Authentication-Token", data.wolfeAuthenticationToken) })
+    .then(data => {
+      RestResponse.send200WithHeader(res, "Wolfe-Authentication-Token", data.wolfeAuthenticationToken, {"message": "Success!!!", "user": data.user})
+    })
     // Anytime login fails, we send back the same thing (not trying to provide too much info)
     .catch(errorMessage => { RestResponse.send401(res) });
 });

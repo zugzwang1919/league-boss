@@ -21,7 +21,7 @@ export class LoginComponent {
 
   constructor(
     private loginService: LoginService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
 

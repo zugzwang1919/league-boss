@@ -66,6 +66,14 @@ router.post('/:leagueId/player', RestUtils.ensureAuthenticated, ensureSuperUserO
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
 
+router.delete('/:leagueId/player/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
+  console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
+  LeagueLogic.removePlayer(req.params.leagueId, req.params.userId)
+    .then(league => { RestResponse.send200(res, league) })
+    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+});
+
+
 
 // Admins in this league
 

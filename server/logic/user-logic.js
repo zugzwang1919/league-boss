@@ -58,9 +58,9 @@ module.exports = {
     },
       { where: { id: userData.id } }
     )
-      .then(result => {
+      .then(user => {
         console.log("user-logic.update() " + userData.userName + " was successfully updated.");
-        return Promise.resolve(null);
+        return Promise.resolve(user);
       })
       .catch(err => { return Promise.reject(buildCleanError(err)); })
   },

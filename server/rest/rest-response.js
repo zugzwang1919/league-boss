@@ -9,7 +9,7 @@ module.exports = {
   send200WithHeader: function(res, headerKey, headerValue, optionalBody) {
     sendResponse(res, 200, optionalBody, {"key" : headerKey, "value" : headerValue });
   },  
-  
+    
   send401: function(res) {
     sendResponse(res, 401, buildJSONfromMessage("Authentication failed."))
   },

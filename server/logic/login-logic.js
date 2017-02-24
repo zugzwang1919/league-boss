@@ -12,12 +12,14 @@ module.exports = {
     // This is the only error message that we will provide in the 
     // event that we're being hacked.
     var errorMessage = "Login Credentials were not correct.";
+    var foundUser;
 
     return UserLogic.findUserByUserName( loginData.userName )
       .then(user => {
         if (user != null && user.password === loginData.password) {
           user.authenticationToken = guid;
           user.authenticationTokenExpiration = DateUtils.createAuthenticationExpirationDate(); 
+          foundUser = user;
           return UserLogic.updateUser(user);
         }
         else {
@@ -25,7 +27,7 @@ module.exports = {
         }
       })
 
-      .then(junk => { return Promise.resolve({ "wolfeAuthenticationToken": guid }); })
+      .then(junk => { return Promise.resolve({ "user": foundUser, "wolfeAuthenticationToken": guid }); })
 
       .catch(err => {
         // If an error occurred, log it here.

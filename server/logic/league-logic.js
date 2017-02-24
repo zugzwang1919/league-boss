@@ -80,8 +80,27 @@ module.exports = {
     return this.findLeagueById(leagueId)
       .then(league => { return league.removeAdmin(userId) })
       .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
-  }
+  },
 
+  getPlayers: function (leagueId) {
+    return this.findLeagueById(leagueId)
+      .then(league => {
+        return league.getPlayer()
+      })
+      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+  },
+
+  addPlayer: function (leagueId, userId) {
+    return this.findLeagueById(leagueId)
+      .then(league => { return league.addPlayer(userId) })
+      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+  },
+
+  removePlayer: function (leagueId, userId) {
+    return this.findLeagueById(leagueId)
+      .then(league => { return league.removePlayer(userId) })
+      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+  }
 
 }
 

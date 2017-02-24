@@ -2,6 +2,7 @@ import { NgModule }             from '@angular/core';
 import { BrowserModule }        from '@angular/platform-browser';
 import { FormsModule }          from '@angular/forms';
 import { HttpModule }           from '@angular/http';
+import { CoreModule }           from './core.module';
 
 
 import { AppRoutingModule }     from './app-routing.module';
@@ -19,7 +20,8 @@ import { LoginService }         from './login/login-service.service';
   imports:      [ BrowserModule,
                   FormsModule,
                   AppRoutingModule,
-                  HttpModule],
+                  HttpModule,
+                  CoreModule],
   declarations: [ AppComponent,
                   UserDetailComponent,
                   LoginComponent ],
