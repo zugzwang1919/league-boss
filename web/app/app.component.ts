@@ -8,36 +8,8 @@ import { CurrentUserService }from './user/current-user-service.service';
 
 @Component({
   selector: 'my-app',
-   template: `
-    <div style="text-align: center"> 
-      <div>
-                <p *ngIf=(this.currentUserService.getCurrentUser())> Current User: {{this.currentUserService.getCurrentUser().userName}} </p>
-      </div> 
-      <div >
-        <label> Select a User by Id: </label>
-        <input [(ngModel)]="displayedId" placeholder="id"  />
-        <button (click)="editDetails()">Edit Details</button>
-      <div>
-    
-      <p>... OR ... </p>
-      <br>
-      <button (click)="createNew()">Create New User</button>
-      <br>
-      <p>... OR ... </p>
-      <br>      
-      <p *ngIf=(this.currentUserService.getCurrentUser())> 
-        Current User: {{this.currentUserService.getCurrentUser().userName}} 
-        <br>
-        Current User Email : {{this.currentUserService.getCurrentUser().emailAddress}}
-      </p>
-      <button (click)="loginNow()">Go To Login</button>
-      <br>
-      <hr>
-      <br>
-    </div>
-    
-    <router-outlet></router-outlet>
-    `
+  moduleId: module.id,
+  templateUrl: 'app.component.html',
 })
 
 export class AppComponent { 
