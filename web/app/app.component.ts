@@ -9,7 +9,8 @@ import { CurrentUserService }from './user/current-user-service.service';
 @Component({
   selector: 'my-app',
   moduleId: module.id,
-  templateUrl: 'app.component.html',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 
 export class AppComponent { 

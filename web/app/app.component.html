@@ -1,28 +1,47 @@
-    <div style="text-align: center"> 
-      <div>
-                <p *ngIf=(this.currentUserService.getCurrentUser())> Current User: {{this.currentUserService.getCurrentUser().userName}} </p>
-      </div> 
-      <div >
-        <label> Select a User by Id: </label>
-        <input [(ngModel)]="displayedId" placeholder="id"  />
-        <button (click)="editDetails()">Edit Details</button>
-      <div>
-    
+<div style="text-align: center">
+  <div class="header">
+    <div class="sub-header-left">
+      Image Coming Here Soon!
+    </div>
+    <div class="sub-header-center">
+      Title for a New Application 
+    </div>
+    <div class="sub-header-right">
+      <p *ngIf=(this.currentUserService.getCurrentUser())>
+
+        Welcome {{this.currentUserService.getCurrentUser().userName}}!
+        <br>
+        <a href="/logout">Logout</a>
+      </p>
+      <p *ngIf=(!this.currentUserService.getCurrentUser())>
+        <br>
+        <a href="/login">Login</a>
+      </p>
+    </div>
+    <br style="clear:both" />
+  </div>
+  <br>
+  <div>
+    <label> Select a User by Id: </label>
+    <input [(ngModel)]="displayedId" placeholder="id" />
+    <button (click)="editDetails()">Edit Details</button>
+    <div>
+
       <p>... OR ... </p>
       <br>
       <button (click)="createNew()">Create New User</button>
       <br>
       <p>... OR ... </p>
-      <br>      
-      <p *ngIf=(this.currentUserService.getCurrentUser())> 
-        Current User: {{this.currentUserService.getCurrentUser().userName}} 
+      <br>
+      <p *ngIf=(this.currentUserService.getCurrentUser())>
+        Welcome: {{this.currentUserService.getCurrentUser().userName}}
+        <br> Current User Email : {{this.currentUserService.getCurrentUser().emailAddress}}
         <br>
-        Current User Email : {{this.currentUserService.getCurrentUser().emailAddress}}
-      </p>
-      <button (click)="loginNow()">Go To Login</button>
-      <br>
-      <hr>
-      <br>
+        <a </p>
+
+          <br>
+          <hr>
+          <br>
     </div>
-    
+
     <router-outlet></router-outlet>
