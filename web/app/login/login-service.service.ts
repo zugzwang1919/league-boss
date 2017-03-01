@@ -4,6 +4,7 @@ import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { WolfeHttp } from '../common/wolfe-http';
+import { ServiceResponse } from '../common/service-response';
 import { CurrentUserService } from '../user/current-user-service.service';
 
 @Injectable()
@@ -12,7 +13,6 @@ export class LoginService {
   constructor(
     private http: WolfeHttp,
     private currentUserService: CurrentUserService,
-
   ) { }
 
   login(userName: String, password: String): Promise<Object> {
@@ -20,13 +20,25 @@ export class LoginService {
     return this.http.post('http://localhost:1919/login/', { "userName": userName, "password": password })
       .toPromise()
       .then((res: Response) => {
-        // Set the authorization token in local storage where subesequent calls can access it
+        // Save the login info in our currentUserService
         // Notice that angular has "de-capitalized the name of the header"... Weird
-        var token: string = res.headers.get('wolfe-authentication-token');
-        localStorage.setItem('Wolfe-Authentication-Token', token);
-        this.currentUserService.setCurrentUser(res.json().user);
-        return Promise.resolve(res.json().message)} )
-      .catch((error: Response) => Promise.reject(error.json().message))
+        this.currentUserService.currentUser = res.json().user;
+        this.currentUserService.wolfeAuthenticationToken = res.headers.get('wolfe-authentication-token');
+        return Promise.resolve(new ServiceResponse(res));
+      })
+      .catch((error: Response) => Promise.reject(new ServiceResponse(error)));
+  }
+
+  logout() {
+    console.log("Inside LoginService: Attemption to log out")
+    return this.http.post('http://localhost:1919/logout/', { })
+    .toPromise()
+    .then((res: Response) => {
+      this.currentUserService.currentUser = null;
+      this.currentUserService.wolfeAuthenticationToken = null;
+      return Promise.resolve(null);
+    })
+    .catch((error: Response) => Promise.reject(new ServiceResponse(error)))
   }
 
 }

@@ -16,7 +16,7 @@
           <label> user name: </label>
         </td>
         <td>
-          <input [(ngModel)]="userName" placeholder="user name"/>
+          <input type="text" [(ngModel)]="userName" placeholder="user name"/>
         </td>
       </tr>
 
@@ -25,7 +25,7 @@
           <label> password: </label>
         </td>
         <td>
-          <input [(ngModel)]="password" placeholder="password"/>
+          <input type="text" [(ngModel)]="password" placeholder="password"/>
         </td>
       </tr>
 
@@ -36,7 +36,12 @@
   <br>  
 
   <div>
-    <button (click)="login()">Login</button>
+    <button ng-model="button"  (click)="login()">Login</button>
   </div>
   
+  <br>
+  <br>
+  <br>
+  <br>
+  <a href='/user/create'>Create a New Account</a>
 </div>

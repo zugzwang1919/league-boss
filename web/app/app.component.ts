@@ -23,8 +23,7 @@ export class AppComponent {
 
 
   ngOnInit(): void {
-    this.displayedId = "";
-    
+    this.displayedId = "";    
   }
 
   

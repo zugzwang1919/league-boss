@@ -5,6 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { WolfeHttp } from '../common/wolfe-http';
 import { User } from "./user";
+import { ServiceResponse } from '../common/service-response';
 
 
 @Injectable()
@@ -26,24 +27,24 @@ export class UserService {
     })
   }
 
-  createUser(user: User): Promise<String> {
+  createUser(user: User): Promise<ServiceResponse> {
     console.log("Inside UserService:  Beginning 'Create User' process");
     return new Promise(resolve => {
-      this.http.post('http://localhost:1919/user/create', user)
+      this.http.post('http://localhost:1919/user', user)
         .toPromise()
-        .then((res: Response) => resolve(this.getMessageFromHttpResponse(res)))
-        .catch((error: Response) => resolve(this.getMessageFromHttpResponse(error))
+        .then((res: Response) => resolve(new ServiceResponse(res)))
+        .catch((res: Response) => resolve(new ServiceResponse(res))
         )
     })
   }
 
-  updateUser(user: User): Promise<String> {
+  updateUser(user: User): Promise<ServiceResponse> {
     console.log("Inside UpdateService:  Beginning 'Update User' process");
     return new Promise(resolve => {
       this.http.put('http://localhost:1919/user/' + user.id, user)
         .toPromise()
-        .then((res: Response) => resolve(this.getMessageFromHttpResponse(res)))
-        .catch((error: Response) => resolve(this.getMessageFromHttpResponse(error))
+        .then((res: Response) => resolve(new ServiceResponse(res)))
+        .catch((res: Response) => resolve(new ServiceResponse(res))
         )
     })
   }

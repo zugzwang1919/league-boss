@@ -14,11 +14,11 @@ module.exports = {
     var errorMessage = "Login Credentials were not correct.";
     var foundUser;
 
-    return UserLogic.findUserByUserName( loginData.userName )
+    return UserLogic.findUserByUserName(loginData.userName)
       .then(user => {
         if (user != null && user.password === loginData.password) {
           user.authenticationToken = guid;
-          user.authenticationTokenExpiration = DateUtils.createAuthenticationExpirationDate(); 
+          user.authenticationTokenExpiration = DateUtils.createAuthenticationExpirationDate();
           foundUser = user;
           return UserLogic.updateUser(user);
         }
@@ -37,5 +37,24 @@ module.exports = {
         return Promise.reject(LogicErrors.LOGIN_FAILED);
       })
 
+  },
+
+  logout: function (userName) {
+    return UserLogic.findUserByUserName(userName)
+      .then(user => {
+        user.authenticationTokenExpiration = new Date();
+        return UserLogic.updateUser(user);
+      })
+      .then(junk => {
+        return Promise.resolve(null);
+      })
+      .catch(err => {
+        // If an error occurred, get it into a proper format and log it
+        var logicError = LogicErrors.firmUpError(err);
+        console.log("login-logic.logout() - " + logicError.message);
+        // If any error occurred, just indicate that the logout unexpectedly failed 
+        return Promise.reject(logicError);
+      })
   }
+
 }

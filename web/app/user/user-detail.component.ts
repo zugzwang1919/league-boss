@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 
 import { User }         from './user';
 import { UserService }  from './user-service.service';
+import { ServiceResponse } from '../common/service-response';
 
 
 @Component({
@@ -58,18 +59,18 @@ export class UserDetailComponent {
   createNewUser(): void {
     console.log("Beginning the process of creating a new user.");
     this.userService.createUser(this.user)
-      .then(message => {
-        console.log("Message received from create = " + message);
-        this.message = message;
+      .then((serviceResponse : ServiceResponse) => {
+        console.log("Message received from create = " + serviceResponse.getMessage());
+        this.message = serviceResponse.getMessage();
       })
   }
   
   updateUser(): void {
     console.log("Beginning the process of updating a user.");
     this.userService.updateUser(this.user)
-      .then(message => {
-        console.log("Message received from update = " + message);
-        this.message = message;
+      .then( (serviceResponse : ServiceResponse) => {
+        console.log("Message received from update = " + serviceResponse.getMessage());
+        this.message = serviceResponse.getMessage();
       })
   }
 

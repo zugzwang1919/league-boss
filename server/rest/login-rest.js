@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var LoginLogic = require('../logic/login-logic');
+var UserLogic = require('../logic/user-logic');
 var RestResponse = require('./rest-response');
 
 router.post('/login', function (req, res) {
@@ -18,4 +19,20 @@ router.post('/login', function (req, res) {
     // Anytime login fails, we send back the same thing (not trying to provide too much info)
     .catch(errorMessage => { RestResponse.send401(res) });
 });
+
+router.post('/logout', function (req, res) {
+  console.log("login-rest logout requested: ");
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+  .then(user => {
+    return LoginLogic.logout(user.userName)
+  })
+  .then( junk => {
+    RestResponse.send200(res);
+  })
+  .catch( error => {
+    RestResponse.sendAppropriateResponse(res, error)
+  })
+  
+});
+
 module.exports = router;

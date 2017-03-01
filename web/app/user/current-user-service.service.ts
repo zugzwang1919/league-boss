@@ -5,14 +5,7 @@ import { User } from "./user";
 @Injectable()
 export class CurrentUserService {
 
-  private currentUser: User;
+  public currentUser: User;
+  public wolfeAuthenticationToken: string;
 
-
-  setCurrentUser(newCurrentUser: User): void {
-    this.currentUser = newCurrentUser;
-  }
-
-  getCurrentUser(newCurrentUser: User): User {
-    return this.currentUser;
-  }
 } 

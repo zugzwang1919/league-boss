@@ -1,15 +1,51 @@
 /* Master Styles */
-body {
+body, button {
   color: darkslategray;
-  font-family: "Roboto","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-family: Lato,Helvetica,Arial,"Lucida Grande",sans-serif;
 }
-h1 {
-  font-size: 250%;
+
+h1, h2, h3, h4 {
+  font-weight: normal;
 }
-h2, h3 {
-  font-weight: lighter;
+
+input[type=text], textarea {
+  border: 0;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: gray;
 }
-body {
+
+
+input[type=text]:focus, textarea:focus {
+  outline: 0;
+  border: 0;
+  border-bottom: 1px solid black;
+}
+
+button {
+  background: lightskyblue;
+  border:1px solid lightskyblue;
+  border-radius:0px;
+  font-size: 1em;
+  height: 2em;
+  width: 8em;
+}
+button:disabled {
+  background: lightgray;
+  border: 1px solid lightgray;
+  color: gray;
+}
+
+button:hover {
+  background: dodgerblue;
+  border:1px solid dodgerblue;
+  color: white;
+}
+button:active {
+  background: royalblue;
+  border:1px solid royalblue;
+  color: white;
+  transform: scale(0.95);  
 }
 
 div.message-box {
