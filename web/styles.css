@@ -43,7 +43,7 @@ button:hover {
 button:disabled {
   background: lightgray;
   border: 1px solid lightgray;
-  color: white;
+  color: gainsboro;
 }
 
 
