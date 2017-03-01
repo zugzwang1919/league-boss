@@ -30,17 +30,23 @@ button {
   height: 2em;
   width: 8em;
 }
-button:disabled {
-  background: lightgray;
-  border: 1px solid lightgray;
-  color: gray;
-}
+
+/* Note: Place hover before disabled so that if a 
+user hovers over a disabled button, disable will have priority */
 
 button:hover {
   background: dodgerblue;
   border:1px solid dodgerblue;
   color: white;
 }
+
+button:disabled {
+  background: lightgray;
+  border: 1px solid lightgray;
+  color: white;
+}
+
+
 button:active {
   background: royalblue;
   border:1px solid royalblue;

@@ -36,12 +36,12 @@
   <br>  
 
   <div>
-    <button ng-model="button"  (click)="login()">Login</button>
+    <button [disabled]="!userName || !password"  (click)="login()">Login</button>
   </div>
   
   <br>
   <br>
   <br>
   <br>
-  <a href='/user/create'>Create a New Account</a>
+  <a [routerLink]="['/user/create']">Create a New Account</a>
 </div>
