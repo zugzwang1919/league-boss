@@ -5,11 +5,14 @@
 var DataModel = require('./model/dataModel');
 var USER = DataModel.USER;
 var LEAGUE = DataModel.LEAGUE;
+var SEASON = DataModel.SEASON;
 
 
 var user1;
 var user2;
 var league1;
+var league2;
+var season1;
 
 
 var sequelize = require('./model/index');
@@ -22,20 +25,34 @@ sequelize.sync({ force: true })
       emailAddress: 'russ.wolfe@gmail.com',
     })
   })
-  .then(user => { 
-    user1 = user 
-  })
-  .then(function () {
+  .then(user => {
+    user1 = user;
     return USER.create({
       userName: 'TB',
       password: 'TB',
       emailAddress: 'tom.brady@gmail.com',
     })
   })
-  .then(user => { 
-    user2 = user 
+  .then(user => {
+    user2 = user;
+    SEASON.create({
+      seasonName: 'College Football 2017-18',
+      beginDate: '2017/08/22',
+      endDate: '2018/01/08'
+    })
+    SEASON.create({
+      seasonName: 'NBA 2017-18',
+      beginDate: '2017/10/02',
+      endDate: '2018/06/12'
+    })
+    return SEASON.create({
+      seasonName: 'NFL 2017-18',
+      beginDate: '2017/09/01',
+      endDate: '2018/02/10'
+    })
   })
-  .then(function () {
+  .then(season => {
+    season1 = season;
     return LEAGUE.create({
       leagueName: 'NFL Chumps',
       description: 'The worst collection ever of NFL enthusiasts.'
@@ -43,14 +60,23 @@ sequelize.sync({ force: true })
   })
   .then(league => {
     league1 = league;
-    return league1.addPlayer(user1);
+    league1.addPlayer(user1);
+    league1.addSeason(season1);
+    league1.addPlayer(user2);
+    league1.addAdmin(user2);
+    return LEAGUE.create({
+      leagueName: 'Winners not Weiners',
+      description: 'Yeah, we are that good.'
+    })
   })
-  .then(junk => {
-    return league1.addPlayer(user2);
+  .then(league => {
+    league2 = league;
+    league2.addPlayer(user1);
+    league2.addSeason(season1);
+    league2.addPlayer(user2);
+    return league2.addAdmin(user2);
   })
-  .then(junk => {
-    return league1.addAdmin(user2);
-  }).catch(err => {
+  .catch(err => {
     console.log("error name = " + err.name + ".  Error Message = " + err.message)
   })
 
@@ -85,6 +111,8 @@ var userRoutes = require('./rest/user-rest');
 app.use('/user', userRoutes);
 var userRoutes = require('./rest/league-rest');
 app.use('/league', userRoutes);
+var seasonRoutes = require('./rest/season-rest');
+app.use("/season", seasonRoutes);
 var loginRoutes = require('./rest/login-rest');
 app.use("/", loginRoutes);
 
