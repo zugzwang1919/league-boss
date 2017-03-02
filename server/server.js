@@ -15,8 +15,8 @@ var league2;
 var season1;
 
 
-var sequelize = require('./model/index');
 
+var sequelize = require('./model/index');
 sequelize.sync({ force: true })
   .then(function () {
     return USER.create({
@@ -60,8 +60,8 @@ sequelize.sync({ force: true })
   })
   .then(league => {
     league1 = league;
-    league1.addPlayer(user1);
     league1.addSeason(season1);
+    league1.addPlayer(user1);
     league1.addPlayer(user2);
     league1.addAdmin(user2);
     return LEAGUE.create({
@@ -71,8 +71,8 @@ sequelize.sync({ force: true })
   })
   .then(league => {
     league2 = league;
-    league2.addPlayer(user1);
     league2.addSeason(season1);
+    league2.addPlayer(user1);
     league2.addPlayer(user2);
     return league2.addAdmin(user2);
   })
