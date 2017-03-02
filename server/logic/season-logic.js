@@ -7,7 +7,9 @@ var LogicErrors = require('./logic-error');
 module.exports = {
 
   getSeasons: function() {
-    return Season.findAll()
+    return Season.findAll( {
+      order: [['beginDate','ASC']]
+    })
     .catch(err => { 
       return Promise.reject(buildCleanError(err)); 
     })
