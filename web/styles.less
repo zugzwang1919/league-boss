@@ -1,72 +1,85 @@
+@import url(./globals.less);
+
+
 /* Master Styles */
-body,
-button {
+body, button {
   color: gray;
-  font-family: Lato, Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: Lato,Helvetica,Arial,"Lucida Grande",sans-serif;
 }
-h1,
-h2,
-h3,
-h4 {
+
+h1, h2, h3, h4 {
   font-weight: normal;
 }
+
 a {
   color: lightgray;
 }
+
 a:hover {
   color: gray;
 }
-input[type=text],
-textarea {
+
+input[type=text], textarea {
   border: 0;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: lightgrey;
 }
-input[type=text]:focus,
-textarea:focus {
+
+
+input[type=text]:focus, textarea:focus {
   outline: 0;
   border: 0;
   border-bottom: 1px solid gray;
 }
+
 button {
-  background: #07b;
-  border: 1px solid #07b;
+  background: @primary-color;
+  border:1px solid @primary-color;
   color: white;
-  border-radius: 5px;
+  border-radius:5px;
   font-size: 1em;
   height: 2.5em;
   width: 10em;
 }
+
 /* Note: Place hover before disabled so that if a 
 user hovers over a disabled button, disable will have priority */
+
 button:hover {
-  background: #005788;
-  border: 0px solid #005788;
+  background: @primary-color-dark;
+  border:0px solid @primary-color-dark;
   color: white;
 }
+
 button:disabled {
-  background: #eef9ff;
-  border: 0px solid #eef9ff;
+  background: @primary-color-lightest;
+  border: 0px solid @primary-color-lightest;
   color: gainsboro;
 }
+
+
 button:active {
-  background: #003655;
-  border: 0px solid #003655;
+  background: @primary-color-darker;
+  border:0px solid @primary-color-darker;
   color: white;
-  transform: scale(0.95);
+  transform: scale(0.95);  
 }
+
 div.message-box {
   width: 30em;
   margin: 0 auto;
   background: lemonchiffon;
   color: black;
   border-style: solid;
-  border-width: .1em;
+  border-width: .1em; 
 }
+
 table.key-value td {
   padding: .2em;
 }
+
 td.key {
   text-align: right;
 }
+

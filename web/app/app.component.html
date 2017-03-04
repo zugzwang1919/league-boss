@@ -1,22 +1,28 @@
 <div style="text-align: center">
   <div class="header">
     <div class="sub-header-left">
-      Image Coming Here Soon!
+      <img src="/resources/images/wolf-silhouette.png" height="100%">
     </div>
     <div class="sub-header-center">
-      Title for a New Application
+      Lorem Ipsum Dolor sit Amet
     </div>
     <div class="sub-header-right">
-      <p *ngIf=(this.currentUserService.currentUser)>
+      <div *ngIf=(this.currentUserService.currentUser)>
+        <div class='username'>
+          {{this.currentUserService.currentUser.userName}}
+        </div>
+        <div class='user-actions'>
+          <a [routerLink]="['/user/' + this.currentUserService.currentUser.id]">MY PROFILE</a>
+          <br>
+          <a [routerLink]="['/logout']">LOGOUT</a>
+          <br>
+        </div>
+      </div>
+      <div class="sign-in" *ngIf=(!this.currentUserService.currentUser)>
 
-        Welcome {{this.currentUserService.currentUser.userName}}!
-        <br>
-        <a [routerLink]="['/logout']">Logout</a>
-      </p>
-      <p *ngIf=(!this.currentUserService.currentUser)>
-        <br>
-        <a [routerLink]="['/login']">Login</a>
-      </p>
+        <a [routerLink]="['/login']">SIGN IN</a>
+
+      </div>
     </div>
     <br style="clear:both" />
   </div>
@@ -29,7 +35,7 @@
       <br>
       <button (click)="editDetails()">Edit Details</button>
     </div>
-    <div class="content" style="text-align: center">
+    <div class="content">
       <router-outlet>
       </router-outlet>
     </div>
