@@ -1,7 +1,9 @@
+/* #449bc7 #07b */
+/* wolfe-software #0099da */
 /* Master Styles */
 body,
 button {
-  color: gray;
+  color: #8080a0;
   font-family: Lato, Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 h1,
@@ -11,27 +13,27 @@ h4 {
   font-weight: normal;
 }
 a {
-  color: lightgray;
+  color: #0099da;
 }
 a:hover {
-  color: gray;
+  color: #0087c1;
 }
 input[type=text],
 textarea {
   border: 0;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: lightgrey;
+  border-bottom-color: #a6a6bc;
 }
 input[type=text]:focus,
 textarea:focus {
   outline: 0;
   border: 0;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #717195;
 }
 button {
-  background: #07b;
-  border: 1px solid #07b;
+  background: #0099da;
+  border: 1px solid #0099da;
   color: white;
   border-radius: 5px;
   font-size: 1em;
@@ -41,26 +43,26 @@ button {
 /* Note: Place hover before disabled so that if a 
 user hovers over a disabled button, disable will have priority */
 button:hover {
-  background: #005788;
-  border: 0px solid #005788;
+  background: #0087c1;
+  border: 0px solid #0087c1;
   color: white;
 }
 button:disabled {
-  background: #eef9ff;
-  border: 0px solid #eef9ff;
-  color: gainsboro;
+  background: #c1ecff;
+  border: 0px solid #c1ecff;
+  color: white;
 }
 button:active {
-  background: #003655;
-  border: 0px solid #003655;
+  background: #0075a7;
+  border: 0px solid #0075a7;
   color: white;
-  transform: scale(0.95);
+  /* transform: scale(0.99); */
 }
 div.message-box {
   width: 30em;
   margin: 0 auto;
-  background: lemonchiffon;
-  color: black;
+  background: #da4100;
+  color: white;
   border-style: solid;
   border-width: .1em;
 }

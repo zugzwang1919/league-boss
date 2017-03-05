@@ -1,8 +1,8 @@
-button {
-  background: royalblue;
-}
+/* #449bc7 #07b */
+/* wolfe-software #0099da */
 div.header {
-  background: white;
+  color: #f2f2f5;
+  background: #0099da;
   vertical-align: middle;
   height: 100px;
 }
@@ -16,7 +16,6 @@ div.sub-header-left {
 }
 div.sub-header-center {
   float: left;
-  color: gray;
   height: 60px;
   line-height: 60px;
   font-size: 1.7em;
@@ -32,9 +31,14 @@ div.sub-header-right {
   padding-top: 20px;
   padding-right: 20px;
   font-size: 1em;
-  color: lightgrey;
   text-align: right;
   /* background: lightpink; */
+}
+div.sub-header-right a {
+  color: #f2f2f5;
+}
+div.sub-header-right a:hover {
+  color: white;
 }
 div.sub-header-right .sign-in {
   height: 60px;
@@ -59,10 +63,137 @@ div.sub-header-right .user-actions a {
 div.navigation {
   width: 200px;
   float: left;
-  background: lightsalmon;
+  /* background: @complementary-color-lighter; */
 }
 div.content {
   text-align: center;
   float: left;
   margin-left: 12em;
+  /* background: @our-gray-lighter; */
+}
+div.primary-lightest {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #c1ecff;
+}
+div.primary-lighter {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #74d6ff;
+}
+div.primary-light {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #27bfff;
+}
+div.primary {
+  float: left;
+  width: 40%;
+  height: 100%;
+  background-color: #0099da;
+}
+div.primary-dark {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #0087c1;
+}
+div.primary-darker {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #0075a7;
+}
+div.primary-darkest {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #00638e;
+}
+div.complementary-lightest {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #ffd3c1;
+}
+div.complementary-lighter {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #ff9d74;
+}
+div.complementary-light {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #ff6827;
+}
+div.complementary {
+  float: left;
+  width: 40%;
+  height: 100%;
+  background-color: #da4100;
+}
+div.complementary-dark {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #c13900;
+}
+div.complementary-darker {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #a73200;
+}
+div.complementary-darkest {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #8e2a00;
+}
+div.our-gray-lightest {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #f2f2f5;
+}
+div.our-gray-lighter {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #ccccd9;
+}
+div.our-gray-light {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #a6a6bc;
+}
+div.our-gray {
+  float: left;
+  width: 40%;
+  height: 100%;
+  background-color: #8080a0;
+}
+div.our-gray-dark {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #717195;
+}
+div.our-gray-darker {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #656588;
+}
+div.our-gray-darkest {
+  float: left;
+  width: 10%;
+  height: 100%;
+  background-color: #5b5b79;
 }

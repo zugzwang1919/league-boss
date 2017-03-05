@@ -3,7 +3,7 @@
 
 /* Master Styles */
 body, button {
-  color: gray;
+  color: @our-gray;
   font-family: Lato,Helvetica,Arial,"Lucida Grande",sans-serif;
 }
 
@@ -12,25 +12,25 @@ h1, h2, h3, h4 {
 }
 
 a {
-  color: lightgray;
+  color: @primary-color;
 }
 
 a:hover {
-  color: gray;
+  color:@primary-color-dark;
 }
 
 input[type=text], textarea {
   border: 0;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: lightgrey;
+  border-bottom-color: @our-gray-light;
 }
 
 
 input[type=text]:focus, textarea:focus {
   outline: 0;
   border: 0;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid @our-gray-dark;
 }
 
 button {
@@ -55,7 +55,7 @@ button:hover {
 button:disabled {
   background: @primary-color-lightest;
   border: 0px solid @primary-color-lightest;
-  color: gainsboro;
+  color: white;
 }
 
 
@@ -63,14 +63,14 @@ button:active {
   background: @primary-color-darker;
   border:0px solid @primary-color-darker;
   color: white;
-  transform: scale(0.95);  
+  /* transform: scale(0.99); */  
 }
 
 div.message-box {
   width: 30em;
   margin: 0 auto;
-  background: lemonchiffon;
-  color: black;
+  background: @complementary-color;
+  color: white;
   border-style: solid;
   border-width: .1em; 
 }
