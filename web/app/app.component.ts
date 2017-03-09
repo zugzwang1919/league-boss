@@ -39,5 +39,8 @@ export class AppComponent {
     this.router.navigate(['/login']);
   }
 
+  createNewLeague(): void {
+    this.router.navigate(['/league/create']);    
+  }
   
 }

@@ -35,7 +35,11 @@
       <input [(ngModel)]="displayedId" placeholder="id" />
       <br>
       <br>
-      <button (click)="editDetails()">Edit Details</button>
+      <button [disabled]="!this.currentUserService.currentUser" (click)="editDetails()">Edit Details</button>
+      <br>
+      <br>
+      <button [disabled]="!this.currentUserService.currentUser" (click)="createNewLeague()">Create League</button>
+      
     </div>
     <div class="content">
       <router-outlet>

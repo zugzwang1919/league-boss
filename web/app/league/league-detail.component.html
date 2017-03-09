@@ -1,0 +1,55 @@
+<div class="sub-content">
+  <div *ngIf="(action != 'create')">
+    <h2>Profile for {{league.leagueName}}</h2>
+  </div>
+  <div class="message-box" *ngIf="message">
+    <h4>{{message}}</h4>
+  </div>
+  <div *ngIf="(action == 'create')">
+    <h2>Create New League</h2>
+  </div>
+  <div>
+    <table style="margin: 0 auto" class="key-value">
+      <tr *ngIf="(action != 'create')">
+        <td class="key">
+          <label>id: </label>
+        </td>
+        <td>
+          {{league.id}}
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">
+          <label> league name: </label>
+        </td>
+        <td>
+          <input type="text" [(ngModel)]="league.leagueName" placeholder="league name" />
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">
+          <label> description: </label>
+        </td>
+        <td>
+          <input type="text" [(ngModel)]="league.description" placeholder="description" />
+        </td>
+      </tr>
+    </table>
+    <div *ngFor="let season of possibleSeasons">
+      <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id />{{season.name}}
+      <br>
+    </div>
+
+
+  </div>
+  <br>
+  <div *ngIf="(action == 'edit')">
+    <button (click)="updateLeague()">Update</button>
+  </div>
+  <div *ngIf="(action == 'create')">
+    <button (click)="createNewLeague()">Create</button>
+  </div>
+
+</div>
