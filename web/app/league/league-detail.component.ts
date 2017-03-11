@@ -11,6 +11,7 @@ import { ServiceResponse } from '../common/service-response';
 @Component({
   moduleId: module.id,
   templateUrl: 'league-detail.component.html',
+  styleUrls: ['./league-detail.component.css']
 })
 
 
@@ -23,6 +24,7 @@ export class LeagueDetailComponent {
 
   // Referential Data
   possibleSeasons: Object[] = require('../../interface/season.js');
+  possibleLeagueTypes: Object[] = require('../../interface/league-type.js');
 
   constructor(
     private route: ActivatedRoute,

@@ -1,5 +1,6 @@
 /**/node_modules
 /**/*.log
+/**/*.log.*
 
 # ignore generated .js & .map files
 # i'm sure this will eventually bite me

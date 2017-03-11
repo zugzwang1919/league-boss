@@ -1,4 +1,4 @@
-<div class="sub-content">
+<div class="centered-60">
   <div *ngIf="(action != 'create')">
     <h2>Profile for {{league.leagueName}}</h2>
   </div>
@@ -6,10 +6,10 @@
     <h4>{{message}}</h4>
   </div>
   <div *ngIf="(action == 'create')">
-    <h2>Create New League</h2>
+    <h1>Create New League</h1>
   </div>
   <div>
-    <table style="margin: 0 auto" class="key-value">
+    <table class="key-value">
       <tr *ngIf="(action != 'create')">
         <td class="key">
           <label>id: </label>
@@ -37,14 +37,54 @@
         </td>
       </tr>
     </table>
-    <div *ngFor="let season of possibleSeasons">
-      <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id />{{season.name}}
+    <!--
+    <div>
       <br>
+      <fieldset>
+        <legend>Season Type</legend>
+        <table class="layout">
+          <tr *ngFor="let season of possibleSeasons">
+            <td>
+              <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group"/>{{season.name}}
+            </td>
+          </tr>
+        </table>
+      </fieldset>
     </div>
-
+    <div>
+      <br>
+      <fieldset>
+        <legend>League Type</legend>
+        <table class="layout">
+          <tr *ngFor="let leagueType of possibleLeagueTypes">
+            <td>
+              <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id  name="league-type-group"/>{{leagueType.name}}
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+    </div>
+    -->
+    <br>
+    <table class="layout-with-outline">
+      <tr><td class="heading">Season</td></tr>
+      <tr *ngFor="let season of possibleSeasons">
+        <td>
+          <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
+        </td>
+      </tr>
+      <tr><td>&nbsp;</td></tr>
+      <tr><td class="heading">League Type</td></tr>
+      <tr *ngFor="let leagueType of possibleLeagueTypes">
+        <td>
+          <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
+        </td>
+      </tr>
+    </table>
 
   </div>
   <br>
+
   <div *ngIf="(action == 'edit')">
     <button (click)="updateLeague()">Update</button>
   </div>

@@ -2,15 +2,10 @@
 /* wolfe-software #0099da */
 /* Master Styles */
 body,
-button {
+button,
+input {
   color: #8080a0;
   font-family: Lato, Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-h1,
-h2,
-h3,
-h4 {
-  font-weight: normal;
 }
 a {
   color: #0099da;
@@ -58,6 +53,20 @@ button:active {
   color: white;
   /* transform: scale(0.99); */
 }
+table {
+  margin: 0 auto;
+}
+fieldset {
+  margin: 0 auto;
+  border: 1px solid #f2f2f5;
+}
+legend {
+  text-align: left;
+}
+div.centered-60 {
+  width: 60%;
+  margin: 0 auto;
+}
 div.message-box {
   width: 30em;
   margin: 0 auto;
@@ -71,4 +80,11 @@ table.key-value td {
 }
 td.key {
   text-align: right;
+}
+table.layout {
+  border: 0px;
+}
+table.layout-with-outline {
+  border: 1px solid #f2f2f5;
+  padding: 10 60;
 }

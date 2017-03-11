@@ -2,14 +2,11 @@
 
 
 /* Master Styles */
-body, button {
+body, button, input {
   color: @our-gray;
   font-family: Lato,Helvetica,Arial,"Lucida Grande",sans-serif;
 }
 
-h1, h2, h3, h4 {
-  font-weight: normal;
-}
 
 a {
   color: @primary-color;
@@ -66,6 +63,25 @@ button:active {
   /* transform: scale(0.99); */  
 }
 
+table {
+  margin: 0 auto; // Assume that tables will always want to be centered in their contatining div
+}
+
+fieldset {
+  margin: 0 auto;
+  border: 1px solid @our-gray-lightest;
+}
+
+legend {
+  text-align: left;
+}
+
+div.centered-60 {
+  width: 60%;
+  margin: 0 auto;
+}
+
+
 div.message-box {
   width: 30em;
   margin: 0 auto;
@@ -83,3 +99,11 @@ td.key {
   text-align: right;
 }
 
+table.layout {
+  border: 0px;
+}
+
+table.layout-with-outline {
+  border: 1px solid @our-gray-lightest;
+  padding: 10 60;
+}
