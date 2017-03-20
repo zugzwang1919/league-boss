@@ -17,36 +17,39 @@ export class UserService {
 
   getUser(id: Number): Promise<User> {
     console.log("Inside UserService: Starting to look for User with an id of " + id);
-    //return Promise.resolve(this.buildUserFromHttpResponse(undefined));
-
-    return new Promise(resolve => {
-      this.http.get('http://localhost:1919/user/' + id)
-        .toPromise()
-        .then((res: Response) => resolve(this.buildUserFromHttpResponse(id, res)))
-        .catch((error: Response) => resolve(new User()))
-    })
+    return this.http.get('http://localhost:1919/user/' + id)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(this.buildUserFromHttpResponse(id, res))
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
   }
 
   createUser(user: User): Promise<ServiceResponse> {
     console.log("Inside UserService:  Beginning 'Create User' process");
-    return new Promise(resolve => {
-      this.http.post('http://localhost:1919/user', user)
-        .toPromise()
-        .then((res: Response) => resolve(new ServiceResponse(res)))
-        .catch((res: Response) => resolve(new ServiceResponse(res))
-        )
-    })
+
+    return this.http.post('http://localhost:1919/user', user)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(new ServiceResponse(res))
+      })
+      .catch((res: Response) => {
+        return Promise.resolve(new ServiceResponse(res))
+      })
   }
 
   updateUser(user: User): Promise<ServiceResponse> {
     console.log("Inside UpdateService:  Beginning 'Update User' process");
-    return new Promise(resolve => {
-      this.http.put('http://localhost:1919/user/' + user.id, user)
-        .toPromise()
-        .then((res: Response) => resolve(new ServiceResponse(res)))
-        .catch((res: Response) => resolve(new ServiceResponse(res))
-        )
-    })
+    return this.http.put('http://localhost:1919/user/' + user.id, user)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(new ServiceResponse(res))
+      })
+      .catch((res: Response) => {
+        return Promise.resolve(new ServiceResponse(res))
+      })
   }
 
   private buildUserFromHttpResponse(id: Number, res: Response): User {

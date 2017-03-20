@@ -62,7 +62,7 @@ export class LoginComponent {
       .catch((serviceResponse: ServiceResponse) => {
         console.log("Error message received from failed login  = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
-      })
+      })  
   }
 
   logout(): void {

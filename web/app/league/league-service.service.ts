@@ -18,34 +18,39 @@ export class LeagueService {
   getLeague(id: Number): Promise<League> {
     console.log("Inside LeagueService: Starting to look for League with an id of " + id);
 
-    return new Promise(resolve => {
-      this.http.get('http://localhost:1919/league/' + id)
-        .toPromise()
-        .then((res: Response) => resolve(new ServiceResponse(res)))
-        .catch((res: Response) => resolve(new ServiceResponse(res)))
-    })
+    return this.http.get('http://localhost:1919/league/' + id)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
   }
 
   createLeague(league: League): Promise<ServiceResponse> {
     console.log("Inside LeagueService:  Beginning 'Create League' process");
-    return new Promise(resolve => {
-      this.http.post('http://localhost:1919/league', league)
-        .toPromise()
-        .then((res: Response) => resolve(new ServiceResponse(res)))
-        .catch((res: Response) => resolve(new ServiceResponse(res))
-        )
-    })
+    return this.http.post('http://localhost:1919/league', league)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(new ServiceResponse(res))
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
   }
 
   updateLeague(league: League): Promise<ServiceResponse> {
     console.log("Inside LeagueService:  Beginning 'Update League' process");
-    return new Promise(resolve => {
-      this.http.put('http://localhost:1919/league/' + league.id, league)
-        .toPromise()
-        .then((res: Response) => resolve(new ServiceResponse(res)))
-        .catch((res: Response) => resolve(new ServiceResponse(res))
-        )
-    })
+    return this.http.put('http://localhost:1919/league', league)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(new ServiceResponse(res))
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
   }
+
 
 }

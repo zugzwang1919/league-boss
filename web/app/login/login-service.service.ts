@@ -26,19 +26,23 @@ export class LoginService {
         this.currentUserService.wolfeAuthenticationToken = res.headers.get('wolfe-authentication-token');
         return Promise.resolve(new ServiceResponse(res));
       })
-      .catch((error: Response) => Promise.reject(new ServiceResponse(error)));
+      .catch((error: Response) => {
+        return Promise.reject(new ServiceResponse(error))
+      });
   }
 
-  logout() {
+  logout(): Promise<Object> {
     console.log("Inside LoginService: Attemption to log out")
-    return this.http.post('http://localhost:1919/logout/', { })
-    .toPromise()
-    .then((res: Response) => {
-      this.currentUserService.currentUser = null;
-      this.currentUserService.wolfeAuthenticationToken = null;
-      return Promise.resolve(null);
-    })
-    .catch((error: Response) => Promise.reject(new ServiceResponse(error)))
+    return this.http.post('http://localhost:1919/logout/', {})
+      .toPromise()
+      .then((res: Response) => {
+        this.currentUserService.currentUser = null;
+        this.currentUserService.wolfeAuthenticationToken = null;
+        return Promise.resolve(null);
+      })
+      .catch((error: Response) => {
+        return Promise.reject(new ServiceResponse(error))
+      })
   }
 
 }
