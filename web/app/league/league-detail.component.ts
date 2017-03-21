@@ -20,6 +20,7 @@ export class LeagueDetailComponent {
 
   league: League;
   leagueAdmins: User[];
+  leaguePlayers: User[];
 
   action: String;
   message: String;
@@ -59,6 +60,10 @@ export class LeagueDetailComponent {
             })
             .then(admins => {
               this.leagueAdmins = admins;
+              return this.leagueService.getPlayers(this.league.id)
+            })
+            .then(players => {
+              this.leaguePlayers = players;
             })
             .catch(serviceResponse => {
               this.setUpEmptyLeague();
@@ -96,6 +101,7 @@ export class LeagueDetailComponent {
     league.leagueTypeIndex = 0;
     this.league = league;
     this.leagueAdmins = null;
+    this.leaguePlayers =  null;
   }
 
 }

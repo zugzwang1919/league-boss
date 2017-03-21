@@ -57,6 +57,11 @@
       <tr *ngFor="let admin of leagueAdmins">
         <td>{{admin.userName}}</td>  
       </tr> 
+      <tr><td>&nbsp;</td></tr>
+      <tr><td class="heading">Players</td></tr>
+      <tr *ngFor="let player of leaguePlayers">
+        <td>{{player.userName}}</td>  
+      </tr> 
     </table>
   
   </div>

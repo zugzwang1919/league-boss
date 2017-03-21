@@ -67,5 +67,17 @@ export class LeagueService {
       })
   }
 
+  getPlayers(leagueId: Number): Promise<User[]> {
+    console.log("Inside LeagueService: Looking for players for league id = " + leagueId);
+      return this.http.get('http://localhost:1919/league/' + leagueId + '/player')
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
+  }
+
 
 }
