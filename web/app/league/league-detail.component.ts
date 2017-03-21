@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 
 import { League } from './league';
+import { User } from '../user/user';
 import { LeagueService } from './league-service.service';
 import { ServiceResponse } from '../common/service-response';
 
@@ -18,6 +19,7 @@ import { ServiceResponse } from '../common/service-response';
 export class LeagueDetailComponent {
 
   league: League;
+  leagueAdmins: User[];
 
   action: String;
   message: String;
@@ -36,12 +38,8 @@ export class LeagueDetailComponent {
     // Set some defaults immediately
     // We'll only execute this code when the user asks for a new UserDetailComponent to be created.
     // Modifications to the UserDetailComponent are handled in the subscribe() below.
-    this.league = new League();
-    this.league.leagueName = '';
-    this.league.description = '';
-    this.league.seasonTypeIndex = 1;
-    this.league.leagueTypeIndex = 0;
-
+    this.setUpEmptyLeague();
+    
     // Handle the request to begin the "Create", "Edit", (and someday "View") process
     // Based on the subscribe below, we'll constantly monitor changes to the URL 
     this.route.url
@@ -49,28 +47,29 @@ export class LeagueDetailComponent {
         this.message = null;
         console.log("Examining segments in URL within league-detail.component.  Segments = " + segments);
         if (segments[1].toString() == 'create') {
-          this.league.leagueName = '';
-          this.league.description = '';
-          this.league.seasonTypeIndex = 1;
-          this.league.leagueTypeIndex = 0;
+          this.setUpEmptyLeague();
           this.action = 'create';
         }
         else {
-          /*
-          this.userService.getUser(+segments[1])
-            .then(user => {
-              this.action = 'edit';
-              this.user = user;
-              if (user.id == null)
-                this.message = "The specified user could not be found.  Try another Id.";
+          this.action = 'edit';
+          this.leagueService.getLeague(+segments[1])
+            .then(league => {
+              this.league = league;
+              return this.leagueService.getAdmins(this.league.id)
             })
-          */
+            .then(admins => {
+              this.leagueAdmins = admins;
+            })
+            .catch(serviceResponse => {
+              this.setUpEmptyLeague();
+              this.message = serviceResponse.message;
+            })
         }
       })
   }
 
   createNewLeague(): void {
-    console.log("Beginning the process of creating a new user.");
+    console.log("Beginning the process of creating a new league.");
     this.leagueService.createLeague(this.league)
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from create = " + serviceResponse.getMessage());
@@ -79,12 +78,24 @@ export class LeagueDetailComponent {
   }
 
   updateLeague(): void {
-    console.log("Beginning the process of updating a user.");
+    console.log("Beginning the process of updating a league.");
     this.leagueService.updateLeague(this.league)
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from update = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
       })
+  }
+
+  setUpEmptyLeague() {
+    var league: League;
+    league = new League();
+    league.id = null;
+    league.leagueName = '';
+    league.description = '';
+    league.seasonTypeIndex = 0;
+    league.leagueTypeIndex = 0;
+    this.league = league;
+    this.leagueAdmins = null;
   }
 
 }

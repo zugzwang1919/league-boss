@@ -4,8 +4,11 @@ import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { WolfeHttp } from '../common/wolfe-http';
-import { League } from "./league";
+import { League } from './league';
+import { User } from '../user/user';
 import { ServiceResponse } from '../common/service-response';
+
+
 
 
 @Injectable()
@@ -46,6 +49,18 @@ export class LeagueService {
       .toPromise()
       .then((res: Response) => {
         return Promise.resolve(new ServiceResponse(res))
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
+  }
+
+  getAdmins(leagueId: Number): Promise<User[]> {
+    console.log("Inside LeagueService: Looking for admins for league id = " + leagueId);
+      return this.http.get('http://localhost:1919/league/' + leagueId + '/admin')
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
       })
       .catch((res: Response) => {
         return Promise.reject(new ServiceResponse(res))

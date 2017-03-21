@@ -14,7 +14,9 @@ import { CurrentUserService }from './user/current-user-service.service';
 })
 
 export class AppComponent { 
-  displayedId: String;
+  displayedUserId: String;
+  displayedLeagueId: String;
+  leaguueId
   constructor(
     private router: Router,
     private userService: UserService,
@@ -23,12 +25,13 @@ export class AppComponent {
 
 
   ngOnInit(): void {
-    this.displayedId = "";    
+    this.displayedUserId = "";    
+    this.displayedLeagueId = "";    
   }
 
   
-  editDetails(): void {
-    this.router.navigate(['/user', this.displayedId]);  
+  editUserDetails(): void {
+    this.router.navigate(['/user', this.displayedUserId]);  
   }
   
   createNew(): void {
@@ -39,6 +42,10 @@ export class AppComponent {
     this.router.navigate(['/login']);
   }
 
+  editLeagueDetails(): void {
+    this.router.navigate(['/league', this.displayedLeagueId]);  
+  }
+  
   createNewLeague(): void {
     this.router.navigate(['/league/create']);    
   }

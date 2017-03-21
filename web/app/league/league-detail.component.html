@@ -37,34 +37,6 @@
         </td>
       </tr>
     </table>
-    <!--
-    <div>
-      <br>
-      <fieldset>
-        <legend>Season Type</legend>
-        <table class="layout">
-          <tr *ngFor="let season of possibleSeasons">
-            <td>
-              <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group"/>{{season.name}}
-            </td>
-          </tr>
-        </table>
-      </fieldset>
-    </div>
-    <div>
-      <br>
-      <fieldset>
-        <legend>League Type</legend>
-        <table class="layout">
-          <tr *ngFor="let leagueType of possibleLeagueTypes">
-            <td>
-              <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id  name="league-type-group"/>{{leagueType.name}}
-            </td>
-          </tr>
-        </table>
-      </fieldset>
-    </div>
-    -->
     <br>
     <table class="layout-with-outline">
       <tr><td class="heading">Season</td></tr>
@@ -80,8 +52,13 @@
           <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
         </td>
       </tr>
+      <tr><td>&nbsp;</td></tr>
+      <tr><td class="heading">Admins</td></tr>
+      <tr *ngFor="let admin of leagueAdmins">
+        <td>{{admin.userName}}</td>  
+      </tr> 
     </table>
-
+  
   </div>
   <br>
 

@@ -32,10 +32,16 @@
       <h2> Navigation Div </h2>
       <label> Select a User by Id: </label>
       <br>
-      <input [(ngModel)]="displayedId" placeholder="id" />
+      <input [(ngModel)]="displayedUserId" placeholder="user id" />
       <br>
       <br>
-      <button [disabled]="!this.currentUserService.currentUser" (click)="editDetails()">Edit Details</button>
+      <button [disabled]="!this.currentUserService.currentUser" (click)="editUserDetails()">Edit User</button>
+      <br>
+      <br>
+      <input [(ngModel)]="displayedLeagueId" placeholder="league id" />
+      <br>
+      <br>
+      <button [disabled]="!this.currentUserService.currentUser" (click)="editLeagueDetails()">Edit League</button>
       <br>
       <br>
       <button [disabled]="!this.currentUserService.currentUser" (click)="createNewLeague()">Create League</button>

@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'user/create', component: UserDetailComponent },
   { path: 'user', component: UserDetailComponent },
   { path: 'league', component: LeagueDetailComponent },
+  { path: 'league/:id', component: LeagueDetailComponent },
   { path: 'league/create', component: LeagueDetailComponent },
   { path: 'login', component: LoginComponent },  
   { path: 'logout', component: LoginComponent },  
