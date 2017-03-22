@@ -40,7 +40,7 @@ export class LeagueDetailComponent {
     // We'll only execute this code when the user asks for a new UserDetailComponent to be created.
     // Modifications to the UserDetailComponent are handled in the subscribe() below.
     this.setUpEmptyLeague();
-    
+
     // Handle the request to begin the "Create", "Edit", (and someday "View") process
     // Based on the subscribe below, we'll constantly monitor changes to the URL 
     this.route.url
@@ -80,6 +80,9 @@ export class LeagueDetailComponent {
         console.log("Message received from create = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
       })
+      .catch(serviceResponse => {
+        this.message = serviceResponse.message;
+      })
   }
 
   updateLeague(): void {
@@ -88,6 +91,9 @@ export class LeagueDetailComponent {
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from update = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
+      })
+      .catch(serviceResponse => {
+        this.message = serviceResponse.message;
       })
   }
 
@@ -101,7 +107,7 @@ export class LeagueDetailComponent {
     league.leagueTypeIndex = 0;
     this.league = league;
     this.leagueAdmins = null;
-    this.leaguePlayers =  null;
+    this.leaguePlayers = null;
   }
 
 }

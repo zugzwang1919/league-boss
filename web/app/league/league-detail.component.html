@@ -1,4 +1,4 @@
-<div class="centered-60">
+<div class="centered-80">
   <div *ngIf="(action != 'create')">
     <h2>Profile for {{league.leagueName}}</h2>
   </div>
@@ -38,40 +38,70 @@
       </tr>
     </table>
     <br>
-    <table class="layout-with-outline">
-      <tr><td class="heading">Season</td></tr>
-      <tr *ngFor="let season of possibleSeasons">
-        <td>
-          <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
-        </td>
-      </tr>
-      <tr><td>&nbsp;</td></tr>
-      <tr><td class="heading">League Type</td></tr>
-      <tr *ngFor="let leagueType of possibleLeagueTypes">
-        <td>
-          <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
-        </td>
-      </tr>
-      <tr><td>&nbsp;</td></tr>
-      <tr><td class="heading">Admins</td></tr>
-      <tr *ngFor="let admin of leagueAdmins">
-        <td>{{admin.userName}}</td>  
-      </tr> 
-      <tr><td>&nbsp;</td></tr>
-      <tr><td class="heading">Players</td></tr>
-      <tr *ngFor="let player of leaguePlayers">
-        <td>{{player.userName}}</td>  
-      </tr> 
-    </table>
-  
+    <div class="two-column-container">
+      <div class="left-column">
+        <table class="layout-with-outline">
+          <tr>
+            <td class="heading">Season</td>
+          </tr>
+          <tr *ngFor="let season of possibleSeasons">
+            <td>
+              <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
+            </td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+      </div>
+      <div class="right-column">
+        <table class="layout-with-outline">
+          <tr>
+            <td class="heading">League Type</td>
+          </tr>
+          <tr *ngFor="let leagueType of possibleLeagueTypes">
+            <td>
+              <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="clear"></div>
+
+    <br>
+
+    <div *ngIf="(action == 'edit')">
+      <button (click)="updateLeague()">Update</button>
+    </div>
+    <div *ngIf="(action == 'create')">
+      <button (click)="createNewLeague()">Create</button>
+    </div>
+
+    <br>
+
   </div>
   <br>
-
-  <div *ngIf="(action == 'edit')">
-    <button (click)="updateLeague()">Update</button>
+  <div class="two-column-container">
+    <div class="left-column">
+      <table class="layout-with-outline">
+        <tr>
+          <td class="heading">Admins</td>
+        </tr>
+        <tr *ngFor="let admin of leagueAdmins">
+          <td>{{admin.userName}}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="right-column">
+      <table class="layout-with-outline">
+        <tr>
+          <td class="heading">Players</td>
+        </tr>
+        <tr *ngFor="let player of leaguePlayers">
+          <td>{{player.userName}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
-  <div *ngIf="(action == 'create')">
-    <button (click)="createNewLeague()">Create</button>
-  </div>
-
 </div>

@@ -25,6 +25,8 @@ router.post('/', RestUtils.ensureAuthenticated, function (req, res) {
         {
           leagueName: req.body.leagueName,
           description: req.body.description,
+          leagueTypeIndex: req.body.leagueTypeIndex,
+          seasonTypeIndex: req.body.seasonTypeIndex
         },
         { userId: user.id })
     })
@@ -44,6 +46,8 @@ router.put('/:leagueId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueA
     id: req.params.leagueId,
     leagueName: req.body.leagueName,
     description: req.body.description,
+    leagueTypeIndex: req.body.leagueTypeIndex,
+    seasonTypeIndex: req.body.seasonTypeIndex
   })
     .then(league => { RestResponse.send200(res, league); })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })

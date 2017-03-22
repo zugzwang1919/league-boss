@@ -45,7 +45,7 @@ export class LeagueService {
 
   updateLeague(league: League): Promise<ServiceResponse> {
     console.log("Inside LeagueService:  Beginning 'Update League' process");
-    return this.http.put('http://localhost:1919/league', league)
+    return this.http.put('http://localhost:1919/league/'+ league.id, league)
       .toPromise()
       .then((res: Response) => {
         return Promise.resolve(new ServiceResponse(res))

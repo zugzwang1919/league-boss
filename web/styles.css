@@ -67,6 +67,10 @@ div.centered-60 {
   width: 60%;
   margin: 0 auto;
 }
+div.centered-80 {
+  width: 80%;
+  margin: 0 auto;
+}
 div.message-box {
   width: 30em;
   margin: 0 auto;
@@ -74,6 +78,20 @@ div.message-box {
   color: white;
   border-style: solid;
   border-width: .1em;
+}
+div.left-column {
+  float: left;
+  width: 40%;
+  padding: 0% 5%;
+}
+div.right-column {
+  float: right;
+  width: 40%;
+  padding: 0% 5%;
+}
+div.clear {
+  clear: both;
+  width: 100%;
 }
 table.key-value td {
   padding: .2em;

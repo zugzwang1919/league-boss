@@ -221,7 +221,9 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
 	&quot;leagueName&quot;:&quot;NFL Winners&quot;,&#xd;
-	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;&#xd;
+	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;,&#xd;
+	&quot;leagueTypeIndex&quot;: 0,&#xd;
+	&quot;seasonTypeIndex&quot;: 0&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -252,7 +254,9 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
 	&quot;leagueName&quot;:&quot;NFL Losers&quot;,&#xd;
-	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;&#xd;
+	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;,&#xd;
+	&quot;leagueTypeIndex&quot;: 0,&#xd;
+	&quot;seasonTypeIndex&quot;: 0&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -299,6 +303,8 @@
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="1073374461">&quot;id&quot;:2</stringProp>
                 <stringProp name="-725333742">&quot;leagueName&quot;:&quot;NFL Losers&quot;</stringProp>
+                <stringProp name="1423884689">&quot;leagueTypeIndex&quot;:0</stringProp>
+                <stringProp name="42822725">&quot;seasonTypeIndex&quot;:0</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>

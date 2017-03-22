@@ -23,6 +23,8 @@ module.exports = {
     return League.create({
       leagueName: leagueData.leagueName,
       description: leagueData.description,
+      seasonTypeIndex: leagueData.seasonTypeIndex,
+      leagueTypeIndex: leagueData.leagueTypeIndex
     })
 
       .then(league => {
@@ -51,7 +53,9 @@ module.exports = {
     // Update the league
     return League.update({
       leagueName: leagueData.leagueName,
-      description: leagueData.description
+      description: leagueData.description,
+      seasonTypeIndex: leagueData.seasonTypeIndex,
+      leagueTypeIndex: leagueData.leagueTypeIndex
     },
       { where: { id: leagueData.id } }
     )
