@@ -14,8 +14,7 @@ module.exports = {
           // If the session hasn't timed out...
           if (user.authenticationTokenExpiration > Date.now()) {
             // Bump the expiration date
-            user.authenticationTokenExpiration = DateUtils.createAuthenticationExpirationDate();
-            return UserLogic.updateUser(user);
+            return UserLogic.updateUser(user.id, {authenticationTokenExpiration: DateUtils.createAuthenticationExpirationDate()});
           }
           // Session timed out
           else {

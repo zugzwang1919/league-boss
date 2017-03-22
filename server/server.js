@@ -23,6 +23,7 @@ sequelize.sync({ force: true })
       userName: 'RWW',
       password: 'RWW',
       emailAddress: 'russ.wolfe@gmail.com',
+      isSuperUser: true,
     })
   })
   .then(user => {
@@ -31,6 +32,7 @@ sequelize.sync({ force: true })
       userName: 'TB',
       password: 'TB',
       emailAddress: 'tom.brady@gmail.com',
+      isSuperUser: false,
     })
   })
   .then(user => {

@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var UserLogic = require('../logic/user-logic');
+var LogicError = require('../logic/logic-error');
 var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
 
@@ -22,6 +23,7 @@ router.post('/', function (req, res) {
     userName: req.body.userName,
     password: req.body.password,
     emailAddress: req.body.emailAddress,
+    isSuperUser: false
   })
     .then(user => { RestResponse.send200(res, user) })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
@@ -31,28 +33,50 @@ router.post('/', function (req, res) {
 router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, function (req, res) {
   console.log("user-rest updateUser: userName found in body = " + req.body.userName);
 
-  UserLogic.updateUser({
-    id: req.params.userId,
-    userName: req.body.userName,
-    password: req.body.password,
-    emailAddress: req.body.emailAddress,
-  })
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    .then(currentUser => {
+      if (currentUser.isSuperUser) {
+        var userData =         
+        {
+          userName: req.body.userName,
+          password: req.body.password,
+          emailAddress: req.body.emailAddress,
+          isSuperUser: req.body.isSuperUser,
+        };
+        if (!isUserDataValidForUpdateBySuperUser(userData)) {
+          var error = LogicError.INCOMPLETE_INPUT;
+          error.message = "At least one of the required user attributes is missing.";
+          return Promise.reject(error);
+        }
+        return UserLogic.updateUser(req.params.userId, userData);
+      }
+      else {
+        var userData = 
+        {
+          userName: req.body.userName,
+          password: req.body.password,
+          emailAddress: req.body.emailAddress,
+        };
+
+        if (!isUserDataValidForUpdate(userData)) {
+          var error = LogicError.INCOMPLETE_INPUT;
+          error.message = "At least one of the required user attributes is missing.";
+          return Promise.reject(error);
+        }
+        return UserLogic.updateUser(req.params.userId, userData);
+      }
+    })
     .then(user => { RestResponse.send200(res, user); })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
 });
 
 function ensureSuperUserOrSelf(req, res, next) {
-    var foundUser;
+  
   // Get the user associated with the token
   UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-    .then(user => {
-      foundUser = user;
-      return UserLogic.isSuperUser(foundUser);
-    })
-    // Check on SuperUser Status or Self status
-    .then(isSuperUser => {
+    .then(foundUser => {
       // If this is a superuser, we're good to go (call next())
-      if (isSuperUser) {
+      if (foundUser.isSuperUser) {
         next();
       }
       // Otherwise, this could be a user performing operations on himself
@@ -71,6 +95,22 @@ function ensureSuperUserOrSelf(req, res, next) {
       // If anything goes wrong, we're sending back a 403
       RestResponse.send403(res);
     })
+}
+
+function isUserDataValidForUpdate(userData) {
+  var result =  userData.userName != null &&
+                userData.password != null &&
+                userData.emailAddress != null &&
+                userData.isSuperUser === undefined;
+  return result;
+}
+
+function isUserDataValidForUpdateBySuperUser(userData) {
+  var result =  userData.userName != null &&
+                userData.password != null &&
+                userData.emailAddress != null &&
+                userData.isSuperUser != null;
+  return result;
 }
 
 module.exports = router;

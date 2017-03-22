@@ -13,6 +13,9 @@ module.exports = function () {
     emailAddress: {
       type: Sequelize.STRING
     },
+    isSuperUser: {
+      type: Sequelize.BOOLEAN
+    },
     authenticationToken: {
       type: Sequelize.STRING
     },

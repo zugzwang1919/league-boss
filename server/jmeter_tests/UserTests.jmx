@@ -248,7 +248,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update User as SuperUser" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upgrade User to SuperUser (as a SuperUser)" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
@@ -258,7 +258,8 @@
 	&quot;id&quot;:2,&#xd;
 	&quot;userName&quot;:&quot;TB&quot;,&#xd;
 	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;:&quot;updatedEmailAddress@gmail.com&quot;&#xd;
+	&quot;emailAddress&quot;:&quot;updatedEmailAddress@gmail.com&quot;,&#xd;
+	&quot;isSuperUser&quot;:true&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -307,6 +308,7 @@
                 <stringProp name="-1735009918">&quot;userName&quot;:&quot;TB&quot;</stringProp>
                 <stringProp name="2024212327">&quot;password&quot;:&quot;TB&quot;</stringProp>
                 <stringProp name="1017860110">&quot;emailAddress&quot;:&quot;updatedEmailAddress@gmail.com&quot;</stringProp>
+                <stringProp name="1055910431">&quot;isSuperUser&quot;:1</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -324,7 +326,8 @@
 	&quot;id&quot;:2,&#xd;
 	&quot;userName&quot;:&quot;TB&quot;,&#xd;
 	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;:&quot;tom.brady@gmail.com&quot;&#xd;
+	&quot;emailAddress&quot;:&quot;tom.brady@gmail.com&quot;,&#xd;
+	&quot;isSuperUser&quot;:false&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>

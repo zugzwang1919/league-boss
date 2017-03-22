@@ -17,10 +17,13 @@ module.exports = {
     return UserLogic.findUserByUserName(loginData.userName)
       .then(user => {
         if (user != null && user.password === loginData.password) {
-          user.authenticationToken = guid;
-          user.authenticationTokenExpiration = DateUtils.createAuthenticationExpirationDate();
           foundUser = user;
-          return UserLogic.updateUser(user);
+          // Only update the 
+          return UserLogic.updateUser(user.id, 
+          {
+            authenticationToken: guid,
+            authenticationTokenExpiration: DateUtils.createAuthenticationExpirationDate()
+          });
         }
         else {
           return Promise.reject(LogicErrors.LOGIN_FAILED);
@@ -42,8 +45,7 @@ module.exports = {
   logout: function (userName) {
     return UserLogic.findUserByUserName(userName)
       .then(user => {
-        user.authenticationTokenExpiration = new Date();
-        return UserLogic.updateUser(user);
+        return UserLogic.updateUser(user.id, {authenticationTokenExpiration: new Date()});
       })
       .then(junk => {
         return Promise.resolve(null);

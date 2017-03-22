@@ -31,6 +31,7 @@ module.exports = {
       userName: userData.userName,
       password: userData.password,
       emailAddress: userData.emailAddress,
+      isSuperUser: false,
     })
       .then(user => {
         console.log("user-logic.create() " + userData.userName + " was successfully created.");
@@ -39,25 +40,18 @@ module.exports = {
       .catch(err => { return Promise.reject(buildCleanError(err)); })
   },
 
-  updateUser: function (userData) {
+  /*
+    This is a little tricky.  Since there are a variety of ways someone could be wanting to update
+    a user, we count on the caller to be responsible for guaranteeing that they have the right to 
+    change what they're changing in the user... most tricky are the "isSuperUser" atrribute and
+    attributes associated with the session 
+  */
+  updateUser: function (userId, userData) {
     console.log("user-logic.update() - updateUser has been called.");
-
-    // Ensure all of the required inputs are present
-    if (!isExistingUserValid(userData)) {
-      return Promise.reject(buildIncompleteAttributesError());
-    }
 
     // If we're here, we should be able to update a user, so...
     // Update the user
-    return User.update({
-      userName: userData.userName,
-      password: userData.password,
-      emailAddress: userData.emailAddress,
-      authenticationToken: userData.authenticationToken,
-      authenticationTokenExpiration: userData.authenticationTokenExpiration
-    },
-      { where: { id: userData.id } }
-    )
+    return User.update( userData, { where: { id: userId } })
       .then(user => {
         console.log("user-logic.update() " + userData.userName + " was successfully updated.");
         return Promise.resolve(user);
@@ -65,16 +59,6 @@ module.exports = {
       .catch(err => { return Promise.reject(buildCleanError(err)); })
   },
 
-  isSuperUser: function (userData) {
-    // for now
-    var result;
-    if (userData.id === 1)
-      result = true;
-    else
-      result = false;
-    console.log("user-logic.isSuperUser - result = " + result);
-    return Promise.resolve(result);
-  },
 
   isLeagueAdmin: function (userData, leagueId) {
     var foundLeague
@@ -107,12 +91,6 @@ function findUser(whereClause) {
     })
 }
 
-function isExistingUserValid(userData) {
-  return (userData.id != null &&
-    userData.userName != null &&
-    userData.password != null &&
-    userData.emailAddress != null)
-}
 
 function isNewUserValid(userData) {
   return (userData.userName != null &&
