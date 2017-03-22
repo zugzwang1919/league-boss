@@ -3,4 +3,5 @@ export class User {
   userName: string;
   password: string;
   emailAddress: string;
+  isSuperUser: boolean;
 }

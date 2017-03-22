@@ -10,6 +10,7 @@
   </div>
   <div>
     <table style="margin: 0 auto" class="key-value" >
+      <!--
       <tr *ngIf="(action != 'create')">
         <td class="key">
           <label>id: </label>
@@ -18,7 +19,7 @@
           {{user.id}}
         </td>
       </tr>
-
+      -->
       <tr>
         <td class="key">
           <label> user name: </label>
@@ -52,12 +53,18 @@
         </td>
         <td>
           <input type="text" [(ngModel)]="user.emailAddress" placeholder="email address"/>
+          
         </td>
       </tr>
 
     </table>
   </div>
-  <br>  
+  <br> 
+  <div *ngIf="this.currentUserService.currentUser.isSuperUser">
+    <input type="checkbox" id="super-user" [(ngModel)]="user.isSuperUser"/>
+    <label for="super-user">Super User </label>
+  </div>
+  <br> 
   <div *ngIf="(action == 'edit')">
     <button (click)="updateUser()">Update</button>
   </div>
