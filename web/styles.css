@@ -14,6 +14,7 @@ a:hover {
   color: #0087c1;
 }
 input[type=text],
+input[type=password],
 textarea {
   border: 0;
   border-bottom-width: 1px;
@@ -21,6 +22,7 @@ textarea {
   border-bottom-color: #a6a6bc;
 }
 input[type=text]:focus,
+input[type=password]:focus,
 textarea:focus {
   outline: 0;
   border: 0;

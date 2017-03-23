@@ -29,12 +29,12 @@
         </td>
       </tr>
 
-      <tr>
+      <tr *ngIf="(action == 'create') || (this.currentUserService.currentUser.id == this.user.id)">
         <td class="key">
           <label> password: </label>
         </td>
         <td>
-          <input  type="text" [(ngModel)]="user.password" placeholder="password"/>
+          <input  type="password" [(ngModel)]="user.password" placeholder="password"/>
         </td>
       </tr>
 
@@ -43,7 +43,7 @@
           <label> confirm password: </label>
         </td>
         <td>
-          <input  type="text" [(ngModel)]="user.confirmPassword" placeholder="confirm password"/>
+          <input  type="password" [(ngModel)]="user.confirmPassword" placeholder="confirm password"/>
         </td>
       </tr>
 
@@ -60,7 +60,7 @@
     </table>
   </div>
   <br> 
-  <div *ngIf="this.currentUserService.currentUser.isSuperUser">
+  <div *ngIf="this.currentUserService.currentUser && this.currentUserService.currentUser.isSuperUser">
     <input type="checkbox" id="super-user" [(ngModel)]="user.isSuperUser"/>
     <label for="super-user">Super User </label>
   </div>
