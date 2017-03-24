@@ -1,4 +1,4 @@
-<div class="centered-60">
+<div class="centered-80">
   <div *ngIf="(action != 'create')">
     <h2>Profile for {{user.userName}}</h2>
   </div>
@@ -22,55 +22,44 @@
       -->
       <tr>
         <td class="key">
-          <label> user name: </label>
+          user name: 
         </td>
-        <td>
-          <input type="text" [(ngModel)]="user.userName" placeholder="user name" />
+        <td [hidden]="(action === 'view')" class="value">
+          <input type="text" [(ngModel)]="user.userName" placeholder="user name" #un="ngModel"/>
         </td>
-      </tr>
-      <!--
-      <tr *ngIf="this.isNotViewOnlyForThisUser()">
-        <td class="key">
-          <label> password: </label>
-        </td>
-        <td>
-          <input type="text" [(ngModel)]="user.password" #xyz="ngModel" >
+        <td [hidden]="(action !== 'view')" class="value">
+          {{user.userName}}
         </td>
       </tr>
 
-      <tr *ngIf="this.isNotViewOnlyForThisUser() && xyz.dirty">
+      <tr [hidden]="!this.isNotViewOnlyForThisUser()">
         <td class="key">
-          <label> confirm password: </label>
-        </td>
-        <td>
-          <input  type="password" [(ngModel)]="user.confirmPassword" placeholder="confirm password"/>
-        </td>
-      </tr>
--->
-      <tr>
-        <td class="key">
-          <label> password: </label>
+          password: 
         </td>
         <td class="value">
           <input type="password" [(ngModel)]="user.password" #pw="ngModel" />
         </td>
       </tr>
 
-      <tr *ngIf="pw.dirty">
+      <tr [hidden]="!pw.dirty">
         <td class="key">
-          <label> confirm password: </label>
+          confirm password: 
         </td>
-        <td>
+        <td class="value">
           <input type="password" [(ngModel)]="user.confirmPassword" placeholder="confirm password" />
         </td>
       </tr>
 
       <tr>
         <td class="key">
-          <label> email address: </label>
+          email address: 
         </td>
-        <td>
-          <input type="text" [(ngModel)]="user.emailAddress" placeholder="email address" />
+        <td [hidden]="(action === 'view')" class="value">  
+          <input type="text" [(ngModel)]="user.emailAddress" placeholder="email address" #ema="ngModel"/>
+        </td>
+
+        <td [hidden]="(action !== 'view')" class="value">
+          {{user.emailAddress}}
         </td>
       </tr>
 
@@ -78,19 +67,19 @@
         <td class="key">
           <input type="checkbox" id="super-user" [(ngModel)]="user.isSuperUser" />
         </td>
-        <td>
+        <td class="value">
           Super User
         </td>
       </tr>
 
     </table>
-  
+
   </div>
   <br>
 
   <br>
   <div *ngIf="(action == 'edit')">
-    <button (click)="updateUser()">Update</button>
+    <button [disabled]="!(un.dirty || ema.dirty || (pw.dirty && user.password === user.confirmPassword))"(click)="updateUser()">Update</button>
   </div>
   <div *ngIf="(action == 'create')">
     <button (click)="createNewUser()">Create</button>
