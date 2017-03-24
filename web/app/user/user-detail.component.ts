@@ -5,7 +5,7 @@ import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 
 import { User } from './user';
 import { UserService } from './user-service.service';
-import { CurrentUserService }from './current-user-service.service';
+import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
 
 
@@ -49,8 +49,12 @@ export class UserDetailComponent {
         else {
           this.userService.getUser(+segments[1])
             .then(user => {
-              this.action = 'edit';
               this.user = user;
+              var currentUser: User = this.currentUserService.currentUser;
+              if (currentUser.id === this.user.id  || currentUser.isSuperUser)
+                this.action = 'edit';
+              else
+                this.action = 'view';
             })
             .catch(serviceResponse => {
               this.user = new User();
@@ -76,6 +80,14 @@ export class UserDetailComponent {
         console.log("Message received from update = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
       })
+  }
+
+  isNotViewOnlyForThisUser(): boolean {
+    var result: boolean;
+    result = this.action === 'create' ||
+             (this.currentUserService.currentUser && 
+             (this.currentUserService.currentUser.isSuperUser || this.currentUserService.currentUser.id === this.user.id));
+    return result;
   }
 
 }

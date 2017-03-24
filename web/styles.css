@@ -3,8 +3,11 @@
 /* Master Styles */
 body,
 button,
-input {
+input,
+textarea,
+table {
   color: #8080a0;
+  font-size: 1em;
   font-family: Lato, Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 a {
@@ -33,7 +36,6 @@ button {
   border: 1px solid #0099da;
   color: white;
   border-radius: 5px;
-  font-size: 1em;
   height: 2.5em;
   width: 10em;
 }
@@ -94,6 +96,17 @@ div.right-column {
 div.clear {
   clear: both;
   width: 100%;
+}
+table.spacious-key-value {
+  margin: 20px auto;
+}
+table.spacious-key-value td,
+input {
+  font-size: 110%;
+  padding: 6px 4px;
+}
+table.key-value {
+  margin: 0 auto;
 }
 table.key-value td {
   padding: .2em;
