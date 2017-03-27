@@ -66,7 +66,7 @@
             email address:
           </td>
           <td [hidden]="(action === 'view')" class="value">
-            <input type="text" [(ngModel)]="user.emailAddress"  name="emailAddress" placeholder="email address" #ema="ngModel" />
+            <input type="text" [(ngModel)]="user.emailAddress" name="emailAddress" placeholder="email address" #ema="ngModel" />
           </td>
 
           <td [hidden]="(action !== 'view')" class="value">
@@ -76,7 +76,7 @@
 
         <tr *ngIf="this.currentUserService.currentUser && this.currentUserService.currentUser.isSuperUser">
           <td class="key">
-            <input type="checkbox" id="super-user" [(ngModel)]="user.isSuperUser"  name="isSuperUser"/>
+            <input type="checkbox" id="super-user" [(ngModel)]="user.isSuperUser" name="isSuperUser" />
           </td>
           <td class="value">
             Super User
@@ -95,8 +95,31 @@
       <button (click)="createNewUser()">Create</button>
     </div>
 
+    <br>
 
+    <table class="layout-with-outline">
+      <tr>
+        <td class="heading">Playing in:</td>
+      </tr>
+      <tr *ngFor="let league of leaguesAsPlayer">
+        <td>
+          <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
+        </td>
+      </tr>
+    </table>
 
+    <br>
+
+    <table *ngIf="leaguesAsAdmin && leaguesAsAdmin[0]" class="layout-with-outline">
+      <tr>
+        <td class="heading">Administrator for:</td>
+      </tr>
+      <tr *ngFor="let league of leaguesAsAdmin">
+        <td>
+          <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
+        </td>
+      </tr>
+    </table>
 
   </form>
 </div>

@@ -89,7 +89,9 @@
           <td class="heading">Admins</td>
         </tr>
         <tr *ngFor="let admin of leagueAdmins">
-          <td>{{admin.userName}}</td>
+          <td>
+            <a [routerLink]="['/user/' + admin.id]">{{admin.userName}}</a>
+          </td>
         </tr>
       </table>
     </div>
@@ -99,7 +101,9 @@
           <td class="heading">Players</td>
         </tr>
         <tr *ngFor="let player of leaguePlayers">
-          <td>{{player.userName}}</td>
+          <td>
+            <a [routerLink]="['/user/' + player.id]">{{player.userName}}</a>
+          </td>
         </tr>
       </table>
     </div>

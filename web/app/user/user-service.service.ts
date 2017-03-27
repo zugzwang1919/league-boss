@@ -4,7 +4,8 @@ import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { WolfeHttp } from '../common/wolfe-http';
-import { User } from "./user";
+import { User } from './user';
+import { League } from '../league/league';
 import { ServiceResponse } from '../common/service-response';
 
 
@@ -52,6 +53,30 @@ export class UserService {
       .catch((res: Response) => {
         return Promise.resolve(new ServiceResponse(res))
       })
+  }
+
+  getLeaguesPlayingIn(userId: number): Promise<League[]> {
+    console.log("Inside UpdateService:  Beginning 'Retrieving Leagues played in by User' process");
+    return this.http.get('http://localhost:1919/user/' + userId + '/leagueAsPlayer')
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })    
+  }
+
+  getLeaguesAdministering(userId: number): Promise<League[]> {
+    console.log("Inside UpdateService:  Beginning 'Retrieving Leagues administered by User' process");
+    return this.http.get('http://localhost:1919/user/' + userId + '/leagueAsAdmin')
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })    
   }
 
   private buildUserFromHttpResponse(id: Number, res: Response): User {

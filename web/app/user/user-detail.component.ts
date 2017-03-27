@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 import {FormsModule, NgForm, FormGroup } from '@angular/forms'
 
 import { User } from './user';
+import { League } from '../league/league';
 import { UserService } from './user-service.service';
 import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
@@ -20,6 +21,8 @@ import { ServiceResponse } from '../common/service-response';
 export class UserDetailComponent {
 
   user: User;
+  leaguesAsAdmin: League[];
+  leaguesAsPlayer: League[];
   action: String;
   happyMessage: String;
   errorMessage: String;
@@ -46,6 +49,7 @@ export class UserDetailComponent {
       .subscribe((segments: UrlSegment[]) => {
         this.happyMessage = null;
         this.errorMessage = null;
+        this.markFormPristine(this.userDetailForm);
         console.log("Examining segments in URL within user-detail.component.  Segments = " + segments);
         if (segments[1].toString() == 'create') {
           this.user = new User();
@@ -60,6 +64,14 @@ export class UserDetailComponent {
                 this.action = 'edit';
               else
                 this.action = 'view';
+              return this.userService.getLeaguesPlayingIn(user.id)
+            })
+            .then(leagues => {
+              this.leaguesAsPlayer = leagues;
+              return this.userService.getLeaguesAdministering(this.user.id);
+            })
+            .then(leagues => {
+              this.leaguesAsAdmin = leagues;
             })
             .catch(serviceResponse => {
               this.user = new User();
