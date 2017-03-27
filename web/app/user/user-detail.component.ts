@@ -1,7 +1,8 @@
 import 'rxjs/add/operator/switchMap';
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import {FormsModule, NgForm, FormGroup } from '@angular/forms'
 
 import { User } from './user';
 import { UserService } from './user-service.service';
@@ -12,6 +13,7 @@ import { ServiceResponse } from '../common/service-response';
 @Component({
   moduleId: module.id,
   templateUrl: 'user-detail.component.html',
+  styleUrls: ['./user-detail.component.css']
 })
 
 
@@ -19,7 +21,9 @@ export class UserDetailComponent {
 
   user: User;
   action: String;
-  message: String;
+  happyMessage: String;
+  errorMessage: String;
+  @ViewChild('userDetailForm') userDetailForm: FormGroup;
 
 
   constructor(
@@ -40,7 +44,8 @@ export class UserDetailComponent {
     // Based on the subscribe below, we'll constantly monitor changes to the URL 
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
-        this.message = null;
+        this.happyMessage = null;
+        this.errorMessage = null;
         console.log("Examining segments in URL within user-detail.component.  Segments = " + segments);
         if (segments[1].toString() == 'create') {
           this.user = new User();
@@ -58,7 +63,8 @@ export class UserDetailComponent {
             })
             .catch(serviceResponse => {
               this.user = new User();
-              this.message = serviceResponse.message;
+              this.errorMessage = serviceResponse.message;
+              this.happyMessage = null;
             })
         }
       })
@@ -69,7 +75,8 @@ export class UserDetailComponent {
     this.userService.createUser(this.user)
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from create = " + serviceResponse.getMessage());
-        this.message = serviceResponse.getMessage();
+        this.happyMessage = serviceResponse.getMessage();
+        this.errorMessage = null;
       })
   }
 
@@ -78,16 +85,16 @@ export class UserDetailComponent {
     this.userService.updateUser(this.user)
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from update = " + serviceResponse.getMessage());
-        this.message = serviceResponse.getMessage();
+        this.happyMessage = serviceResponse.getMessage();
+        this.errorMessage = null;
+        this.markFormPristine(this.userDetailForm);
       })
   }
 
-  isNotViewOnlyForThisUser(): boolean {
-    var result: boolean;
-    result = this.action === 'create' ||
-             (this.currentUserService.currentUser && 
-             (this.currentUserService.currentUser.isSuperUser || this.currentUserService.currentUser.id === this.user.id));
-    return result;
+  private markFormPristine(form: FormGroup | NgForm): void {
+    Object.keys(form.controls).forEach(control => {
+      form.controls[control].markAsPristine();
+    });
   }
 
 }

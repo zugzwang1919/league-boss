@@ -45,7 +45,9 @@ export class UserService {
     return this.http.put('http://localhost:1919/user/' + user.id, user)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(new ServiceResponse(res))
+        var sr: ServiceResponse = new ServiceResponse(res);
+        sr.setMessage("The user's profile was successfully updated.")
+        return Promise.resolve(sr);
       })
       .catch((res: Response) => {
         return Promise.resolve(new ServiceResponse(res))

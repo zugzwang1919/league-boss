@@ -1,6 +1,6 @@
 To do:
 
-User Details - Add indication as to whether or not Password and Confirm Password match
+
 User Details - Show leagues that user participates in
 User Details - Show leagues that user is admin for
 
@@ -8,9 +8,11 @@ User Details - Show leagues that user is admin for
 
 Done:
 
+User Details - Figure out how to return the form to the proper state after a submission
 User Details - Enable Submit button only when something has changed and Password and Confirm Password match
 User Details - Only have Submit show for current owner and SuperUser
 User Details - Change entry fields to text fields when user is not current owner or SuperUser
 User Details - Only have Password show for current owner and SuperUser
 User Details - Only have Confirm Password show once the Password field is dirty
+User Details - Add indication as to whether or not Password and Confirm Password match
 

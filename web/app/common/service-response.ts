@@ -26,6 +26,10 @@ export class ServiceResponse {
     return this.message;
   }
 
+  setMessage(newMessage: String) : void {
+    this.message = newMessage;
+  }
+
 
   /*
   getServiceReturnCode() : ServiceReturnCode {
