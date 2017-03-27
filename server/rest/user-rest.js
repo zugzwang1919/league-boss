@@ -7,7 +7,6 @@ var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
 
 
-
 router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("user-rest getUser:  Looking for user with an id of " + req.params.userId);
   UserLogic.findUserById(req.params.userId)
@@ -68,6 +67,29 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
     })
     .then(user => { RestResponse.send200(res, user); })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
+});
+
+
+router.get('/:userId/leagueAsPlayer', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("user-rest getLeaguesForUser:  Looking for legues that this user plays in where UserId = " + req.params.userId);
+  UserLogic.getLeaguesAsPlayer(req.params.userId)
+    .then(leagues => { 
+      RestResponse.send200(res, leagues) 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error) 
+    })
+});
+
+router.get('/:userId/leagueAsAdmin', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("user-rest getLeaguesAsAdminForUser:  Looking for legues that this user is an admin for  where UserId = " + req.params.userId);
+  UserLogic.getLeaguesAsAdmin(req.params.userId)
+    .then(leagues => { 
+      RestResponse.send200(res, leagues) 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error) 
+    })
 });
 
 function ensureSuperUserOrSelf(req, res, next) {

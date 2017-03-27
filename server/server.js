@@ -65,6 +65,7 @@ sequelize.sync({ force: true })
     league1.addSeason(season1);
     league1.addPlayer(user1);
     league1.addPlayer(user2);
+    league1.addAdmin(user1);
     league1.addAdmin(user2);
     return LEAGUE.create({
       leagueName: 'Winners not Weiners',
@@ -74,7 +75,6 @@ sequelize.sync({ force: true })
   .then(league => {
     league2 = league;
     league2.addSeason(season1);
-    league2.addPlayer(user1);
     league2.addPlayer(user2);
     return league2.addAdmin(user2);
   })

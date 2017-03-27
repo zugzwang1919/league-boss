@@ -59,6 +59,25 @@ module.exports = {
       .catch(err => { return Promise.reject(buildCleanError(err)); })
   },
 
+  getLeaguesAsPlayer: function (userId) {
+    return this.findUserById(userId)
+      .then(user => {
+        return user.getPlayerLeague()
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
+  },
+  
+  getLeaguesAsAdmin: function (userId) {
+    return this.findUserById(userId)
+      .then(user => {
+        return user.getAdminLeague()
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
+  },
 
   isLeagueAdmin: function (userData, leagueId) {
     var foundLeague
