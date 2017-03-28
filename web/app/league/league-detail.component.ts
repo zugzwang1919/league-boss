@@ -26,7 +26,7 @@ export class LeagueDetailComponent {
   message: String;
 
   // Referential Data
-  possibleSeasons: Object[] = require('../../interface/season.js');
+  possibleSeasons: Object[] = require('../../interface/season-type.js');
   possibleLeagueTypes: Object[] = require('../../interface/league-type.js');
 
   constructor(

@@ -148,3 +148,23 @@ table.layout-with-outline {
   border: 1px solid #f2f2f5;
   padding: 10 60;
 }
+table.columnar-data {
+  border: 1px solid #f2f2f5;
+  border-collapse: collapse;
+}
+table.columnar-data thead th.overall-heading {
+  padding: 8px 10px;
+  color: #656588;
+  font-size: 110%;
+  font-weight: normal;
+  text-align: center;
+}
+table.columnar-data tbody tr:nth-child(even) {
+  background-color: #f2f2f5;
+}
+table.columnar-data tbody tr:nth-child(odd) {
+  background-color: #fbfbfc;
+}
+table.columnar-data td {
+  padding: 2px 15px;
+}

@@ -104,21 +104,16 @@ router.delete('/:leagueId/admin/:userId', RestUtils.ensureAuthenticated, ensureS
 
 
 function ensureSuperUserOrLeagueAdmin(req, res, next) {
-  var foundUser;
+
   // Get the user associated with the token
+  var foundUser;
   UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then(user => {
       foundUser = user;
-      return UserLogic.isSuperUser(foundUser);
-    })
-    .then(isSuperUser => {
-      if (isSuperUser)
-        next();
-      else
-        return UserLogic.isLeagueAdmin(foundUser, req.params.leagueId)
+      return UserLogic.isLeagueAdmin(user, req.params.leagueId)
     })
     .then(isLeagueAdmin => {
-      if (isLeagueAdmin)
+      if (isLeagueAdmin || foundUser.isSuperUser)
         next()
       else
         RestResponse.send403(res);

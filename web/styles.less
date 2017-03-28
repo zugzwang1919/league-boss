@@ -173,3 +173,28 @@ table.layout-with-outline {
   border: 1px solid @our-gray-lightest;
   padding: 10 60;
 }
+
+table.columnar-data {
+  border: 1px solid @our-gray-lightest;
+  border-collapse: collapse;
+}
+
+table.columnar-data thead th.overall-heading {
+    padding: 8px 10px;
+    color: @our-gray-darker;
+    font-size: 110%;
+    font-weight: normal;  
+    text-align: center;
+}
+
+table.columnar-data tbody tr:nth-child(even){
+  background-color: @our-gray-lightest;
+}
+
+table.columnar-data tbody tr:nth-child(odd){
+  background-color: @our-gray-very-lightest;
+}
+
+table.columnar-data td{
+  padding: 2px 15px;
+}

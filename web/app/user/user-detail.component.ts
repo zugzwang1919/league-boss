@@ -20,6 +20,11 @@ import { ServiceResponse } from '../common/service-response';
 
 export class UserDetailComponent {
 
+  // Referential info
+  leagueType: Object[] = require('../../interface/league-type.js');
+  seasonType: Object[] = require('../../interface/season-type.js');
+
+
   user: User;
   leaguesAsAdmin: League[];
   leaguesAsPlayer: League[];

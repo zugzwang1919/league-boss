@@ -96,29 +96,41 @@
     </div>
 
     <br>
+    <br>
+    <br>
 
-    <table class="layout-with-outline">
-      <tr>
-        <td class="heading">Playing in:</td>
-      </tr>
-      <tr *ngFor="let league of leaguesAsPlayer">
-        <td>
-          <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
-        </td>
-      </tr>
+    <table *ngIf="leaguesAsPlayer && leaguesAsPlayer[0]"class="columnar-data">
+      <thead>
+        <th colspan="3" class="overall-heading">Playing In:</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let league of leaguesAsPlayer">
+          <td>
+            <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
+          </td>
+          <td> {{seasonType[league.seasonTypeIndex].name}} </td>
+          <td> {{leagueType[league.leagueTypeIndex].name}} </td>
+        </tr>       
+      </tbody>
     </table>
 
     <br>
+    <br>
+    <br>
 
-    <table *ngIf="leaguesAsAdmin && leaguesAsAdmin[0]" class="layout-with-outline">
-      <tr>
-        <td class="heading">Administrator for:</td>
-      </tr>
-      <tr *ngFor="let league of leaguesAsAdmin">
-        <td>
-          <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
-        </td>
-      </tr>
+    <table *ngIf="leaguesAsAdmin && leaguesAsAdmin[0]" class="columnar-data">
+      <thead>
+        <th colspan="3" class="overall-heading">Administrator for:</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let league of leaguesAsAdmin">
+          <td>
+            <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
+          </td>
+          <td> {{seasonType[league.seasonTypeIndex].name}} </td>
+          <td> {{leagueType[league.leagueTypeIndex].name}} </td>
+        </tr>
+      </tbody>
     </table>
 
   </form>

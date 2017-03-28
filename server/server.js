@@ -50,14 +50,19 @@ sequelize.sync({ force: true })
     return SEASON.create({
       seasonName: 'NFL 2017-18',
       beginDate: '2017/09/01',
-      endDate: '2018/02/10'
+      endDate: '2018/02/10',
+      seasonTypeIndex: 1,
+      leagueTypeIndex: 1
     })
   })
   .then(season => {
     season1 = season;
     return LEAGUE.create({
       leagueName: 'NFL Chumps',
-      description: 'The worst collection ever of NFL enthusiasts.'
+      description: 'The worst collection ever of NFL enthusiasts.',
+      seasonTypeIndex: 0,
+      leagueTypeIndex: 0
+
     })
   })
   .then(league => {
@@ -69,7 +74,9 @@ sequelize.sync({ force: true })
     league1.addAdmin(user2);
     return LEAGUE.create({
       leagueName: 'Winners not Weiners',
-      description: 'Yeah, we are that good.'
+      description: 'Yeah, we are that good.',
+      seasonTypeIndex: 1,
+      leagueTypeIndex: 2
     })
   })
   .then(league => {
