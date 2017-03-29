@@ -37,7 +37,7 @@ export class UserService {
         return Promise.resolve(new ServiceResponse(res))
       })
       .catch((res: Response) => {
-        return Promise.resolve(new ServiceResponse(res))
+        return Promise.reject(new ServiceResponse(res))
       })
   }
 

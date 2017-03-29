@@ -11,10 +11,10 @@ table {
   font-family: Lato, Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 a {
-  color: #0099da;
+  color: #449bc7;
 }
 a:hover {
-  color: #0087c1;
+  color: #388eba;
 }
 input[type=text],
 input[type=password],
@@ -32,8 +32,8 @@ textarea:focus {
   border-bottom: 1px solid #717195;
 }
 button {
-  background: #0099da;
-  border: 1px solid #0099da;
+  background: #449bc7;
+  border: 1px solid #449bc7;
   color: white;
   border-radius: 5px;
   height: 2.5em;
@@ -42,18 +42,18 @@ button {
 /* Note: Place hover before disabled so that if a 
 user hovers over a disabled button, disable will have priority */
 button:hover {
-  background: #0087c1;
-  border: 0px solid #0087c1;
+  background: #388eba;
+  border: 0px solid #388eba;
   color: white;
 }
 button:disabled {
-  background: #c1ecff;
-  border: 0px solid #c1ecff;
+  background: #badaea;
+  border: 0px solid #badaea;
   color: white;
 }
 button:active {
-  background: #0075a7;
-  border: 0px solid #0075a7;
+  background: #327fa6;
+  border: 0px solid #327fa6;
   color: white;
   /* transform: scale(0.99); */
 }
@@ -79,7 +79,7 @@ div.message-box {
   width: 480px;
   border-radius: 3px;
   margin: 0 auto;
-  background: #da4100;
+  background: #c77044;
   color: white;
   border-style: solid;
   border-width: .1em;
