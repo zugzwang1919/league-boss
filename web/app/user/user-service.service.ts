@@ -92,7 +92,7 @@ export class UserService {
     }
   }
 
-  private getMessageFromHttpResponse(res: Response): String {
+  private getMessageFromHttpResponse(res: Response): string {
     console.log("Examining response.  We received " + res);
     console.log("Looking for message in response.  We received:  " + res.json().message);
     return res.json().message;

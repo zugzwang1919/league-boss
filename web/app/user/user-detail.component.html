@@ -41,11 +41,11 @@
             confirm password:
           </td>
           <td class="value">
-            <input type="password" [(ngModel)]="user.confirmPassword" name="confirmPassword" placeholder="confirm password" />
+            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="confirm password" />
           </td>
         </tr>
 
-        <tr [hidden]="!pw.dirty || user.confirmPassword === user.password">
+        <tr [hidden]="!pw.dirty || confirmPassword === user.password">
           <td colspan="2">
             <div class="confirmation-differs">
               Confirmation password does not match.
@@ -53,10 +53,10 @@
           </td>
         </tr>
 
-        <tr [hidden]="!pw.dirty || user.confirmPassword !== user.password">
+        <tr [hidden]="!pw.dirty || confirmPassword !== user.password">
           <td colspan="2">
             <div class="confirmation-matches">
-              Confirmation password matches.
+              Congrats!  Confirmation password matches.
             </div>
           </td>
         </tr>
@@ -89,10 +89,10 @@
 
 
     <div *ngIf="(action == 'edit')">
-      <button [disabled]="!(un.dirty || ema.dirty || (pw.dirty && user.password === user.confirmPassword))" (click)="updateUser()">Update</button>
+      <button [disabled]="updateButtonShouldBeDisabled()" (click)="updateUser()">Update</button>
     </div>
     <div *ngIf="(action == 'create')">
-      <button (click)="createNewUser()">Create</button>
+      <button [disabled]="createButtonShouldBeDisabled()"(click)="createNewUser()">Create</button>
     </div>
 
     <br>

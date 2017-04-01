@@ -1,0 +1,18 @@
+/* Worth noting that the 80px margin is tied closely to a 500px wide table
+   If the size of the table changes, this margin will likely need to change */
+div.title-bar {
+  padding: 10px;
+  margin: 0 80px;
+  border-radius: 3px;
+  background-color: firebrick;
+  color: white;
+  text-align: center;
+}
+div.confirmation-matches {
+  padding: 10px;
+  margin: 0 80px;
+  border-radius: 3px;
+  background-color: green;
+  color: white;
+  text-align: center;
+}

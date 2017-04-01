@@ -2,7 +2,7 @@ import { Response } from '@angular/http';
 
 export class ServiceResponse {
   private serviceReturnCode: ServiceReturnCode;
-  private message: String;
+  private message: string;
 
 
   constructor(res: Response) {
@@ -22,11 +22,11 @@ export class ServiceResponse {
     }
   }
 
-  getMessage(): String {
+  getMessage(): string {
     return this.message;
   }
 
-  setMessage(newMessage: String) : void {
+  setMessage(newMessage: string) : void {
     this.message = newMessage;
   }
 
