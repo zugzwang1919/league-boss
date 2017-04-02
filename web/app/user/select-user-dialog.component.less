@@ -1,16 +1,27 @@
-/* Worth noting that the 80px margin is tied closely to a 500px wide table
-   If the size of the table changes, this margin will likely need to change */
+@import "../../globals";
+
+
 div.title-bar  {
     padding: 3px;
     border-radius: 0px;
-    background-color: darkorange;  
+    background-color: @primary-color;  
     color: white;
     text-align: center;
 }
 
-div.dialog {
+div.dialog-body {
     border-radius: 3px;
-    background-color: green;  
-    color: white;
+    background-color: @our-gray-very-lightest;
+    color: @our-gray;
     text-align: center;
+    padding: 10px;
+}
+
+table {
+  padding: 15px 0px;
+}
+
+button {
+    width: 6em;
+    height: 1.7em;
 }

@@ -22,8 +22,10 @@ export class LeagueDetailComponent {
   leagueAdmins: User[];
   leaguePlayers: User[];
 
-  action: String;
-  message: String;
+  action: string;
+  message: string;
+
+  adminBeingAdded: boolean;
 
   // Referential Data
   possibleSeasons: Object[] = require('../../interface/season-type.js');
@@ -95,6 +97,14 @@ export class LeagueDetailComponent {
       .catch(serviceResponse => {
         this.message = serviceResponse.message;
       })
+  }
+
+  addAdmin(): void {
+    this.adminBeingAdded = true;
+  }
+
+  onCancelFunction() {
+    this.adminBeingAdded = false;
   }
 
   setUpEmptyLeague() {

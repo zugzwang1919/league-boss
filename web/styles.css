@@ -105,12 +105,24 @@ div.error-message-box {
 div.left-column {
   float: left;
   width: 40%;
-  padding: 0% 5%;
+  padding: 0 2%;
 }
 div.right-column {
   float: right;
   width: 40%;
-  padding: 0% 5%;
+  padding: 0 2%;
+}
+div.left-column-with-outline {
+  border: 1px solid #f2f2f5;
+  float: left;
+  width: 40%;
+  padding: 10px 2%;
+}
+div.right-column-with-outline {
+  border: 1px solid #f2f2f5;
+  float: right;
+  width: 40%;
+  padding: 10px 2%;
 }
 div.clear {
   clear: both;
@@ -143,10 +155,11 @@ td.key {
 }
 table.layout {
   border: 0px;
+  padding: 10px;
 }
 table.layout-with-outline {
   border: 1px solid #f2f2f5;
-  padding: 10 60;
+  padding: 10px;
 }
 table.columnar-data {
   border: 1px solid #f2f2f5;

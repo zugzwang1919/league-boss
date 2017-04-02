@@ -1,18 +1,23 @@
-/* Worth noting that the 80px margin is tied closely to a 500px wide table
-   If the size of the table changes, this margin will likely need to change */
+/* #449bc7 #07b */
+/* wolfe-software #0099da */
 div.title-bar {
-  padding: 10px;
-  margin: 0 80px;
-  border-radius: 3px;
-  background-color: firebrick;
+  padding: 3px;
+  border-radius: 0px;
+  background-color: #449bc7;
   color: white;
   text-align: center;
 }
-div.confirmation-matches {
-  padding: 10px;
-  margin: 0 80px;
+div.dialog-body {
   border-radius: 3px;
-  background-color: green;
-  color: white;
+  background-color: #fbfbfc;
+  color: #8080a0;
   text-align: center;
+  padding: 10px;
+}
+table {
+  padding: 15px 0px;
+}
+button {
+  width: 6em;
+  height: 1.7em;
 }

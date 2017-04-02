@@ -1,8 +1,17 @@
 <div>
-  <div class="title-bar"
-    Your Title here
+  <div class="title-bar">
+    {{title}}
   </div>
-  <div class="dialog-body"
-    Dialog body
+  <div class="dialog-body">
+    <table>
+      <tr>
+        <td>User Name:</td>
+        <td><input type="text" [(ngModel)]="userName" #un="ngModel" placeholder="user name"/></td>
+      </tr>
+    </table>
+    <button [disabled]="!un.dirty">Add Admin</button>
+    <button (click)="cancelButtonPushed()">Cancel</button>
+
   </div>
 </div>
+

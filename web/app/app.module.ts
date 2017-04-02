@@ -11,6 +11,7 @@ import { AppComponent }         from './app.component';
 import { WolfeHttp}             from './common/wolfe-http';
 
 import { UserDetailComponent }  from './user/user-detail.component';
+import { selectUserDialog }     from './user/select-user-dialog.component';
 import { UserService }          from './user/user-service.service';
 
 import { LeagueDetailComponent} from './league/league-detail.component';
@@ -28,6 +29,7 @@ import { LoginService }         from './login/login-service.service';
                   CoreModule],
   declarations: [ AppComponent,
                   UserDetailComponent,
+                  selectUserDialog,
                   LoginComponent,
                   LeagueDetailComponent ],
   providers:    [ UserService,

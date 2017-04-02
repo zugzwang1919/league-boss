@@ -40,7 +40,7 @@
     <br>
     <div class="two-column-container">
       <div class="left-column">
-        <table class="layout-with-outline">
+        <table class="layout">
           <tr>
             <td class="heading">Season</td>
           </tr>
@@ -55,7 +55,7 @@
         </table>
       </div>
       <div class="right-column">
-        <table class="layout-with-outline">
+        <table class="layout">
           <tr>
             <td class="heading">League Type</td>
           </tr>
@@ -69,8 +69,6 @@
     </div>
     <div class="clear"></div>
 
-    <br>
-
     <div *ngIf="(action == 'edit')">
       <button (click)="updateLeague()">Update</button>
     </div>
@@ -83,8 +81,8 @@
   </div>
   <br>
   <div class="two-column-container">
-    <div class="left-column">
-      <table class="layout-with-outline">
+    <div class="left-column-with-outline">
+      <table class="layout">
         <tr>
           <td class="heading">Admins</td>
         </tr>
@@ -94,9 +92,13 @@
           </td>
         </tr>
       </table>
-    </div>
-    <div class="right-column">
-      <table class="layout-with-outline">
+      <button *ngIf="!adminBeingAdded" (click)="addAdmin()">Add Admin</button>
+      <div *ngIf="adminBeingAdded">
+        <selectUserDialog [title]="'Search Users'" (cancelFunction)="onCancelFunction()"  ></selectUserDialog>
+      </div>
+    </div>    
+    <div class="right-column-with-outline">
+      <table class="layout">
         <tr>
           <td class="heading">Players</td>
         </tr>
