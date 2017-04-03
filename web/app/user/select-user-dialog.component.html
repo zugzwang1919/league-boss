@@ -9,7 +9,7 @@
         <td><input type="text" [(ngModel)]="userName" #un="ngModel" placeholder="user name"/></td>
       </tr>
     </table>
-    <button [disabled]="!un.dirty">Add Admin</button>
+    <button (click)="actionButtonPushed()" [disabled]="!un.dirty">Add Admin</button>
     <button (click)="cancelButtonPushed()">Cancel</button>
 
   </div>

@@ -10,14 +10,6 @@
   </div>
   <div>
     <table class="key-value">
-      <tr *ngIf="(action != 'create')">
-        <td class="key">
-          <label>id: </label>
-        </td>
-        <td>
-          {{league.id}}
-        </td>
-      </tr>
 
       <tr>
         <td class="key">
@@ -37,7 +29,7 @@
         </td>
       </tr>
     </table>
-    <br>
+
     <div class="two-column-container">
       <div class="left-column">
         <table class="layout">
@@ -48,9 +40,6 @@
             <td>
               <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
             </td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
           </tr>
         </table>
       </div>
@@ -66,8 +55,11 @@
           </tr>
         </table>
       </div>
+  
     </div>
+    <!--      
     <div class="clear"></div>
+    -->    
 
     <div *ngIf="(action == 'edit')">
       <button (click)="updateLeague()">Update</button>

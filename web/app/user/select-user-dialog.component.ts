@@ -23,6 +23,7 @@ export class selectUserDialog {
   @Input() title: string;
 
   @Output() cancelFunction: EventEmitter<DialogEvent> = new EventEmitter<DialogEvent>();
+  @Output() actionFunction: EventEmitter<DialogEvent> = new EventEmitter<DialogEvent>();
 
 
   userName: string;
@@ -38,6 +39,11 @@ export class selectUserDialog {
   ngOnInit(): void {
     this.userName = null;
     this.errorMessage = null;
+  }
+
+  actionButtonPushed(): void {
+    this.userService.getU
+    this.actionFunction.emit( null );
   }
 
   cancelButtonPushed(): void {
