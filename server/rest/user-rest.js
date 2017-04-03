@@ -14,6 +14,16 @@ router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
     .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
 });
 
+router.get('/', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("user-rest getUser:  Looking for user with a name of " + req.query.userName);
+  UserLogic.findUserByUserName(req.query.userName)
+    .then(user => { 
+      RestResponse.send200(res, user) 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error) 
+    })
+});
 
 router.post('/', function (req, res) {
   console.log("user-rest createUser: userName found in body = " + req.body.userName);
