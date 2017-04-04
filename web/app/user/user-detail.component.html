@@ -20,7 +20,7 @@
             user name:
           </td>
           <td [hidden]="(action === 'view')" class="value">
-            <input type="text" [(ngModel)]="user.userName" name="userName" placeholder="user name" #un="ngModel" />
+            <input type="text" [(ngModel)]="user.userName" name="userName" placeholder="user name" #un="ngModel" autofocus="autofocus" />
           </td>
           <td [hidden]="(action !== 'view')" class="value">
             {{user.userName}}
