@@ -1,11 +1,11 @@
 <div class="centered-80">
-  <div *ngIf="(action != 'create')">
+  <div *ngIf="(action !== 'create')">
     <h2>Profile for {{league.leagueName}}</h2>
   </div>
   <div class="message-box" *ngIf="message">
     <h4>{{message}}</h4>
   </div>
-  <div *ngIf="(action == 'create')">
+  <div *ngIf="(action === 'create')">
     <h1>Create New League</h1>
   </div>
   <div>
@@ -57,14 +57,10 @@
       </div>
   
     </div>
-    <!--      
-    <div class="clear"></div>
-    -->    
-
-    <div *ngIf="(action == 'edit')">
+    <div *ngIf="(action === 'edit')">
       <button (click)="updateLeague()">Update</button>
     </div>
-    <div *ngIf="(action == 'create')">
+    <div *ngIf="(action === 'create')">
       <button (click)="createNewLeague()">Create</button>
     </div>
 
@@ -72,7 +68,7 @@
 
   </div>
   <br>
-  <div class="two-column-container">
+  <div *ngIf="action === 'edit'" class="two-column-container">
     <div class="left-column-with-outline">
       <table class="layout">
         <tr>
@@ -86,7 +82,7 @@
       </table>
       <button *ngIf="!adminBeingAdded" (click)="addAdmin()">Add Admin</button>
       <div *ngIf="adminBeingAdded">
-        <selectUserDialog [title]="'Search Users'" (cancelFunction)="onCancelFunction()"  ></selectUserDialog>
+        <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)" ></selectUserDialog>
       </div>
     </div>    
     <div class="right-column-with-outline">

@@ -18,7 +18,7 @@ export class LeagueService {
     private http: WolfeHttp,
   ) { }
 
-  getLeague(id: Number): Promise<League> {
+  getLeague(id: number): Promise<League> {
     console.log("Inside LeagueService: Starting to look for League with an id of " + id);
 
     return this.http.get('http://localhost:1919/league/' + id)
@@ -45,7 +45,7 @@ export class LeagueService {
 
   updateLeague(league: League): Promise<ServiceResponse> {
     console.log("Inside LeagueService:  Beginning 'Update League' process");
-    return this.http.put('http://localhost:1919/league/'+ league.id, league)
+    return this.http.put('http://localhost:1919/league/' + league.id, league)
       .toPromise()
       .then((res: Response) => {
         return Promise.resolve(new ServiceResponse(res))
@@ -55,9 +55,9 @@ export class LeagueService {
       })
   }
 
-  getAdmins(leagueId: Number): Promise<User[]> {
+  getAdmins(leagueId: number): Promise<User[]> {
     console.log("Inside LeagueService: Looking for admins for league id = " + leagueId);
-      return this.http.get('http://localhost:1919/league/' + leagueId + '/admin')
+    return this.http.get('http://localhost:1919/league/' + leagueId + '/admin')
       .toPromise()
       .then((res: Response) => {
         return Promise.resolve(res.json())
@@ -67,9 +67,22 @@ export class LeagueService {
       })
   }
 
-  getPlayers(leagueId: Number): Promise<User[]> {
+  addAdmin(leagueId: number, userId: number) {
+    console.log("Inside LeagueService: Looking to add user id = " + userId + " into  league id = " + leagueId);
+    return this.http.post('http://localhost:1919/league/' + leagueId + '/admin', { "userId": userId })
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
+
+  }
+
+  getPlayers(leagueId: number): Promise<User[]> {
     console.log("Inside LeagueService: Looking for players for league id = " + leagueId);
-      return this.http.get('http://localhost:1919/league/' + leagueId + '/player')
+    return this.http.get('http://localhost:1919/league/' + leagueId + '/player')
       .toPromise()
       .then((res: Response) => {
         return Promise.resolve(res.json())

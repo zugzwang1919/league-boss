@@ -15,7 +15,7 @@ export class LoginService {
     private currentUserService: CurrentUserService,
   ) { }
 
-  login(userName: String, password: String): Promise<Object> {
+  login(userName: string, password: string): Promise<Object> {
     console.log("Inside LoginService: Attempting to log in " + userName);
     return this.http.post('http://localhost:1919/login/', { "userName": userName, "password": password })
       .toPromise()

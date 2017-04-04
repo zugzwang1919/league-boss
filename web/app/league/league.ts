@@ -1,7 +1,7 @@
 export class League {
-  id: Number;
-  leagueName: String;
-  description: String;
-  seasonTypeIndex: Number;
-  leagueTypeIndex: Number;
+  id: number;
+  leagueName: string;
+  description: string;
+  seasonTypeIndex: number;
+  leagueTypeIndex: number;
 }

@@ -3,13 +3,17 @@
     {{title}}
   </div>
   <div class="dialog-body">
+    <div *ngIf="errorMessage" class="error-message-box">
+      {{errorMessage}}
+    </div>    
     <table>
       <tr>
         <td>User Name:</td>
         <td><input type="text" [(ngModel)]="userName" #un="ngModel" placeholder="user name"/></td>
       </tr>
     </table>
-    <button (click)="actionButtonPushed()" [disabled]="!un.dirty">Add Admin</button>
+
+    <button (click)="actionButtonPushed()" [disabled]="!un.dirty">{{actionButtonName}}</button>
     <button (click)="cancelButtonPushed()">Cancel</button>
 
   </div>

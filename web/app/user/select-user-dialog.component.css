@@ -9,15 +9,19 @@ div.title-bar {
 }
 div.dialog-body {
   border-radius: 3px;
-  background-color: #fbfbfc;
+  background-color: #f2f2f5;
   color: #8080a0;
   text-align: center;
   padding: 10px;
+}
+div.error-message-box {
+  width: 90%;
 }
 table {
   padding: 15px 0px;
 }
 button {
+  font-size: 85%;
   width: 6em;
-  height: 1.7em;
+  height: 1.5em;
 }

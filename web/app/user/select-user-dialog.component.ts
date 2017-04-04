@@ -21,6 +21,7 @@ import { StringUtil } from '../common/string-util';
 export class selectUserDialog {
 
   @Input() title: string;
+  @Input() actionButtonName: string;
 
   @Output() cancelFunction: EventEmitter<DialogEvent> = new EventEmitter<DialogEvent>();
   @Output() actionFunction: EventEmitter<DialogEvent> = new EventEmitter<DialogEvent>();
@@ -42,8 +43,15 @@ export class selectUserDialog {
   }
 
   actionButtonPushed(): void {
-    this.userService.getU
-    this.actionFunction.emit( null );
+    this.userService.getUserByName(this.userName)
+    .then((user: User) => {
+      var event: DialogEvent = new DialogEvent(user);
+      this.actionFunction.emit( event );
+      this.errorMessage = null;
+    })
+    .catch((serviceResponse: ServiceResponse) => {
+      this.errorMessage = "Requested user was not found."
+    }) 
   }
 
   cancelButtonPushed(): void {
@@ -54,7 +62,7 @@ export class selectUserDialog {
 
 export class DialogEvent {
   public user: User;
-  contructor (user: User ) {
+  constructor (user: User ) {
     this.user = user;
   }
 }

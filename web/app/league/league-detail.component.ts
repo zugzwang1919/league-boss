@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 
 import { League } from './league';
 import { User } from '../user/user';
+import { DialogEvent } from '../user/select-user-dialog.component';
 import { LeagueService } from './league-service.service';
 import { ServiceResponse } from '../common/service-response';
 
@@ -103,9 +104,20 @@ export class LeagueDetailComponent {
     this.adminBeingAdded = true;
   }
 
-  onCancelFunction() {
+  onAdminCancel() {
     this.adminBeingAdded = false;
   }
+
+  onAdminFound(dialogEvent: DialogEvent) {
+    this.leagueService.addAdmin(this.league.id, dialogEvent.user.id)
+      .then(junk => {
+        this.leagueAdmins.push(dialogEvent.user);
+      })
+      .catch(serviceResponse => {
+        this.message = serviceResponse.message;
+      })
+  }
+
 
   setUpEmptyLeague() {
     var league: League;

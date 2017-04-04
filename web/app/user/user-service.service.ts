@@ -16,7 +16,7 @@ export class UserService {
     private http: WolfeHttp,
   ) { }
 
-  getUser(id: Number): Promise<User> {
+  getUser(id: number): Promise<User> {
     console.log("Inside UserService: Starting to look for User with an id of " + id);
     return this.http.get('http://localhost:1919/user/' + id)
       .toPromise()
@@ -30,7 +30,7 @@ export class UserService {
 
   getUserByName(userName: string): Promise<User> {
     console.log("Inside UserService: Starting to look for User with a name of " + userName);
-    return this.http.get('http://localhost:1919/user?name=' + userName)
+    return this.http.get('http://localhost:1919/user?userName=' + userName)
       .toPromise()
       .then((res: Response) => {
         return Promise.resolve(this.buildUserFromHttpResponse(res))

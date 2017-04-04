@@ -14,8 +14,8 @@ import { CurrentUserService }from './user/current-user-service.service';
 })
 
 export class AppComponent { 
-  displayedUserId: String;
-  displayedLeagueId: String;
+  displayedUserId: string;
+  displayedLeagueId: string;
   leaguueId
   constructor(
     private router: Router,

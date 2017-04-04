@@ -17,9 +17,9 @@ import { User } from '../user/user';
 
 export class LoginComponent {
 
-  userName: String;
-  password: String;
-  message: String;
+  userName: string;
+  password: string;
+  message: string;
 
 
   constructor(
