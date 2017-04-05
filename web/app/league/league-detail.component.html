@@ -40,6 +40,7 @@
             <td>
               <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
             </td>
+
           </tr>
         </table>
       </div>
@@ -55,7 +56,7 @@
           </tr>
         </table>
       </div>
-  
+
     </div>
     <div *ngIf="(action === 'edit')">
       <button (click)="updateLeague()">Update</button>
@@ -78,13 +79,16 @@
           <td>
             <a [routerLink]="['/user/' + admin.id]">{{admin.userName}}</a>
           </td>
+          <td>
+            <button class="delete">X</button>
+          </td>
         </tr>
       </table>
       <button *ngIf="!adminBeingAdded" (click)="addAdmin()">Add Admin</button>
       <div *ngIf="adminBeingAdded">
-        <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)" ></selectUserDialog>
+        <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)"></selectUserDialog>
       </div>
-    </div>    
+    </div>
     <div class="right-column-with-outline">
       <table class="layout">
         <tr>
