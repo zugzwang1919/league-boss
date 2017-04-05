@@ -25,12 +25,14 @@
           <label> description: </label>
         </td>
         <td>
-          <input type="text" [(ngModel)]="league.description" placeholder="description" />
+          <textarea  [(ngModel)]="league.description" placeholder="description"></textarea>
         </td>
       </tr>
     </table>
 
     <div class="two-column-container">
+
+ 
       <div class="left-column">
         <table class="layout">
           <tr>
@@ -55,12 +57,13 @@
           </tr>
         </table>
       </div>
-  
-    </div>
-    <div *ngIf="(action === 'edit')">
+              
+    </div>   
+
+    <div  *ngIf="(action === 'edit')">
       <button (click)="updateLeague()">Update</button>
     </div>
-    <div *ngIf="(action === 'create')">
+    <div  *ngIf="(action === 'create')">
       <button (click)="createNewLeague()">Create</button>
     </div>
 
