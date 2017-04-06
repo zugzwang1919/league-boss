@@ -1,5 +1,6 @@
 /* #449bc7 #07b */
 /* wolfe-software #0099da */
+/*BCA #00A4D8 */
 /* Master Styles */
 body,
 button,
@@ -11,10 +12,10 @@ table {
   font-family: Lato, Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 a {
-  color: #449bc7;
+  color: #00A4D8;
 }
 a:hover {
-  color: #388eba;
+  color: #0091bf;
 }
 input[type=text],
 input[type=password] {
@@ -40,8 +41,8 @@ textarea:focus {
   border: 1px solid #717195;
 }
 button {
-  background: #449bc7;
-  border: 1px solid #449bc7;
+  background: #00A4D8;
+  border: 1px solid #00A4D8;
   color: white;
   border-radius: 5px;
   height: 2.5em;
@@ -50,18 +51,18 @@ button {
 /* Note: Place hover before disabled so that if a 
 user hovers over a disabled button, disable will have priority */
 button:hover {
-  background: #388eba;
-  border: 0px solid #388eba;
+  background: #0091bf;
+  border: 0px solid #0091bf;
   color: white;
 }
 button:disabled {
-  background: #badaea;
-  border: 0px solid #badaea;
+  background: #72ddff;
+  border: 0px solid #72ddff;
   color: white;
 }
 button:active {
-  background: #327fa6;
-  border: 0px solid #327fa6;
+  background: #007da5;
+  border: 0px solid #007da5;
   color: white;
   /* transform: scale(0.99); */
 }
@@ -87,7 +88,7 @@ div.message-box {
   width: 480px;
   border-radius: 3px;
   margin: 0 auto;
-  background: #c77044;
+  background: #d83400;
   color: white;
   border-style: solid;
   border-width: .1em;
