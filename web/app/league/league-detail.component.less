@@ -1,3 +1,5 @@
+@import "../../globals";
+
 /* Used inside a table when trying to make this stand out */
 table {
     padding-top: 0px;
@@ -13,9 +15,14 @@ td.heading {
 button.delete {
   outline: 0px;
   width: 100%;
-  line-height: 15px;
-  height: 30px;
+  line-height: 9px;
+  font-size: 9px;
+  font-weight: bold;
+  height: 16px;
   background: firebrick;
   background-color: firebrick;
-  border: 1px solid firebrick;
+  border-top: 1px solid @our-gray;
+  border-left: 1px solid @our-gray;
+  border-bottom: 1px solid @our-gray-lighter;
+  border-right: 1px solid @our-gray-lighter;
 }

@@ -17,18 +17,30 @@ a:hover {
   color:@primary-color-dark;
 }
 
-input[type=text], input[type=password], textarea {
+input[type=text], input[type=password] {
+
   border: 0;
+  width: 195px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: @our-gray-light;
 }
 
-
-input[type=text]:focus, input[type=password]:focus, textarea:focus {
+input[type=text]:focus, input[type=password]:focus,  {
   outline: 0;
   border: 0;
   border-bottom: 1px solid @our-gray-dark;
+}
+
+textarea {
+  border: 1px solid @our-gray-light;
+  width: 195px;
+  height: 60px;
+}
+
+textarea:focus {
+  outline: 0;
+  border: 1px solid @our-gray-dark;  
 }
 
 button {
@@ -117,15 +129,18 @@ div.error-message-box {
   border-width: .1em; 
 }
 
+div.two-column-container {
+  background-color: purple;
+}
 div.left-column {
     float: left;
-    width: 40%;
-    padding: 0 2%;  
+    width: 45%;
+    padding: 0 2%; 
 }
 
 div.right-column {
     float: right;
-    width: 40%;
+    width: 45%;
     padding: 0 2%;  
 }
 
