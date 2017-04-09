@@ -13,10 +13,13 @@
 
       <tr>
         <td class="key">
-          <label> league name: </label>
+          league name: 
         </td>
-        <td>
-          <input type="text" [(ngModel)]="league.leagueName" placeholder="league name" />
+        <td *ngIf="(action !== 'view')" class="value" >
+          <input type="text" [(ngModel)]="league.leagueName" placeholder="enter a league name" />
+        </td>
+        <td *ngIf="(action === 'view')" class="value" >
+          {{league.leagueName}}
         </td>
       </tr>
 
@@ -25,7 +28,7 @@
           <label> description: </label>
         </td>
         <td>
-          <input type="text" [(ngModel)]="league.description" placeholder="description" />
+          <textarea [disabled]="(action === 'view')" [(ngModel)]="league.description" placeholder="enter a description"></textarea>
         </td>
       </tr>
     </table>
@@ -38,7 +41,7 @@
           </tr>
           <tr *ngFor="let season of possibleSeasons">
             <td>
-              <input type="radio" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
+              <input type="radio" [disabled]="action==='view'" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
             </td>
 
           </tr>
@@ -51,7 +54,7 @@
           </tr>
           <tr *ngFor="let leagueType of possibleLeagueTypes">
             <td>
-              <input type="radio" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
+              <input type="radio" [disabled]="action==='view'" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
             </td>
           </tr>
         </table>
@@ -69,7 +72,7 @@
 
   </div>
   <br>
-  <div *ngIf="action === 'edit'" class="two-column-container">
+  <div  *ngIf="action !== 'create'" class="two-column-container">
     <div class="left-column-with-outline">
       <table class="layout">
         <tr>
@@ -80,11 +83,11 @@
             <a [routerLink]="['/user/' + admin.id]">{{admin.userName}}</a>
           </td>
           <td>
-            <button class="delete">X</button>
+            <button *ngIf="action === 'edit'" class="delete">X</button>
           </td>
         </tr>
       </table>
-      <button *ngIf="!adminBeingAdded" (click)="addAdmin()">Add Admin</button>
+      <button *ngIf="action === 'edit' && !adminBeingAdded" (click)="addAdmin()">Add Admin</button>
       <div *ngIf="adminBeingAdded">
         <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)"></selectUserDialog>
       </div>

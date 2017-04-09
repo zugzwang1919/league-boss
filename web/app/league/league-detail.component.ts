@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 
 import { League } from './league';
 import { User } from '../user/user';
+import { CurrentUserService } from '../user/current-user-service.service';
 import { DialogEvent } from '../user/select-user-dialog.component';
 import { LeagueService } from './league-service.service';
 import { ServiceResponse } from '../common/service-response';
@@ -35,6 +36,7 @@ export class LeagueDetailComponent {
   constructor(
     private route: ActivatedRoute,
     private leagueService: LeagueService,
+    private currentUserService: CurrentUserService,
   ) { }
 
 
@@ -55,7 +57,8 @@ export class LeagueDetailComponent {
           this.action = 'create';
         }
         else {
-          this.action = 'edit';
+          // initially set the action to 'view'
+          this.action = 'view';
           this.leagueService.getLeague(+segments[1])
             .then(league => {
               this.league = league;
@@ -63,6 +66,10 @@ export class LeagueDetailComponent {
             })
             .then(admins => {
               this.leagueAdmins = admins;
+              // override the action to 'edit' if the user has sufficient credentials
+              var currentUser: User = this.currentUserService.currentUser;
+              if ( currentUser.isSuperUser || this.isCurrentUserAdmin() )
+                this.action = 'edit';
               return this.leagueService.getPlayers(this.league.id)
             })
             .then(players => {
@@ -118,6 +125,14 @@ export class LeagueDetailComponent {
       })
   }
 
+  private isCurrentUserAdmin() : boolean {
+    for( var admin of this.leagueAdmins) {
+      var currentUserId: number = this.currentUserService.currentUser.id;
+      if ( currentUserId === admin.id )
+        return true;
+    }
+    return false;
+  }
 
   setUpEmptyLeague() {
     var league: League;

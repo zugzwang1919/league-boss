@@ -3,7 +3,7 @@
 /*BCA #00A4D8 */
 div.header {
   color: #f2f2f5;
-  background: #00A4D8;
+  background: #449bc7;
   vertical-align: middle;
   height: 100px;
 }
@@ -74,85 +74,85 @@ div.primary-lightest {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #72ddff;
+  background-color: #badaea;
 }
 div.primary-lighter {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #3fd1ff;
+  background-color: #92c5df;
 }
 div.primary-light {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #0cc5ff;
+  background-color: #6bb0d3;
 }
 div.primary {
   float: left;
   width: 40%;
   height: 100%;
-  background-color: #00A4D8;
+  background-color: #449bc7;
 }
 div.primary-dark {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #0091bf;
+  background-color: #388eba;
 }
 div.primary-darker {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #007da5;
+  background-color: #327fa6;
 }
 div.primary-darkest {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #006a8c;
+  background-color: #2c7093;
 }
 div.complementary-lightest {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #ffcebf;
+  background-color: #fcf7f5;
 }
 div.complementary-lighter {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #ff9472;
+  background-color: #eacaba;
 }
 div.complementary-light {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #ff5a25;
+  background-color: #d99d7f;
 }
 div.complementary {
   float: left;
   width: 40%;
   height: 100%;
-  background-color: #d83400;
+  background-color: #c77044;
 }
 div.complementary-dark {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #bf2e00;
+  background-color: #ba6338;
 }
 div.complementary-darker {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #a52800;
+  background-color: #a65932;
 }
 div.complementary-darkest {
   float: left;
   width: 10%;
   height: 100%;
-  background-color: #8c2200;
+  background-color: #934e2c;
 }
 div.our-gray-lightest {
   float: left;
