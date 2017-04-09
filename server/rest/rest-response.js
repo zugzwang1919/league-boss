@@ -10,8 +10,8 @@ module.exports = {
     sendResponse(res, 200, optionalBody, {"key" : headerKey, "value" : headerValue });
   },  
     
-  send401: function(res) {
-    sendResponse(res, 401, buildJSONfromMessage("Authentication failed."))
+  send401: function(res, optionalMessage) {
+    sendResponse(res, 401, buildJSONfromMessage(optionalMessage !== undefined ? optionalMessage : "Authentication failed. Successful login required."))
   },
 
   send403: function(res) {

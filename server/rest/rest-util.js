@@ -1,5 +1,6 @@
 var DateUtils = require('../common/date-util');
 var UserLogic = require('../logic/user-logic');
+var RestResponse = require('./rest-response');
 
 module.exports = {
   buildJSONfromMessage: function (message) {
@@ -30,11 +31,11 @@ module.exports = {
         .catch(err => {
           console.log("err.name = " + err.name);
           console.log("err.message = " + err.message);
-          res.sendStatus(401)
+          RestResponse.send401(res);
         });
     }
     else {
-      res.sendStatus(401);
+      RestResponse.send401(res);
     }
   }
 }
