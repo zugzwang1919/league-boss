@@ -6,17 +6,37 @@
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-        <collectionProp name="Arguments.arguments"/>
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="server" elementType="Argument">
+            <stringProp name="Argument.name">server</stringProp>
+            <stringProp name="Argument.value">${__P(server)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">${__P(port)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
+      <kg.apc.jmeter.config.VariablesFromCSV guiclass="kg.apc.jmeter.config.VariablesFromCSVGui" testclass="kg.apc.jmeter.config.VariablesFromCSV" testname="Load Variables from CSV" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+        <stringProp name="filename">C:\SoftwareProjects\league-boss\server\jmeter_tests\UniversalVariables.csv</stringProp>
+        <stringProp name="variablesPrefix"></stringProp>
+        <stringProp name="delimiter">=</stringProp>
+        <intProp name="skipLines">0</intProp>
+        <boolProp name="storeSysProp">false</boolProp>
+      </kg.apc.jmeter.config.VariablesFromCSV>
+      <hashTree/>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">localhost</stringProp>
-        <stringProp name="HTTPSampler.port">1919</stringProp>
+        <stringProp name="HTTPSampler.domain">${server}</stringProp>
+        <stringProp name="HTTPSampler.port">${port}</stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
         <stringProp name="HTTPSampler.protocol"></stringProp>
@@ -255,7 +275,7 @@
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="SuperUser Functions" enabled="true"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful SuperUser Login" enabled="true">
-            <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve User as SuperUser" enabled="true">
@@ -397,7 +417,7 @@
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="&apos;Normal&apos; User Operating on Self" enabled="true"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful Normal User Login" enabled="true">
-            <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\SuccessfulUserLoginTestFragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulUserLoginTestFragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve Self as Normal User" enabled="true">

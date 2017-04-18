@@ -11,34 +11,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
-        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments"/>
-        </elementProp>
-        <stringProp name="HTTPSampler.domain">localhost</stringProp>
-        <stringProp name="HTTPSampler.port">1919</stringProp>
-        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-        <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        <stringProp name="HTTPSampler.protocol"></stringProp>
-        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-        <stringProp name="HTTPSampler.path"></stringProp>
-        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
-      </ConfigTestElement>
-      <hashTree/>
-      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-        <collectionProp name="HeaderManager.headers">
-          <elementProp name="" elementType="Header">
-            <stringProp name="Header.name">Content-Type</stringProp>
-            <stringProp name="Header.value">application/json</stringProp>
-          </elementProp>
-          <elementProp name="" elementType="Header">
-            <stringProp name="Header.name">Wolfe-Authentication-Token</stringProp>
-            <stringProp name="Header.value">${token}</stringProp>
-          </elementProp>
-        </collectionProp>
-      </HeaderManager>
-      <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Main" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Login Tests" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -46,13 +19,55 @@
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <longProp name="ThreadGroup.start_time">1487110417000</longProp>
-        <longProp name="ThreadGroup.end_time">1487110417000</longProp>
+        <longProp name="ThreadGroup.start_time">1492521538000</longProp>
+        <longProp name="ThreadGroup.end_time">1492521538000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <kg.apc.jmeter.config.VariablesFromCSV guiclass="kg.apc.jmeter.config.VariablesFromCSVGui" testclass="kg.apc.jmeter.config.VariablesFromCSV" testname="Load Variables from CSV" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+          <stringProp name="filename">C:\SoftwareProjects\league-boss\server\jmeter_tests\UniversalVariables.csv</stringProp>
+          <stringProp name="variablesPrefix"></stringProp>
+          <stringProp name="delimiter">=</stringProp>
+          <intProp name="skipLines">0</intProp>
+          <boolProp name="storeSysProp">false</boolProp>
+        </kg.apc.jmeter.config.VariablesFromCSV>
+        <hashTree/>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Wolfe-Authentication-Token</stringProp>
+              <stringProp name="Header.value">${token}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+          <boolProp name="displayJMeterProperties">true</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login with Bad UserName" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -101,7 +116,7 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-	&quot;userName&quot;: &quot;RWW&quot;,&#xd;
+	&quot;userName&quot;: &quot;${superUser1password}&quot;,&#xd;
 	&quot;password&quot;: &quot;RWWXYZ&quot;&#xd;
 }&#xd;
 </stringProp>
@@ -136,7 +151,7 @@
           <hashTree/>
         </hashTree>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Good Login for SuperUser" enabled="true">
-          <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
+          <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>

@@ -1,0 +1,10 @@
+server=localhost
+port=1919
+superUser1Id=1
+superUser1userName=RWW
+superUser1password=RWW
+superUser1emailAddress=russ.wolfe@gmail.com
+normalUser1Id=2
+normalUser1userName=TB
+normalUser1password=TB
+normalUser1emailAddress=tom.brady@gmail.com
