@@ -6,3 +6,5 @@
 # i'm sure this will eventually bite me
 /web/**/*.js
 /web/**/*.map
+# sinces we're using less for everything
+/web/**/*.css
