@@ -17,7 +17,7 @@ import { ServiceResponse } from '../common/service-response';
   styleUrls: ['./league-detail.component.css']
 })
 
-/*  Adding a comment here to see if the other repo picks it up */
+
 export class LeagueDetailComponent {
 
   league: League;
