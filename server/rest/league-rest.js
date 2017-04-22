@@ -73,8 +73,12 @@ router.post('/:leagueId/player', RestUtils.ensureAuthenticated, ensureSuperUserO
 router.delete('/:leagueId/player/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
   LeagueLogic.removePlayer(req.params.leagueId, req.params.userId)
-    .then(league => { RestResponse.send200(res, league) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+    .then(numberOfPlayersRemoved => { 
+      RestResponse.send200(res) 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error) 
+    })
 });
 
 
@@ -98,8 +102,12 @@ router.post('/:leagueId/admin', RestUtils.ensureAuthenticated, ensureSuperUserOr
 router.delete('/:leagueId/admin/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
   LeagueLogic.removeAdmin(req.params.leagueId, req.params.userId)
-    .then(league => { RestResponse.send200(res, league) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+    .then(league => { 
+      RestResponse.send200(res, league) 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error) 
+    })
 });
 
 

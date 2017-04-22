@@ -82,8 +82,20 @@ module.exports = {
 
   removeAdmin: function (leagueId, userId) {
     return this.findLeagueById(leagueId)
-      .then(league => { return league.removeAdmin(userId) })
-      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+      .then(league => { 
+        return league.removeAdmin(userId) 
+      })
+      .then(numAdminsRemoved => {
+        if (numAdminsRemoved === 1) {
+          return Promise.resolve(numAdminsRemoved);
+        }
+        else {
+          return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND);
+        }        
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
   },
 
   getPlayers: function (leagueId) {
@@ -102,8 +114,20 @@ module.exports = {
 
   removePlayer: function (leagueId, userId) {
     return this.findLeagueById(leagueId)
-      .then(league => { return league.removePlayer(userId) })
-      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+      .then(league => { 
+        return league.removePlayer(userId) 
+      })
+      .then(numPlayersRemoved => {
+        if (numPlayersRemoved === 1) {
+          return Promise.resolve(numPlayersRemoved);
+        }
+        else {
+          return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND);
+        }
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
   }
 
 }
