@@ -66,18 +66,22 @@ router.get('/:leagueId/player', RestUtils.ensureAuthenticated, function (req, re
 router.post('/:leagueId/player', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest addPlayer: userId found in body = " + req.body.userId);
   LeagueLogic.addPlayer(req.params.leagueId, req.body.userId)
-    .then(league => { RestResponse.send200(res, league) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+    .then(success => { 
+      RestResponse.send200(res);
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error);
+    })
 });
 
 router.delete('/:leagueId/player/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
   LeagueLogic.removePlayer(req.params.leagueId, req.params.userId)
-    .then(numberOfPlayersRemoved => { 
-      RestResponse.send200(res) 
+    .then( success => { 
+      RestResponse.send200(res); 
     })
     .catch(error => { 
-      RestResponse.sendAppropriateResponse(res, error) 
+      RestResponse.sendAppropriateResponse(res, error);
     })
 });
 
@@ -95,18 +99,22 @@ router.get('/:leagueId/admin', RestUtils.ensureAuthenticated, function (req, res
 router.post('/:leagueId/admin', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest addAddmin: userId found in body = " + req.body.userId);
   LeagueLogic.addAdmin(req.params.leagueId, req.body.userId)
-    .then(league => { RestResponse.send200(res, league) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+    .then(success => { 
+      RestResponse.send200(res); 
+    })
+    .catch(error => { 
+      RestResponse.sendAppropriateResponse(res, error);
+    })
 });
 
 router.delete('/:leagueId/admin/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
   console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
   LeagueLogic.removeAdmin(req.params.leagueId, req.params.userId)
-    .then(league => { 
-      RestResponse.send200(res, league) 
+    .then(success => { 
+      RestResponse.send200(res); 
     })
     .catch(error => { 
-      RestResponse.sendAppropriateResponse(res, error) 
+      RestResponse.sendAppropriateResponse(res, error);
     })
 });
 

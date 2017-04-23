@@ -1,13 +1,13 @@
 var DataModel = require('../model/dataModel');
 var League = DataModel.LEAGUE;
 var LogicErrors = require('./logic-error');
+var UserLogic = require('./user-logic');
 
 module.exports = {
 
   findLeagueById: function (id) {
     return findLeague({ where: { "id": id } });
   },
-
 
   createLeague: function (leagueData, creatingUserId) {
     console.log("league-logic.create() - createLeague has been called.");
@@ -75,9 +75,28 @@ module.exports = {
   },
 
   addAdmin: function (leagueId, userId) {
-    return this.findLeagueById(leagueId)
-      .then(league => { return league.addAdmin(userId) })
-      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+    var foundLeague;
+    var UserLogic = require('./user-logic');
+    return UserLogic.findUserById(userId)
+      .then(user => {
+        return this.findLeagueById(leagueId)
+      })     
+      .then(league => {
+        foundLeague = league;
+        return foundLeague.hasAdmin(userId)
+      })
+      .then (leagueAlreadyHasAdmin => {
+        if (leagueAlreadyHasAdmin)
+          return Promise.reject(LogicErrors.DUPLICATE);
+        else
+          return foundLeague.addAdmin(userId); 
+      })
+      .then( newLeagueAdmin => {
+        return true;
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
   },
 
   removeAdmin: function (leagueId, userId) {
@@ -87,7 +106,7 @@ module.exports = {
       })
       .then(numAdminsRemoved => {
         if (numAdminsRemoved === 1) {
-          return Promise.resolve(numAdminsRemoved);
+          return true;
         }
         else {
           return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND);
@@ -107,9 +126,28 @@ module.exports = {
   },
 
   addPlayer: function (leagueId, userId) {
-    return this.findLeagueById(leagueId)
-      .then(league => { return league.addPlayer(userId) })
-      .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
+    var foundLeague;
+    var UserLogic = require('./user-logic.js');
+    return UserLogic.findUserById(userId)
+      .then(user => {
+        return this.findLeagueById(leagueId)
+      })     
+      .then(league => {
+        foundLeague = league;
+        return foundLeague.hasPlayer(userId)
+      })
+      .then (playerAlreadyInLeague => {
+        if (playerAlreadyInLeague)
+          return Promise.reject(LogicErrors.DUPLICATE);
+        else
+          return foundLeague.addPlayer(userId); 
+      })
+      .then( wasPlayerAddedToLeague => {
+        return true;
+      })
+      .catch(err => { 
+        return Promise.reject(LogicErrors.firmUpError(err)); 
+      })
   },
 
   removePlayer: function (leagueId, userId) {
@@ -119,7 +157,7 @@ module.exports = {
       })
       .then(numPlayersRemoved => {
         if (numPlayersRemoved === 1) {
-          return Promise.resolve(numPlayersRemoved);
+          return true;
         }
         else {
           return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND);
