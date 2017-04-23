@@ -115,6 +115,12 @@ export class UserDetailComponent {
         this.happyMessage = serviceResponse.getMessage();
         this.errorMessage = null;
         this.markFormPristine(this.userDetailForm);
+      })      
+      .catch((serviceResponse: ServiceResponse) => {
+        console.log("Error message received from failed update  = " + serviceResponse.getMessage());
+        this.happyMessage = null;
+        this.errorMessage = serviceResponse.getMessage();
+        this.markFormPristine(this.userDetailForm);
       })
   }
 
