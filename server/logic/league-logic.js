@@ -2,6 +2,7 @@ var DataModel = require('../model/dataModel');
 var League = DataModel.LEAGUE;
 var LogicErrors = require('./logic-error');
 var UserLogic = require('./user-logic');
+//console.log("inside league-logic, User Logic ID = " + UserLogic.getIdentification());
 
 module.exports = {
 

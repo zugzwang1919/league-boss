@@ -5,6 +5,7 @@ var UserLogic = require('../logic/user-logic');
 var LogicError = require('../logic/logic-error');
 var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
+console.log("inside user-rest, User Logic ID = " + UserLogic.getIdentification());
 
 
 router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {

@@ -5,14 +5,12 @@
 var DataModel = require('./model/dataModel');
 var USER = DataModel.USER;
 var LEAGUE = DataModel.LEAGUE;
-var SEASON = DataModel.SEASON;
 
 
 var user1;
 var user2;
 var league1;
 var league2;
-var season1;
 
 
 
@@ -37,26 +35,6 @@ sequelize.sync({ force: true })
   })
   .then(user => {
     user2 = user;
-    SEASON.create({
-      seasonName: 'College Football 2017-18',
-      beginDate: '2017/08/22',
-      endDate: '2018/01/08'
-    })
-    SEASON.create({
-      seasonName: 'NBA 2017-18',
-      beginDate: '2017/10/02',
-      endDate: '2018/06/12'
-    })
-    return SEASON.create({
-      seasonName: 'NFL 2017-18',
-      beginDate: '2017/09/01',
-      endDate: '2018/02/10',
-      seasonTypeIndex: 1,
-      leagueTypeIndex: 1
-    })
-  })
-  .then(season => {
-    season1 = season;
     return LEAGUE.create({
       leagueName: 'NFL Chumps',
       description: 'The worst collection ever of NFL enthusiasts.',
@@ -67,7 +45,6 @@ sequelize.sync({ force: true })
   })
   .then(league => {
     league1 = league;
-    league1.addSeason(season1);
     league1.addPlayer(user1);
     league1.addPlayer(user2);
     league1.addAdmin(user1);
@@ -81,7 +58,6 @@ sequelize.sync({ force: true })
   })
   .then(league => {
     league2 = league;
-    league2.addSeason(season1);
     league2.addPlayer(user2);
     return league2.addAdmin(user2);
   })

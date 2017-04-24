@@ -3,6 +3,7 @@ var MathUtils = require('../common/math-util');
 var DateUtils = require('../common/date-util');
 var UserLogic = require('./user-logic');
 var LogicErrors = require('./logic-error');
+console.log("inside login-logic, User Logic ID = " + UserLogic.getIdentification());
 
 module.exports = {
 

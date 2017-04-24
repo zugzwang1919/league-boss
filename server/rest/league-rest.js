@@ -5,7 +5,7 @@ var UserLogic = require('../logic/user-logic');
 var LeagueLogic = require('../logic/league-logic');
 var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
-
+console.log("inside league-rest, User Logic ID = " + UserLogic.getIdentification());
 
 
 router.get('/:leagueId', RestUtils.ensureAuthenticated, function (req, res) {

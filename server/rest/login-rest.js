@@ -4,6 +4,7 @@ var router = express.Router();
 var LoginLogic = require('../logic/login-logic');
 var UserLogic = require('../logic/user-logic');
 var RestResponse = require('./rest-response');
+console.log("inside login-rest, User Logic ID = " + UserLogic.getIdentification());
 
 router.post('/login', function (req, res) {
   console.log("login-rest login: username found in body = " + req.body.userName);

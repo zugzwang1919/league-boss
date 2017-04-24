@@ -90,6 +90,10 @@ module.exports = {
     .catch(err => { 
       Promise.reject(buildCleanError(err)) 
     } )
+  },
+
+  getIdentification: function() {
+    return '48567';
   }
 }
 

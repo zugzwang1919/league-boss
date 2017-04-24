@@ -1,6 +1,6 @@
 var Sequelize = require("Sequelize");
 
-module.exports = function () {
+exports.definition = function () {
   var sequelize = require('./index.js');
   return sequelize.define('league', {
     leagueName: {
