@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var UserLogic = require('../logic/user-logic');
 var LeagueLogic = require('../logic/league-logic');
+var UserLeagueLogic = require('../logic/user-league-logic');
 var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
 console.log("inside league-rest, User Logic ID = " + UserLogic.getIdentification());
@@ -126,7 +127,7 @@ function ensureSuperUserOrLeagueAdmin(req, res, next) {
   UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then(user => {
       foundUser = user;
-      return UserLogic.isLeagueAdmin(user, req.params.leagueId)
+      return UserLeagueLogic.isLeagueAdmin(user, req.params.leagueId)
     })
     .then(isLeagueAdmin => {
       if (isLeagueAdmin || foundUser.isSuperUser)

@@ -5,59 +5,57 @@ var UserLogic = require('./user-logic');
 var LogicErrors = require('./logic-error');
 console.log("inside login-logic, User Logic ID = " + UserLogic.getIdentification());
 
-module.exports = {
 
-  login: function (loginData) {
+exports.login = function (loginData) {
 
-    var guid = MathUtils.createGuid();
-    // This is the only error message that we will provide in the 
-    // event that we're being hacked.
-    var errorMessage = "Login Credentials were not correct.";
-    var foundUser;
+  var guid = MathUtils.createGuid();
+  // This is the only error message that we will provide in the 
+  // event that we're being hacked.
+  var errorMessage = "Login Credentials were not correct.";
+  var foundUser;
 
-    return UserLogic.findUserByUserName(loginData.userName)
-      .then(user => {
-        if (user != null && user.password === loginData.password) {
-          foundUser = user;
-          // Only update the 
-          return UserLogic.updateUser(user.id, 
+  return UserLogic.findUserByUserName(loginData.userName)
+    .then(user => {
+      if (user != null && user.password === loginData.password) {
+        foundUser = user;
+        // Only update the 
+        return UserLogic.updateUser(user.id,
           {
             authenticationToken: guid,
             authenticationTokenExpiration: DateUtils.createAuthenticationExpirationDate()
           });
-        }
-        else {
-          return Promise.reject(LogicErrors.LOGIN_FAILED);
-        }
-      })
-
-      .then(junk => { return Promise.resolve({ "user": foundUser, "wolfeAuthenticationToken": guid }); })
-
-      .catch(err => {
-        // If an error occurred, log it here.
-        var loggedErrorMessage = LogicErrors.buildGenericMessage(err);
-        console.log("login-logic.login() - " + loggedErrorMessage);
-        // If any error occurred, just indicate that the login failed to the caller.
+      }
+      else {
         return Promise.reject(LogicErrors.LOGIN_FAILED);
-      })
+      }
+    })
 
-  },
+    .then(junk => { return Promise.resolve({ "user": foundUser, "wolfeAuthenticationToken": guid }); })
 
-  logout: function (userName) {
-    return UserLogic.findUserByUserName(userName)
-      .then(user => {
-        return UserLogic.updateUser(user.id, {authenticationTokenExpiration: new Date()});
-      })
-      .then(junk => {
-        return Promise.resolve(null);
-      })
-      .catch(err => {
-        // If an error occurred, get it into a proper format and log it
-        var logicError = LogicErrors.firmUpError(err);
-        console.log("login-logic.logout() - " + logicError.message);
-        // If any error occurred, just indicate that the logout unexpectedly failed 
-        return Promise.reject(logicError);
-      })
-  }
+    .catch(err => {
+      // If an error occurred, log it here.
+      var loggedErrorMessage = LogicErrors.buildGenericMessage(err);
+      console.log("login-logic.login() - " + loggedErrorMessage);
+      // If any error occurred, just indicate that the login failed to the caller.
+      return Promise.reject(LogicErrors.LOGIN_FAILED);
+    })
 
 }
+
+exports.logout = function (userName) {
+  return UserLogic.findUserByUserName(userName)
+    .then(user => {
+      return UserLogic.updateUser(user.id, { authenticationTokenExpiration: new Date() });
+    })
+    .then(junk => {
+      return Promise.resolve(null);
+    })
+    .catch(err => {
+      // If an error occurred, get it into a proper format and log it
+      var logicError = LogicErrors.firmUpError(err);
+      console.log("login-logic.logout() - " + logicError.message);
+      // If any error occurred, just indicate that the logout unexpectedly failed 
+      return Promise.reject(logicError);
+    })
+}
+

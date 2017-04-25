@@ -1,101 +1,72 @@
 var DataModel = require('../model/dataModel');
 var User = DataModel.USER;
 
-var LeagueLogic = require('./league-logic');
 var LogicErrors = require('./logic-error');
 
-module.exports = {
 
-  findUserById: function (id) {
-    return findUser({ where: { "id": id } });
-  },
 
-  findUserByAuthenticationToken: function (token) {
-    return findUser({ where: { "authenticationToken": token } });
-  },
-
-  findUserByUserName: function (userName) {
-    return findUser({ where: { "userName": userName } })
-  },
-
-  createUser: function (userData) {
-    console.log("user-logic.create() - createUser has been called.");
-    // Ensure all of the required inputs are present
-    if (!isNewUserValid(userData)) {
-      return Promise.reject(buildIncompleteAttributesError());
-    }
-
-    // If we're here, we should be able to create a user, so...
-    // Create the user
-    return User.create({
-      userName: userData.userName,
-      password: userData.password,
-      emailAddress: userData.emailAddress,
-      isSuperUser: false,
-    })
-      .then(user => {
-        console.log("user-logic.create() " + userData.userName + " was successfully created.");
-        return Promise.resolve(null);
-      })
-      .catch(err => { return Promise.reject(buildCleanError(err)); })
-  },
-
-  /*
-    This is a little tricky.  Since there are a variety of ways someone could be wanting to update
-    a user, we count on the caller to be responsible for guaranteeing that they have the right to 
-    change what they're changing in the user... most tricky are the "isSuperUser" atrribute and
-    attributes associated with the session 
-  */
-  updateUser: function (userId, userData) {
-    console.log("user-logic.update() - updateUser has been called.");
-
-    // If we're here, we should be able to update a user, so...
-    // Update the user
-    return User.update( userData, { where: { id: userId } })
-      .then(user => {
-        console.log("user-logic.update() " + userData.userName + " was successfully updated.");
-        return Promise.resolve(user);
-      })
-      .catch(err => { return Promise.reject(buildCleanError(err)); })
-  },
-
-  getLeaguesAsPlayer: function (userId) {
-    return this.findUserById(userId)
-      .then(user => {
-        return user.getPlayerLeague()
-      })
-      .catch(err => { 
-        return Promise.reject(LogicErrors.firmUpError(err)); 
-      })
-  },
-  
-  getLeaguesAsAdmin: function (userId) {
-    return this.findUserById(userId)
-      .then(user => {
-        return user.getAdminLeague()
-      })
-      .catch(err => { 
-        return Promise.reject(LogicErrors.firmUpError(err)); 
-      })
-  },
-
-  isLeagueAdmin: function (userData, leagueId) {
-    var foundLeague
-    var foundUser
-
-    return LeagueLogic.findLeagueById(leagueId)
-    .then(league => { 
-      return league.hasAdmin(userData.id)
-    })
-    .catch(err => { 
-      Promise.reject(buildCleanError(err)) 
-    } )
-  },
-
-  getIdentification: function() {
-    return '48567';
-  }
+exports.findUserById = function (id) {
+  return findUser({ where: { "id": id } });
 }
+
+exports.findUserByAuthenticationToken = function (token) {
+  return findUser({ where: { "authenticationToken": token } });
+}
+
+exports.findUserByUserName = function (userName) {
+  return findUser({ where: { "userName": userName } })
+}
+
+exports.createUser = function (userData) {
+  console.log("user-logic.create() - createUser has been called.");
+  // Ensure all of the required inputs are present
+  if (!isNewUserValid(userData)) {
+    return Promise.reject(buildIncompleteAttributesError());
+  }
+
+  // If we're here, we should be able to create a user, so...
+  // Create the user
+  return User.create({
+    userName: userData.userName,
+    password: userData.password,
+    emailAddress: userData.emailAddress,
+    isSuperUser: false,
+  })
+    .then(user => {
+      console.log("user-logic.create() " + userData.userName + " was successfully created.");
+      return Promise.resolve(null);
+    })
+    .catch(err => { return Promise.reject(buildCleanError(err)); })
+}
+
+/*
+  This is a little tricky.  Since there are a variety of ways someone could be wanting to update
+  a user, we count on the caller to be responsible for guaranteeing that they have the right to 
+  change what they're changing in the user... most tricky are the "isSuperUser" atrribute and
+  attributes associated with the session 
+*/
+exports.updateUser = function (userId, userData) {
+  console.log("user-logic.update() - updateUser has been called.");
+
+  // If we're here, we should be able to update a user, so...
+  // Update the user
+  return User.update(userData, { where: { id: userId } })
+    .then(user => {
+      console.log("user-logic.update() " + userData.userName + " was successfully updated.");
+      return Promise.resolve(user);
+    })
+    .catch(err => { return Promise.reject(buildCleanError(err)); })
+}
+
+
+
+exports.getIdentification = function () {
+  return '48567';
+}
+
+
+
+// non-exported functions
 
 function findUser(whereClause) {
   return User.findOne(whereClause)

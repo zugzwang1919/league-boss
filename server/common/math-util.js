@@ -1,6 +1,6 @@
-module.exports = {
 
-  createGuid: function () {
+
+exports.createGuid = function () {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
@@ -8,10 +8,8 @@ module.exports = {
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
-  },
-
-  anotherFunction: function () {
-    return false;
   }
 
-}
+exports.anotherFunction = function () {
+    return false;
+  }

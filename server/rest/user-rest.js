@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var UserLogic = require('../logic/user-logic');
 var LogicError = require('../logic/logic-error');
+var UserLeagueLogic = require('../logic/user-league-logic');
 var RestUtils = require('./rest-util');
 var RestResponse = require('./rest-response');
 console.log("inside user-rest, User Logic ID = " + UserLogic.getIdentification());
@@ -83,7 +84,7 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
 
 router.get('/:userId/leagueAsPlayer', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("user-rest getLeaguesForUser:  Looking for legues that this user plays in where UserId = " + req.params.userId);
-  UserLogic.getLeaguesAsPlayer(req.params.userId)
+  UserLeagueLogic.getLeaguesAsPlayer(req.params.userId)
     .then(leagues => { 
       RestResponse.send200(res, leagues) 
     })
@@ -94,7 +95,7 @@ router.get('/:userId/leagueAsPlayer', RestUtils.ensureAuthenticated, function (r
 
 router.get('/:userId/leagueAsAdmin', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("user-rest getLeaguesAsAdminForUser:  Looking for legues that this user is an admin for  where UserId = " + req.params.userId);
-  UserLogic.getLeaguesAsAdmin(req.params.userId)
+  UserLeagueLogic.getLeaguesAsAdmin(req.params.userId)
     .then(leagues => { 
       RestResponse.send200(res, leagues) 
     })

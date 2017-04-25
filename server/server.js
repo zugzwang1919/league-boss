@@ -96,8 +96,6 @@ var userRoutes = require('./rest/user-rest');
 app.use('/user', userRoutes);
 var userRoutes = require('./rest/league-rest');
 app.use('/league', userRoutes);
-var seasonRoutes = require('./rest/season-rest');
-app.use("/season", seasonRoutes);
 var loginRoutes = require('./rest/login-rest');
 app.use("/", loginRoutes);
 
