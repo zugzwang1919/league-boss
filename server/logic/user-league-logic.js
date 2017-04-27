@@ -1,3 +1,11 @@
+
+/* Originally user-logic wanted to use league-logic and vice versa.  This 
+   created a circular depenedency.  Given that many, many files will want to use
+   user-logic, this file was created to answer league questions about a specific
+   user. */
+
+
+
 var LeagueLogic = require('./league-logic');
 var UserLogic = require('./user-logic');
 

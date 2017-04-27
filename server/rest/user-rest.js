@@ -19,11 +19,11 @@ router.get('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
 router.get('/', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("user-rest getUser:  Looking for user with a name of " + req.query.userName);
   UserLogic.findUserByUserName(req.query.userName)
-    .then(user => { 
-      RestResponse.send200(res, user) 
+    .then(user => {
+      RestResponse.send200(res, user)
     })
-    .catch(error => { 
-      RestResponse.sendAppropriateResponse(res, error) 
+    .catch(error => {
+      RestResponse.sendAppropriateResponse(res, error)
     })
 });
 
@@ -36,8 +36,12 @@ router.post('/', function (req, res) {
     emailAddress: req.body.emailAddress,
     isSuperUser: false
   })
-    .then(user => { RestResponse.send200(res, user) })
-    .catch(error => { RestResponse.sendAppropriateResponse(res, error) })
+    .then(user => {
+      RestResponse.send200(res, user)
+    })
+    .catch(error => {
+      RestResponse.sendAppropriateResponse(res, error)
+    })
 });
 
 
@@ -47,13 +51,13 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
   UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then(currentUser => {
       if (currentUser.isSuperUser) {
-        var userData =         
-        {
-          userName: req.body.userName,
-          password: req.body.password,
-          emailAddress: req.body.emailAddress,
-          isSuperUser: req.body.isSuperUser,
-        };
+        var userData =
+          {
+            userName: req.body.userName,
+            password: req.body.password,
+            emailAddress: req.body.emailAddress,
+            isSuperUser: req.body.isSuperUser,
+          };
         if (!isUserDataValidForUpdateBySuperUser(userData)) {
           var error = LogicError.INCOMPLETE_INPUT;
           error.message = "At least one of the required user attributes is missing.";
@@ -62,12 +66,12 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
         return UserLogic.updateUser(req.params.userId, userData);
       }
       else {
-        var userData = 
-        {
-          userName: req.body.userName,
-          password: req.body.password,
-          emailAddress: req.body.emailAddress,
-        };
+        var userData =
+          {
+            userName: req.body.userName,
+            password: req.body.password,
+            emailAddress: req.body.emailAddress,
+          };
 
         if (!isUserDataValidForUpdate(userData)) {
           var error = LogicError.INCOMPLETE_INPUT;
@@ -82,30 +86,54 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
 });
 
 
+router.delete('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
+  console.log("user-rest deleteUser: entering");
+  console.log("user-rest deleteUser: userId found in url = " + req.params.userId);
+
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    .then(currentUser => {
+      if (currentUser.isSuperUser) {
+        return UserLogic.deleteUser(req.params.userId);
+      }
+      else {
+        var error = LogicError.FORBIDDEN;
+        return Promise.reject(error);
+      }
+    })
+    .then(success => {
+      console.log("user-rest deleteUser: successful delete for user id " + req.params.userId + " has occurred.");
+      RestResponse.send200(res);
+    })
+    .catch(error => {
+      console.log("user-rest deleteUser: an error occurred while deleting user id  " + req.params.userId);
+      RestResponse.sendAppropriateResponse(res, error);
+    })
+});
+
 router.get('/:userId/leagueAsPlayer', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("user-rest getLeaguesForUser:  Looking for legues that this user plays in where UserId = " + req.params.userId);
   UserLeagueLogic.getLeaguesAsPlayer(req.params.userId)
-    .then(leagues => { 
-      RestResponse.send200(res, leagues) 
+    .then(leagues => {
+      RestResponse.send200(res, leagues)
     })
-    .catch(error => { 
-      RestResponse.sendAppropriateResponse(res, error) 
+    .catch(error => {
+      RestResponse.sendAppropriateResponse(res, error)
     })
 });
 
 router.get('/:userId/leagueAsAdmin', RestUtils.ensureAuthenticated, function (req, res) {
   console.log("user-rest getLeaguesAsAdminForUser:  Looking for legues that this user is an admin for  where UserId = " + req.params.userId);
   UserLeagueLogic.getLeaguesAsAdmin(req.params.userId)
-    .then(leagues => { 
-      RestResponse.send200(res, leagues) 
+    .then(leagues => {
+      RestResponse.send200(res, leagues)
     })
-    .catch(error => { 
-      RestResponse.sendAppropriateResponse(res, error) 
+    .catch(error => {
+      RestResponse.sendAppropriateResponse(res, error)
     })
 });
 
 function ensureSuperUserOrSelf(req, res, next) {
-  
+
   // Get the user associated with the token
   UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then(foundUser => {
@@ -132,18 +160,18 @@ function ensureSuperUserOrSelf(req, res, next) {
 }
 
 function isUserDataValidForUpdate(userData) {
-  var result =  userData.userName != null &&
-                userData.password != null &&
-                userData.emailAddress != null &&
-                userData.isSuperUser === undefined;
+  var result = userData.userName != null &&
+    userData.password != null &&
+    userData.emailAddress != null &&
+    userData.isSuperUser === undefined;
   return result;
 }
 
 function isUserDataValidForUpdateBySuperUser(userData) {
-  var result =  userData.userName != null &&
-                userData.password != null &&
-                userData.emailAddress != null &&
-                userData.isSuperUser != null;
+  var result = userData.userName != null &&
+    userData.password != null &&
+    userData.emailAddress != null &&
+    userData.isSuperUser != null;
   return result;
 }
 

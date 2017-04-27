@@ -34,17 +34,11 @@ exports.createUser = function (userData) {
   })
     .then(user => {
       console.log("user-logic.create() " + userData.userName + " was successfully created.");
-      return Promise.resolve(null);
+      return Promise.resolve(user);
     })
     .catch(err => { return Promise.reject(buildCleanError(err)); })
 }
 
-/*
-  This is a little tricky.  Since there are a variety of ways someone could be wanting to update
-  a user, we count on the caller to be responsible for guaranteeing that they have the right to 
-  change what they're changing in the user... most tricky are the "isSuperUser" atrribute and
-  attributes associated with the session 
-*/
 exports.updateUser = function (userId, userData) {
   console.log("user-logic.update() - updateUser has been called.");
 
@@ -58,15 +52,35 @@ exports.updateUser = function (userId, userData) {
     .catch(err => { return Promise.reject(buildCleanError(err)); })
 }
 
+exports.deleteUser = function (userId) {
+  console.log("user-logic.delte() - deleteUser has been called.");
 
-
+  // If we're here, we should be able to delete a user, so...
+  // Delete the user
+  return User.destroy({ where: { id: userId } })
+    .then(numberUsersDeleted => {
+      if (numberUsersDeleted === 1) {
+        console.log("user-logic.delete() - User with ID of " + userId + " was successfully deleted.");
+        return Promise.resolve(true);
+      }  
+      else {
+        console.log("user-logic.delete() - User with ID of " + userId + " was not found.");
+        return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND)
+      }
+    })
+    .catch(err => { 
+      console.log("user-logic.delete() - Some type of error occurred.  Err message = " + err.message );
+      return Promise.reject(buildCleanError(err)); 
+    })
+}
+// A non-Promise based method to be used to test connectivity
 exports.getIdentification = function () {
   return '48567';
 }
 
 
 
-// non-exported functions
+// non-exported (intenral / private) functions
 
 function findUser(whereClause) {
   return User.findOne(whereClause)
@@ -85,13 +99,11 @@ function findUser(whereClause) {
     })
 }
 
-
 function isNewUserValid(userData) {
   return (userData.userName != null &&
     userData.password != null &&
     userData.emailAddress != null)
 }
-
 
 function buildIncompleteAttributesError() {
   console.log("user-logic - Building error indicating that all required attributes were not specified.")
@@ -112,5 +124,4 @@ function buildCleanError(err) {
     cleanError = LogicErrors.firmUpError(err);
   }
   return cleanError;
-
 }

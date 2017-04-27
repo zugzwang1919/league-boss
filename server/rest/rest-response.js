@@ -21,6 +21,9 @@ exports.send403 = function (res) {
 exports.sendAppropriateResponse = function (res, error) {
   var statusCode;
   switch (error.name) {
+    case LogicErrors.FORBIDDEN.name:
+      statusCode = 403;
+      break;
     case LogicErrors.RESOURCE_NOT_FOUND.name:
       statusCode = 404;
       break;

@@ -168,7 +168,7 @@ exports.removePlayer = function (leagueId, userId) {
     })
 }
 
-// Non-exported functions
+// Non-exported functions (private / local functions)
 
 function findLeague(whereClause) {
   return League.findOne(whereClause)

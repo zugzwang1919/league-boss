@@ -206,6 +206,22 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">createdUserId</stringProp>
+              <stringProp name="RegexExtractor.regex">&quot;id&quot;:(\d*)</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">AbraCadabra</stringProp>
+              <stringProp name="RegexExtractor.match_number">1</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true">
+              <boolProp name="displayJMeterProperties">false</boolProp>
+              <boolProp name="displayJMeterVariables">true</boolProp>
+              <boolProp name="displaySamplerProperties">true</boolProp>
+              <boolProp name="displaySystemProperties">false</boolProp>
+            </DebugPostProcessor>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="400 Test - Create User with existing user name" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -288,7 +304,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -318,10 +334,10 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;:2,&#xd;
-	&quot;userName&quot;:&quot;TB&quot;,&#xd;
-	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;:&quot;updatedEmailAddress@gmail.com&quot;,&#xd;
+	&quot;id&quot;:${normalUser1Id},&#xd;
+	&quot;userName&quot;:&quot;${normalUser1userName}&quot;,&#xd;
+	&quot;password&quot;:&quot;${normalUser1password}&quot;,&#xd;
+	&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;,&#xd;
 	&quot;isSuperUser&quot;:true&#xd;
 }&#xd;
 </stringProp>
@@ -355,7 +371,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -367,10 +383,10 @@
           <hashTree>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Check User Data" enabled="true">
               <collectionProp name="Asserion.test_strings">
-                <stringProp name="1073374461">&quot;id&quot;:2</stringProp>
-                <stringProp name="-1735009918">&quot;userName&quot;:&quot;TB&quot;</stringProp>
-                <stringProp name="2024212327">&quot;password&quot;:&quot;TB&quot;</stringProp>
-                <stringProp name="1017860110">&quot;emailAddress&quot;:&quot;updatedEmailAddress@gmail.com&quot;</stringProp>
+                <stringProp name="-1505883761">&quot;id&quot;:${normalUser1Id}</stringProp>
+                <stringProp name="1798119345">&quot;userName&quot;:&quot;${normalUser1userName}&quot;</stringProp>
+                <stringProp name="-1200664197">&quot;password&quot;:&quot;${normalUser1password}&quot;</stringProp>
+                <stringProp name="2000286517">&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;</stringProp>
                 <stringProp name="1055910431">&quot;isSuperUser&quot;:1</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
@@ -386,10 +402,10 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;:2,&#xd;
-	&quot;userName&quot;:&quot;TB&quot;,&#xd;
-	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;:&quot;tom.brady@gmail.com&quot;,&#xd;
+	&quot;id&quot;:${normalUser1Id},&#xd;
+	&quot;userName&quot;:&quot;${normalUser1userName}&quot;,&#xd;
+	&quot;password&quot;:&quot;${normalUser1password}&quot;,&#xd;
+	&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;,&#xd;
 	&quot;isSuperUser&quot;:false&#xd;
 }&#xd;
 </stringProp>
@@ -403,7 +419,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}</stringProp>
             <stringProp name="HTTPSampler.method">PUT</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -430,7 +446,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -442,10 +458,10 @@
           <hashTree>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Check User Data" enabled="true">
               <collectionProp name="Asserion.test_strings">
-                <stringProp name="1073374461">&quot;id&quot;:2</stringProp>
-                <stringProp name="-1735009918">&quot;userName&quot;:&quot;TB&quot;</stringProp>
-                <stringProp name="2024212327">&quot;password&quot;:&quot;TB&quot;</stringProp>
-                <stringProp name="562275831">&quot;emailAddress&quot;:&quot;tom.brady@gmail.com&quot;</stringProp>
+                <stringProp name="-1505883761">&quot;id&quot;:${normalUser1Id}</stringProp>
+                <stringProp name="1798119345">&quot;userName&quot;:&quot;${normalUser1userName}&quot;</stringProp>
+                <stringProp name="-1200664197">&quot;password&quot;:&quot;${normalUser1password}&quot;</stringProp>
+                <stringProp name="2000286517">&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -460,10 +476,10 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;:2,&#xd;
-	&quot;userName&quot;:&quot;TB&quot;,&#xd;
-	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;:&quot;updatedEmailAddress@gmail.com&quot;&#xd;
+	&quot;id&quot;:${normalUser1Id},&#xd;
+	&quot;userName&quot;:&quot;${normalUser1userName}&quot;,&#xd;
+	&quot;password&quot;:&quot;${normalUser1password}&quot;,&#xd;
+	&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -493,10 +509,10 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;:2,&#xd;
-	&quot;userName&quot;:&quot;TB&quot;,&#xd;
-	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;:&quot;tom.brady@gmail.com&quot;&#xd;
+	&quot;id&quot;:${normalUser1Id},&#xd;
+	&quot;userName&quot;:&quot;${normalUser1userName}&quot;,&#xd;
+	&quot;password&quot;:&quot;${normalUser1password}&quot;,&#xd;
+	&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -526,9 +542,9 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;:2,&#xd;
-	&quot;userName&quot;:&quot;TB&quot;,&#xd;
-	&quot;password&quot;:&quot;TB&quot;&#xd;
+	&quot;id&quot;:${normalUser1Id},&#xd;
+	&quot;userName&quot;:&quot;${normalUser1userName}&quot;,&#xd;
+	&quot;password&quot;:&quot;${normalUser1password}&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -541,7 +557,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}</stringProp>
             <stringProp name="HTTPSampler.method">PUT</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -577,10 +593,10 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;:2,&#xd;
-	&quot;userName&quot;:&quot;RWW&quot;,&#xd;
-	&quot;password&quot;:&quot;TB&quot;,&#xd;
-	&quot;emailAddress&quot;: &quot;tom.brady@gmail.com&quot;&#xd;
+	&quot;id&quot;:${normalUser1Id},&#xd;
+	&quot;userName&quot;:&quot;${superUser1userName}&quot;,&#xd;
+	&quot;password&quot;:&quot;${normalUser1password}&quot;,&#xd;
+	&quot;emailAddress&quot;: &quot;${normalUser1emailAddress}&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -593,7 +609,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}</stringProp>
             <stringProp name="HTTPSampler.method">PUT</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -632,7 +648,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2/leagueAsPlayer</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}/leagueAsPlayer</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -663,7 +679,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/user/2/leagueAsAdmin</stringProp>
+            <stringProp name="HTTPSampler.path">/user/${normalUser1Id}/leagueAsAdmin</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -904,6 +920,41 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Cleanup" enabled="true"/>
+        <hashTree>
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful SuperUser Login" enabled="true">
+            <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
+          </IncludeController>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CLEANUP - Delete User (created above) as SuperUser" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{}&#xd;
+</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/user/${createdUserId}</stringProp>
+            <stringProp name="HTTPSampler.method">DELETE</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
         </hashTree>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
