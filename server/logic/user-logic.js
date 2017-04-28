@@ -53,7 +53,7 @@ exports.updateUser = function (userId, userData) {
 }
 
 exports.deleteUser = function (userId) {
-  console.log("user-logic.delte() - deleteUser has been called.");
+  console.log("user-logic.delete() - deleteUser has been called.");
 
   // If we're here, we should be able to delete a user, so...
   // Delete the user

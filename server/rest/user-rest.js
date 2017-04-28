@@ -86,20 +86,11 @@ router.put('/:userId', RestUtils.ensureAuthenticated, ensureSuperUserOrSelf, fun
 });
 
 
-router.delete('/:userId', RestUtils.ensureAuthenticated, function (req, res) {
+router.delete('/:userId', RestUtils.ensureAuthenticated, RestUtils.ensureSuperUser, function (req, res) {
   console.log("user-rest deleteUser: entering");
   console.log("user-rest deleteUser: userId found in url = " + req.params.userId);
 
-  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-    .then(currentUser => {
-      if (currentUser.isSuperUser) {
-        return UserLogic.deleteUser(req.params.userId);
-      }
-      else {
-        var error = LogicError.FORBIDDEN;
-        return Promise.reject(error);
-      }
-    })
+  UserLogic.deleteUser(req.params.userId)
     .then(success => {
       console.log("user-rest deleteUser: successful delete for user id " + req.params.userId + " has occurred.");
       RestResponse.send200(res);

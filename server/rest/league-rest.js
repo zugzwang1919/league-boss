@@ -41,7 +41,7 @@ router.post('/', RestUtils.ensureAuthenticated, function (req, res) {
 
 
 router.put('/:leagueId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueAdmin, function (req, res) {
-  console.log("user-rest updateLeague: leagueName found in body = " + req.body.leagueName);
+  console.log("league-rest updateLeague: leagueName found in body = " + req.body.leagueName);
 
   LeagueLogic.updateLeague({
     id: req.params.leagueId,
@@ -53,6 +53,23 @@ router.put('/:leagueId', RestUtils.ensureAuthenticated, ensureSuperUserOrLeagueA
     .then(league => { RestResponse.send200(res, league); })
     .catch(error => { RestResponse.sendAppropriateResponse(res, error); })
 });
+
+
+router.delete('/:leagueId', RestUtils.ensureAuthenticated, RestUtils.ensureSuperUser, function (req, res) {
+  console.log("league-rest deleteLeague: entering");
+  console.log("league-rest deleteLeague: leagueId found in url = " + req.params.leagueId);
+
+  LeagueLogic.deleteLeague(req.params.leagueId)
+    .then(success => {
+      console.log("league-rest deleteLeague: successful delete for league id " + req.params.leagueId + " has occurred.");
+      RestResponse.send200(res);
+    })
+    .catch(error => {
+      console.log("user-rest deleteLeague: an error occurred while deleting league id  " + req.params.leagueId);
+      RestResponse.sendAppropriateResponse(res, error);
+    })
+});
+
 
 
 // Players in this league

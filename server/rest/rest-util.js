@@ -40,3 +40,24 @@ exports.ensureAuthenticated = function (req, res, next) {
     RestResponse.send401(res);
   }
 }
+
+
+exports.ensureSuperUser = function (req, res, next) {
+
+  // Get the user associated with the token
+  UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    .then(foundUser => {
+      // If this is a superuser, we're good to go (call next())
+      if (foundUser.isSuperUser) {
+        next();
+      }
+      // Otherwise, reject the request
+      else {
+        return Promise.reject({ "name": "NOT_SUPER_USER", "message": "The current user is not a super user." });
+      }
+    })
+    .catch(error => {
+      // If anything goes wrong, we're sending back a 403
+      RestResponse.send403(res);
+    })
+}

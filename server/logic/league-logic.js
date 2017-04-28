@@ -66,6 +66,26 @@ exports.updateLeague = function (leagueData) {
     .catch(err => { return Promise.reject(LogicErrors.firmUpError(err)); })
 }
 
+exports.deleteLeague = function (leagueId) {
+  console.log("league-logic.delete() - deleteLeague has been called.");
+
+  return League.destroy({ where: { id: leagueId } })
+    .then(numberLeaguesDeleted => {
+      if (numberLeaguesDeleted === 1) {
+        console.log("league-logic.delete() - League with ID of " + leagueId + " was successfully deleted.");
+        return Promise.resolve(true);
+      }  
+      else {
+        console.log("league-logic.delete() - League with ID of " + leagueId + " was not found.");
+        return Promise.reject(LogicErrors.RESOURCE_NOT_FOUND)
+      }
+    })
+    .catch(err => { 
+      console.log("user-logic.delete() - Some type of error occurred.  Err message = " + err.message );
+      return Promise.reject(LogicErrors.firmUpError(err));
+    })
+}
+
 exports.getAdmins = function (leagueId) {
   return this.findLeagueById(leagueId)
     .then(league => {
