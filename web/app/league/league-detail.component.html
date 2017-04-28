@@ -8,71 +8,74 @@
   <div *ngIf="(action === 'create')">
     <h1>Create New League</h1>
   </div>
-  <div>
-    <table class="key-value">
+  <form #leagueBasicInfoForm="ngForm">
+    <div>
+      <table class="key-value">
+        <tr>
+          <td class="key">
+            league name:
+          </td>
+          <td *ngIf="(action !== 'view')" class="value">
+            <input type="text" [(ngModel)]="league.leagueName" name="leagueName" placeholder="enter a league name" />
+          </td>
+          <td *ngIf="(action === 'view')" class="value">
+            {{league.leagueName}}
+          </td>
+        </tr>
 
-      <tr>
-        <td class="key">
-          league name: 
-        </td>
-        <td *ngIf="(action !== 'view')" class="value" >
-          <input type="text" [(ngModel)]="league.leagueName" placeholder="enter a league name" />
-        </td>
-        <td *ngIf="(action === 'view')" class="value" >
-          {{league.leagueName}}
-        </td>
-      </tr>
+        <tr>
+          <td class="key">
+            <label> description: </label>
+          </td>
+          <td>
+            <textarea [disabled]="(action === 'view')" [(ngModel)]="league.description" name="leagueDescription" placeholder="enter a description"></textarea>
+          </td>
+        </tr>
+      </table>
 
-      <tr>
-        <td class="key">
-          <label> description: </label>
-        </td>
-        <td>
-          <textarea [disabled]="(action === 'view')" [(ngModel)]="league.description" placeholder="enter a description"></textarea>
-        </td>
-      </tr>
-    </table>
+      <div class="two-column-container">
+        <div class="left-column">
+          <table class="layout">
+            <tr>
+              <td class="heading">Season</td>
+            </tr>
+            <tr *ngFor="let season of possibleSeasons">
+              <td>
+                <input type="radio" [disabled]="action==='view'" [(ngModel)]="league.seasonTypeIndex" name="leagueSeasonTypeIndex" [value]=season.id name="season-group"
+                />{{season.name}}
+              </td>
 
-    <div class="two-column-container">
-      <div class="left-column">
-        <table class="layout">
-          <tr>
-            <td class="heading">Season</td>
-          </tr>
-          <tr *ngFor="let season of possibleSeasons">
-            <td>
-              <input type="radio" [disabled]="action==='view'" [(ngModel)]="league.seasonTypeIndex" [value]=season.id name="season-group" />{{season.name}}
-            </td>
+            </tr>
+          </table>
+        </div>
+        <div class="right-column">
+          <table class="layout">
+            <tr>
+              <td class="heading">League Type</td>
+            </tr>
+            <tr *ngFor="let leagueType of possibleLeagueTypes">
+              <td>
+                <input type="radio" [disabled]="action==='view'" [(ngModel)]="league.leagueTypeIndex" name="leagueLeagueTypeIndex" [value]=leagueType.id name="league-type-group"
+                />{{leagueType.name}}
+              </td>
+            </tr>
+          </table>
+        </div>
 
-          </tr>
-        </table>
       </div>
-      <div class="right-column">
-        <table class="layout">
-          <tr>
-            <td class="heading">League Type</td>
-          </tr>
-          <tr *ngFor="let leagueType of possibleLeagueTypes">
-            <td>
-              <input type="radio" [disabled]="action==='view'" [(ngModel)]="league.leagueTypeIndex" [value]=leagueType.id name="league-type-group" />{{leagueType.name}}
-            </td>
-          </tr>
-        </table>
+      <div *ngIf="(action === 'edit')">
+        <button [disabled]="updateButtonShouldBeDisabled()" (click)="updateLeague()">Update</button>
+      </div>
+      <div *ngIf="(action === 'create')">
+        <button [disabled]="createButtonShouldBeDisabled()" (click)="createNewLeague()">Create</button>
       </div>
 
-    </div>
-    <div *ngIf="(action === 'edit')">
-      <button (click)="updateLeague()">Update</button>
-    </div>
-    <div *ngIf="(action === 'create')">
-      <button (click)="createNewLeague()">Create</button>
-    </div>
+      <br>
 
-    <br>
-
-  </div>
+    </div>
+  </form>
   <br>
-  <div  *ngIf="action !== 'create'" class="two-column-container">
+  <div *ngIf="action !== 'create'" class="two-column-container">
     <div class="left-column-with-outline">
       <table class="layout">
         <tr>

@@ -9,7 +9,6 @@ import { League } from '../league/league';
 import { UserService } from './user-service.service';
 import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
-
 import { StringUtil } from '../common/string-util';
 
 

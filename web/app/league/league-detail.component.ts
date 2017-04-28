@@ -1,7 +1,8 @@
 import 'rxjs/add/operator/switchMap';
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild  } from '@angular/core';
 import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import {FormsModule, NgForm, FormGroup } from '@angular/forms'
 
 import { League } from './league';
 import { User } from '../user/user';
@@ -9,7 +10,7 @@ import { CurrentUserService } from '../user/current-user-service.service';
 import { DialogEvent } from '../user/select-user-dialog.component';
 import { LeagueService } from './league-service.service';
 import { ServiceResponse } from '../common/service-response';
-
+import { StringUtil } from '../common/string-util';
 
 @Component({
   moduleId: module.id,
@@ -32,6 +33,8 @@ export class LeagueDetailComponent {
   // Referential Data
   possibleSeasons: Object[] = require('../../interface/season-type.js');
   possibleLeagueTypes: Object[] = require('../../interface/league-type.js');
+
+  @ViewChild('leagueBasicInfoForm') leagueBasicInfoForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
@@ -147,4 +150,17 @@ export class LeagueDetailComponent {
     this.leaguePlayers = null;
   }
 
+  updateButtonShouldBeDisabled(): boolean {
+    let result: boolean = 
+      // If nothing has changed, update button is disabled  
+      !this.leagueBasicInfoForm.dirty || 
+      // If all of the required fields are not present, the update button is disabled
+      StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
+    return result;
+  }
+
+  createButtonShouldBeDisabled(): boolean { 
+    let result: boolean = StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
+    return result;
+  }
 }
