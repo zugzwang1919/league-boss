@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/switchMap';
 
-import { Component, Input, ViewChild  } from '@angular/core';
-import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
-import {FormsModule, NgForm, FormGroup } from '@angular/forms'
+import { Component, Input, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, Params, UrlSegment } from '@angular/router';
+import { FormsModule, NgForm, FormGroup } from '@angular/forms'
 
 import { League } from './league';
 import { User } from '../user/user';
@@ -26,9 +26,12 @@ export class LeagueDetailComponent {
   leaguePlayers: User[];
 
   action: string;
-  message: string;
+  incomingHappyMessage: string;
+  happyMessage: string
+  errorMessage: string;
 
   adminBeingAdded: boolean;
+  playerBeingAdded: boolean;
 
   // Referential Data
   possibleSeasons: Object[] = require('../../interface/season-type.js');
@@ -37,6 +40,7 @@ export class LeagueDetailComponent {
   @ViewChild('leagueBasicInfoForm') leagueBasicInfoForm: FormGroup;
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private leagueService: LeagueService,
     private currentUserService: CurrentUserService,
@@ -53,7 +57,15 @@ export class LeagueDetailComponent {
     // Based on the subscribe below, we'll constantly monitor changes to the URL 
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
-        this.message = null;
+        this.adminBeingAdded = false;
+        this.playerBeingAdded = false;
+        if (StringUtil.isEmptyNullOrUndefined(this.incomingHappyMessage)) {
+          this.clearMessages();
+        }
+        else {
+          this.setHappyMessage(this.incomingHappyMessage);
+          this.incomingHappyMessage = null;
+        }
         console.log("Examining segments in URL within league-detail.component.  Segments = " + segments);
         if (segments[1].toString() == 'create') {
           this.setUpEmptyLeague();
@@ -71,7 +83,7 @@ export class LeagueDetailComponent {
               this.leagueAdmins = admins;
               // override the action to 'edit' if the user has sufficient credentials
               var currentUser: User = this.currentUserService.currentUser;
-              if ( currentUser.isSuperUser || this.isCurrentUserAdmin() )
+              if (currentUser.isSuperUser || this.isCurrentUserAdmin())
                 this.action = 'edit';
               return this.leagueService.getPlayers(this.league.id)
             })
@@ -80,7 +92,7 @@ export class LeagueDetailComponent {
             })
             .catch(serviceResponse => {
               this.setUpEmptyLeague();
-              this.message = serviceResponse.message;
+              this.setErrorMessage(serviceResponse.getMessage());
             })
         }
       })
@@ -89,12 +101,13 @@ export class LeagueDetailComponent {
   createNewLeague(): void {
     console.log("Beginning the process of creating a new league.");
     this.leagueService.createLeague(this.league)
-      .then((serviceResponse: ServiceResponse) => {
-        console.log("Message received from create = " + serviceResponse.getMessage());
-        this.message = serviceResponse.getMessage();
+      .then((createdLeague: League) => {
+        console.log("League was successfully created.");
+        this.incomingHappyMessage = "Congrats! You've created a new league!"
+        this.router.navigate(['/league', createdLeague.id]);
       })
       .catch(serviceResponse => {
-        this.message = serviceResponse.message;
+        this.setErrorMessage(serviceResponse.getMessage());
       })
   }
 
@@ -103,10 +116,10 @@ export class LeagueDetailComponent {
     this.leagueService.updateLeague(this.league)
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from update = " + serviceResponse.getMessage());
-        this.message = serviceResponse.getMessage();
+        this.setHappyMessage("Update was succesful!");
       })
       .catch(serviceResponse => {
-        this.message = serviceResponse.message;
+        this.setErrorMessage(serviceResponse.getMessage());
       })
   }
 
@@ -122,20 +135,33 @@ export class LeagueDetailComponent {
     this.leagueService.addAdmin(this.league.id, dialogEvent.user.id)
       .then(junk => {
         this.leagueAdmins.push(dialogEvent.user);
+        this.setHappyMessage("Admin succesfully added!");
       })
       .catch(serviceResponse => {
-        this.message = serviceResponse.message;
+        this.setErrorMessage(serviceResponse.getMessage());
       })
   }
 
-  private isCurrentUserAdmin() : boolean {
-    for( var admin of this.leagueAdmins) {
-      var currentUserId: number = this.currentUserService.currentUser.id;
-      if ( currentUserId === admin.id )
-        return true;
-    }
-    return false;
+  addPlayer(): void {
+    this.playerBeingAdded = true;
   }
+
+  onPlayerCancel() {
+    this.playerBeingAdded = false;
+  }
+
+  onPlayerFound(dialogEvent: DialogEvent) {
+    this.leagueService.addPlayer(this.league.id, dialogEvent.user.id)
+      .then(junk => {
+        this.leaguePlayers.push(dialogEvent.user);
+        this.setHappyMessage("Player succesfully added!");
+      })
+      .catch(serviceResponse => {
+        this.setErrorMessage(serviceResponse.getMessage());
+      })
+  }
+
+
 
   setUpEmptyLeague() {
     var league: League;
@@ -151,16 +177,42 @@ export class LeagueDetailComponent {
   }
 
   updateButtonShouldBeDisabled(): boolean {
-    let result: boolean = 
+    let result: boolean =
       // If nothing has changed, update button is disabled  
-      !this.leagueBasicInfoForm.dirty || 
+      !this.leagueBasicInfoForm.dirty ||
       // If all of the required fields are not present, the update button is disabled
       StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
     return result;
   }
 
-  createButtonShouldBeDisabled(): boolean { 
+  createButtonShouldBeDisabled(): boolean {
     let result: boolean = StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
     return result;
   }
+
+  private isCurrentUserAdmin(): boolean {
+    for (var admin of this.leagueAdmins) {
+      var currentUserId: number = this.currentUserService.currentUser.id;
+      if (currentUserId === admin.id)
+        return true;
+    }
+    return false;
+  }
+
+  private setHappyMessage(hm: string) {
+    this.happyMessage = hm;
+    this.errorMessage = null;
+  }
+
+  private setErrorMessage(em: string) {
+    this.happyMessage = null;
+    this.errorMessage = em;
+  }
+
+  private clearMessages() {
+    this.happyMessage = null;
+    this.errorMessage = null;
+  }
+
+
 }

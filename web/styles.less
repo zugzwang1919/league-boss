@@ -33,16 +33,16 @@ input[type=text]:focus, input[type=password]:focus,  {
 }
 
 textarea {
-  background: @our-gray-lighter;
-  border: 0px solid @our-gray-light;
-  border-bottom-width:1px;
-  border-right-width:1px;
+  background: white;
+  border: 1px solid @our-gray-light;
   width: 195px;
   height: 60px;
+  resize: none;
 }
 
 textarea:focus {
   outline: 0;
+  border-color: @our-gray-dark;
 }
 
 textarea:disabled {
@@ -137,7 +137,8 @@ div.error-message-box {
 }
 
 div.two-column-container {
-  background-color: purple;
+  width: 100%;
+  display: inline-block;
 }
 div.left-column {
     float: left;
@@ -146,7 +147,7 @@ div.left-column {
 }
 
 div.right-column {
-    float: right;
+    float: left;
     width: 45%;
     padding: 0 2%;  
 }
@@ -165,6 +166,11 @@ div.right-column-with-outline {
     padding: 10px 2%;  
 }
 
+div.buttonSizedEmptyDiv {
+
+  height: 2.5em;
+ 
+}
 div.clear{
     clear: both;
 }

@@ -31,12 +31,12 @@ export class LeagueService {
       })
   }
 
-  createLeague(league: League): Promise<ServiceResponse> {
+  createLeague(league: League): Promise<League> {
     console.log("Inside LeagueService:  Beginning 'Create League' process");
     return this.http.post('http://localhost:1919/league', league)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(new ServiceResponse(res))
+        return Promise.resolve(res.json())
       })
       .catch((res: Response) => {
         return Promise.reject(new ServiceResponse(res))
@@ -68,7 +68,7 @@ export class LeagueService {
   }
 
   addAdmin(leagueId: number, userId: number) {
-    console.log("Inside LeagueService: Looking to add user id = " + userId + " into  league id = " + leagueId);
+    console.log("Inside LeagueService: Looking to add user id = " + userId + " into  league id = " + leagueId + " as an admin.");
     return this.http.post('http://localhost:1919/league/' + leagueId + '/admin', { "userId": userId })
       .toPromise()
       .then((res: Response) => {
@@ -90,6 +90,19 @@ export class LeagueService {
       .catch((res: Response) => {
         return Promise.reject(new ServiceResponse(res))
       })
+  }
+
+  addPlayer(leagueId: number, userId: number) {
+    console.log("Inside LeagueService: Looking to add user id = " + userId + " into  league id = " + leagueId + "as a player.");
+    return this.http.post('http://localhost:1919/league/' + leagueId + '/player', { "userId": userId })
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(res.json())
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
+
   }
 
 
