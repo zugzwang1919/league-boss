@@ -80,6 +80,18 @@ export class LeagueService {
 
   }
 
+  removeAdmin(leagueId: number, userId: number) : Promise<boolean> {
+    console.log("Inside LeagueService: Looking to remove user id = " + userId + " from  league id = " + leagueId + " as an admin.");
+    return this.http.delete('http://localhost:1919/league/' + leagueId + '/admin/' + userId)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(true);
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
+  }
+
   getPlayers(leagueId: number): Promise<User[]> {
     console.log("Inside LeagueService: Looking for players for league id = " + leagueId);
     return this.http.get('http://localhost:1919/league/' + leagueId + '/player')
@@ -102,7 +114,19 @@ export class LeagueService {
       .catch((res: Response) => {
         return Promise.reject(new ServiceResponse(res))
       })
+  }
 
+
+  removePlayer(leagueId: number, userId: number) : Promise<boolean> {
+    console.log("Inside LeagueService: Looking to remove user id = " + userId + " from  league id = " + leagueId + " as an admin.");
+    return this.http.delete('http://localhost:1919/league/' + leagueId + '/player/' + userId)
+      .toPromise()
+      .then((res: Response) => {
+        return Promise.resolve(true);
+      })
+      .catch((res: Response) => {
+        return Promise.reject(new ServiceResponse(res))
+      })
   }
 
 

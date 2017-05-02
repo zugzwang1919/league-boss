@@ -46,4 +46,13 @@ export class WolfeHttp {
     });
   }
 
+  delete(url) {
+    let headers = new Headers();
+    return this.http.delete(url,  {
+      headers: this.createAppropriateHeaders()
+    });
+  }
+
+  
+
 }

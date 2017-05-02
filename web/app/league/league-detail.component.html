@@ -88,8 +88,8 @@
           <td>
             <a [routerLink]="['/user/' + admin.id]">{{admin.userName}}</a>
           </td>
-          <td>
-            <button *ngIf="action === 'edit'" class="delete">X</button>
+          <td class="delete-button">
+            <button *ngIf="action === 'edit'" class="delete" (click)="removeAdmin(admin)">X</button>
           </td>
         </tr>
       </table>
@@ -101,14 +101,14 @@
     <div class="right-column-with-outline">
       <table class="layout">
         <tr>
-          <td class="heading">Players</td>
+          <td colspan=2 class="heading">Players</td>
         </tr>
         <tr *ngFor="let player of leaguePlayers">
           <td>
             <a [routerLink]="['/user/' + player.id]">{{player.userName}}</a>
           </td>
-          <td>
-            <button *ngIf="action === 'edit'" class="delete">X</button>
+          <td class="delete-button">
+            <button *ngIf="action === 'edit'" class="delete"  (click)="removePlayer(player)">X</button>
           </td>
         </tr>
       </table>

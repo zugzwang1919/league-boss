@@ -22,8 +22,8 @@ import { StringUtil } from '../common/string-util';
 export class LeagueDetailComponent {
 
   league: League;
-  leagueAdmins: User[];
-  leaguePlayers: User[];
+  leagueAdmins: Array<User>;
+  leaguePlayers: Array<User>;
 
   action: string;
   incomingHappyMessage: string;
@@ -142,6 +142,17 @@ export class LeagueDetailComponent {
       })
   }
 
+  removeAdmin(admin: User) {
+    this.leagueService.removeAdmin(this.league.id, admin.id)
+      .then(success => {
+        this.removeUserFromArray(this.leagueAdmins, admin);
+        this.setHappyMessage("Admin succesfully removed!");
+      })
+      .catch(serviceResponse => {
+        this.setErrorMessage(serviceResponse.getMessage());
+      })
+  }
+
   addPlayer(): void {
     this.playerBeingAdded = true;
   }
@@ -155,6 +166,17 @@ export class LeagueDetailComponent {
       .then(junk => {
         this.leaguePlayers.push(dialogEvent.user);
         this.setHappyMessage("Player succesfully added!");
+      })
+      .catch(serviceResponse => {
+        this.setErrorMessage(serviceResponse.getMessage());
+      })
+  }
+
+  removePlayer(player: User) {
+    this.leagueService.removePlayer(this.league.id, player.id)
+      .then(success => {
+        this.removeUserFromArray(this.leaguePlayers, player);
+        this.setHappyMessage("Player succesfully removed!");
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
@@ -214,5 +236,14 @@ export class LeagueDetailComponent {
     this.errorMessage = null;
   }
 
+  private removeUserFromArray(array: Array<User>, adminToBeRemoved: User) : void {
+    var i;
+    for (i = 0; i<array.length; i++) {
+      if (array[i].id === adminToBeRemoved.id) {
+        array.splice(i,1);
+        return;
+      }
+    }
+  }
 
 }
