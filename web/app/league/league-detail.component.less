@@ -21,8 +21,16 @@ button.delete {
   height: 16px;
   background: firebrick;
   background-color: firebrick;
-  border-top: 1px solid @our-gray;
-  border-left: 1px solid @our-gray;
-  border-bottom: 1px solid @our-gray-lighter;
-  border-right: 1px solid @our-gray-lighter;
+  border: 1px solid white;
+  border-top-color: @our-gray-light;
+  border-left-color: @our-gray-light;
+  border-bottom-color: white;
+  border-right-color: white;
+}
+
+button.delete:active {
+  border-top-color: white;
+  border-left-color: white;
+  border-bottom-color: @our-gray-light;
+  border-right-color: @our-gray-light;
 }
