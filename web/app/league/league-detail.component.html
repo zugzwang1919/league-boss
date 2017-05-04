@@ -12,7 +12,7 @@
     <h1>Create New League</h1>
   </div>
   <form #leagueBasicInfoForm="ngForm">
-    <div>
+    <div class="bordered">
       <table class="key-value">
         <tr>
           <td class="key">
@@ -78,44 +78,46 @@
     </div>
   </form>
 
-  <div *ngIf="action !== 'create'" class="two-column-container">
-    <div class="left-column-with-outline">
-      <table class="layout">
-        <tr>
-          <td colspan=2 class="heading">Admins</td>
-        </tr>
-        <tr *ngFor="let admin of leagueAdmins">
-          <td>
-            <a [routerLink]="['/user/' + admin.id]">{{admin.userName}}</a>
-          </td>
-          <td class="delete-button">
-            <button *ngIf="action === 'edit'" class="delete" (click)="removeAdmin(admin)">X</button>
-          </td>
-        </tr>
-      </table>
-      <button *ngIf="((action === 'edit') && !adminBeingAdded)" (click)="addAdmin()">Add Admin</button>
-      <div *ngIf="adminBeingAdded">
-        <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)"></selectUserDialog>
-      </div>
-    </div>
-    <div class="right-column-with-outline">
-      <table class="layout">
-        <tr>
-          <td colspan=2 class="heading">Players</td>
-        </tr>
-        <tr *ngFor="let player of leaguePlayers">
-          <td>
-            <a [routerLink]="['/user/' + player.id]">{{player.userName}}</a>
-          </td>
-          <td class="delete-button">
-            <button *ngIf="action === 'edit'" class="delete"  (click)="removePlayer(player)">X</button>
-          </td>
-        </tr>
-      </table>
-      <button *ngIf="((action === 'edit') && !playerBeingAdded)" (click)="addPlayer()">Add Player</button>
-      <div *ngIf="playerBeingAdded">
-        <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Player'" (cancelFunction)="onPlayerCancel()" (actionFunction)="onPlayerFound($event)"></selectUserDialog>
-      </div>
-    </div>
-  </div>
-</div>
+  <div *ngIf="action !== 'create'" class="bordered">
+    <div class="two-column-container">
+      <div class="left-column">
+        <table class="layout">
+          <tr>
+            <td colspan=2 class="heading">Admins</td>
+          </tr>
+          <tr *ngFor="let admin of leagueAdmins">
+            <td>
+              <a [routerLink]="['/user/' + admin.id]">{{admin.userName}}</a>
+            </td>
+            <td class="delete-button">
+              <button *ngIf="action === 'edit'" class="delete" (click)="removeAdmin(admin)">X</button>
+            </td>
+          </tr>
+        </table>
+        <button *ngIf="((action === 'edit') && !adminBeingAdded)" (click)="addAdmin()">Add Admin</button>
+        <div *ngIf="adminBeingAdded">
+          <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)"></selectUserDialog>
+        </div>
+      </div> <!-- left-column -->
+      <div class="right-column">
+        <table class="layout">
+          <tr>
+            <td colspan=2 class="heading">Players</td>
+          </tr>
+          <tr *ngFor="let player of leaguePlayers">
+            <td>
+              <a [routerLink]="['/user/' + player.id]">{{player.userName}}</a>
+            </td>
+            <td class="delete-button">
+              <button *ngIf="action === 'edit'" class="delete" (click)="removePlayer(player)">X</button>
+            </td>
+          </tr>
+        </table>
+        <button *ngIf="((action === 'edit') && !playerBeingAdded)" (click)="addPlayer()">Add Player</button>
+        <div *ngIf="playerBeingAdded">
+          <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Player'" (cancelFunction)="onPlayerCancel()" (actionFunction)="onPlayerFound($event)"></selectUserDialog>
+        </div>
+      </div> <!-- right-column -->
+    </div> <!-- two-column -->
+  </div> <!-- bordered -->
+</div> <!-- centered-80 -->
