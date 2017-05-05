@@ -11,6 +11,7 @@ import { DialogEvent } from '../user/select-user-dialog.component';
 import { LeagueService } from './league-service.service';
 import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
+import { AngularUtil } from '../common/angular-util';
 
 @Component({
   moduleId: module.id,
@@ -117,6 +118,7 @@ export class LeagueDetailComponent {
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from update = " + serviceResponse.getMessage());
         this.setHappyMessage("Update was succesful!");
+        AngularUtil.markFormPristine(this.leagueBasicInfoForm);        
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());

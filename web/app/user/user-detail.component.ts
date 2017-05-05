@@ -10,6 +10,7 @@ import { UserService } from './user-service.service';
 import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
+import { AngularUtil } from '../common/angular-util';
 
 
 @Component({
@@ -56,7 +57,7 @@ export class UserDetailComponent {
       .subscribe((segments: UrlSegment[]) => {
         this.happyMessage = null;
         this.errorMessage = null;
-        this.markFormPristine(this.userDetailForm);
+        AngularUtil.markFormPristine(this.userDetailForm);
         console.log("Examining segments in URL within user-detail.component.  Segments = " + segments);
         if (segments[1].toString() == 'create') {
           this.user = new User();
@@ -96,13 +97,13 @@ export class UserDetailComponent {
         console.log("Message received from create = " + serviceResponse.getMessage());
         this.happyMessage = serviceResponse.getMessage();
         this.errorMessage = null;
-        this.markFormPristine(this.userDetailForm);
+        AngularUtil.markFormPristine(this.userDetailForm);
       })
       .catch((serviceResponse: ServiceResponse) => {
         console.log("Error message received from failed login  = " + serviceResponse.getMessage());
         this.happyMessage = null;
         this.errorMessage = serviceResponse.getMessage();
-        this.markFormPristine(this.userDetailForm);
+        AngularUtil.markFormPristine(this.userDetailForm);
       })
   }
 
@@ -113,21 +114,17 @@ export class UserDetailComponent {
         console.log("Message received from update = " + serviceResponse.getMessage());
         this.happyMessage = serviceResponse.getMessage();
         this.errorMessage = null;
-        this.markFormPristine(this.userDetailForm);
+        AngularUtil.markFormPristine(this.userDetailForm);
       })      
       .catch((serviceResponse: ServiceResponse) => {
         console.log("Error message received from failed update  = " + serviceResponse.getMessage());
         this.happyMessage = null;
         this.errorMessage = serviceResponse.getMessage();
-        this.markFormPristine(this.userDetailForm);
+        AngularUtil.markFormPristine(this.userDetailForm);
       })
   }
 
-  private markFormPristine(form: FormGroup | NgForm): void {
-    Object.keys(form.controls).forEach(control => {
-      form.controls[control].markAsPristine();
-    });
-  }
+
 
   updateButtonShouldBeDisabled(): boolean {
     var result: boolean = 
