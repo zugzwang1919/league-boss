@@ -46,7 +46,7 @@
               <td>
                 <input type="radio" 
                   name="leagueSeasonTypeIndex"
-                  [disabled]="action==='view'" 
+                  [disabled]="(action==='view')" 
                   [(ngModel)]="league.seasonTypeIndex"  
                   [value]=season.id />{{season.name}}
               </td>
@@ -62,15 +62,14 @@
             <tr *ngFor="let leagueType of possibleLeagueTypes">
               <td>
                 <input type="radio" 
-                  name="leagueLeagueTypeIndex" 
+                  name="leagueLeagueTypeIndex"
+                  [disabled]="(action==='view')" 
                   [(ngModel)]="league.leagueTypeIndex" 
-                  [value]="leagueType.id" 
-                  [disabled]="(action==='view')"/>{{leagueType.name}}
+                  [value]="leagueType.id"/>{{leagueType.name}}
               </td>
             </tr>
           </table>
         </div>
-        <p>action==='view' : {{action==='view'}} </p>
       </div>
       <div *ngIf="(action === 'view')" class="buttonSizedEmptyDiv">
         &nbsp;
