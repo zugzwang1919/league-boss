@@ -20,6 +20,7 @@ import { AngularUtil } from '../common/angular-util';
 })
 
 
+
 export class LeagueDetailComponent {
 
   league: League;

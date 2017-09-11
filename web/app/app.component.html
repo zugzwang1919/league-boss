@@ -46,6 +46,9 @@
       <br>
       <br>
       <button [disabled]="!this.currentUserService.currentUser" (click)="createNewLeague()">Create League</button>
+      <br>
+      <br>
+      <button [disabled]="this.currentUserService.currentUser" (click)="rapidLogin()">Rapid Login</button>
     </div>
 
     <div class="content">

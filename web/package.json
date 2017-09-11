@@ -2,8 +2,9 @@
   "name": "angular-quickstart",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "start": "tsc && concurrently \"gulp\" \"tsc -w\" \"lite-server\" ",
     "lite": "lite-server",
+    "gulp": "gulp",
     "tsc": "tsc",
     "tsc:w": "tsc -w"
   },
@@ -35,6 +36,9 @@
     "@types/core-js": "^0.9.34",
     "@types/node": "^6.0.45",
     "concurrently": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-less": "^3.3.2",
+    "less": "^2.7.2",
     "lite-server": "^2.2.2"
   }
 }
