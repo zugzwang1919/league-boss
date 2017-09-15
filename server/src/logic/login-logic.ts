@@ -1,9 +1,11 @@
 
-var MathUtils = require('../common/math-util');
-var DateUtils = require('../common/date-util');
+// Logic level classes
 import {UserLogic} from './user-logic';
 import {LogicError} from './logic-error';
 
+// Common classe
+import {MathUtil} from '../common/math-util';
+import {DateUtil} from '../common/date-util';
 
 export class LoginCredentials {
   private readonly _userName: string;
@@ -27,7 +29,7 @@ export class LoginLogic {
 
   static login(loginCredentials: LoginCredentials): Promise<any> {
 
-    var guid = MathUtils.createGuid();
+    var guid = MathUtil.createGuid();
     // This is the only error message that we will provide in the 
     // event that we're being hacked.
     var errorMessage = "Login Credentials were not correct.";
@@ -41,7 +43,7 @@ export class LoginLogic {
           return UserLogic.updateUser(user.id,
             {
               authenticationToken: guid,
-              authenticationTokenExpiration: DateUtils.createAuthenticationExpirationDate()
+              authenticationTokenExpiration: DateUtil.createAuthenticationExpirationDate()
             });
         }
         else {

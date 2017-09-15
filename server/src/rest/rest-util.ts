@@ -4,7 +4,8 @@ import {RestResponse} from './rest-response';
 // Logic Layer Classes
 import {UserLogic} from '../logic/user-logic';
 
-var DateUtils = require('../common/date-util');
+// Common Classes
+import {DateUtil} from '../common/date-util';
 
 
 export class RestUtil {
@@ -18,7 +19,7 @@ export class RestUtil {
           // If the session hasn't timed out...
           if (user.authenticationTokenExpiration > Date.now()) {
             // Bump the expiration date
-            return UserLogic.updateUser(user.id, { authenticationTokenExpiration: DateUtils.createAuthenticationExpirationDate() });
+            return UserLogic.updateUser(user.id, { authenticationTokenExpiration: DateUtil.createAuthenticationExpirationDate() });
           }
           // Session timed out
           else {
