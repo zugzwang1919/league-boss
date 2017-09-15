@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "noResolve": false,
+    "experimentalDecorators": true,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "sourceRoot": "src",
+    "outDir": "build",
+    // NOTE: FIXME: This eventually needs to be set back to true
+    "declaration": false,
+    // NOTE: FIXME: This eventually needs to be set back to true
+    "noImplicitAny": false,
+    // NOTE: FIXME: This eventually needs to be removed
+    "allowJs": true
+  },
+  "exclude": [
+    "build",
+    "node_modules"
+  ]
+}

@@ -2,9 +2,14 @@
 /**/*.log
 /**/*.log.*
 
+
 # ignore generated .js & .map files
 # i'm sure this will eventually bite me
 /web/**/*.js
 /web/**/*.map
-# sinces we're using less for everything
+# since we're using less for everything, no need to save the css
 /web/**/*.css
+
+
+# server build files
+/server/build
