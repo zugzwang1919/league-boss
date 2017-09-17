@@ -35,11 +35,11 @@ export class RestUtil {
         .catch(err => {
           console.log("err.name = " + err.name);
           console.log("err.message = " + err.message);
-          RestResponse.send401(res, undefined);
+          RestResponse.send401(res);
         });
     }
     else {
-      RestResponse.send401(res, undefined);
+      RestResponse.send401(res);
     }
   }
 

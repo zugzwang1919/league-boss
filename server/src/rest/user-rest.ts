@@ -113,7 +113,7 @@ export class UserRest {
     UserLogic.deleteUser(req.params.userId)
       .then(success => {
         console.log("user-rest deleteUser: successful delete for user id " + req.params.userId + " has occurred.");
-        RestResponse.send200(res, undefined);
+        RestResponse.send200(res);
       })
       .catch(error => {
         console.log("user-rest deleteUser: an error occurred while deleting user id  " + req.params.userId);

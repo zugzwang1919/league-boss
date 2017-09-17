@@ -4,21 +4,21 @@ import * as express from 'express';
 
 export class RestResponse {
 
-  static send200(res, optionalBody) {
-    RestResponse.sendResponse(res, 200, optionalBody, undefined);
+  static send200(res, optionalBody ?) {
+    RestResponse.sendResponse(res, 200, optionalBody);
   }
 
   static send200WithHeader(res, headerKey, headerValue, optionalBody) {
     RestResponse.sendResponse(res, 200, optionalBody, { "key": headerKey, "value": headerValue });
   }
 
-  static send401(res, optionalMessage: string) {
+  static send401(res, optionalMessage ?: string) {
     const jsonBody = RestResponse.buildJSONfromMessage(optionalMessage !== undefined ? optionalMessage : "Authentication failed. Successful login required.");
-    RestResponse.sendResponse(res, 401, jsonBody, undefined);
+    RestResponse.sendResponse(res, 401, jsonBody);
   }
 
   static send403(res) {
-    RestResponse.sendResponse(res, 403, RestResponse.buildJSONfromMessage("Not Authorized."), undefined);
+    RestResponse.sendResponse(res, 403, RestResponse.buildJSONfromMessage("Not Authorized."));
   }
 
   static sendAppropriateResponse(res, error: LogicError) {
@@ -37,12 +37,12 @@ export class RestResponse {
       default:
         statusCode = 500;
     }
-    RestResponse.sendResponse(res, statusCode, RestResponse.buildJSONfromMessage(error.message), undefined);
+    RestResponse.sendResponse(res, statusCode, RestResponse.buildJSONfromMessage(error.message));
   }
 
   // Private methods
 
-  private static sendResponse(res, statusCode: number, optionalBody, optionalHeader) {
+  private static sendResponse(res, statusCode: number, optionalBody ?, optionalHeader ?) {
     console.log("Building a response with a status code of " + statusCode);
     var body = RestResponse.buildJSONfromMessage("Success!!!");
     if (optionalBody) {

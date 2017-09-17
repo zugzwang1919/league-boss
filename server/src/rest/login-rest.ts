@@ -41,7 +41,7 @@ export class LoginRest {
       return LoginLogic.logout(user.userName)
     })
     .then( junk => {
-      RestResponse.send200(res, undefined);
+      RestResponse.send200(res);
     })
     .catch( error => {
       RestResponse.sendAppropriateResponse(res, error)

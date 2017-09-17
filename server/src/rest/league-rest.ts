@@ -80,7 +80,7 @@ export class LeagueRest {
     LeagueLogic.deleteLeague(req.params.leagueId)
       .then(success => {
         console.log("league-rest deleteLeague: successful delete for league id " + req.params.leagueId + " has occurred.");
-        RestResponse.send200(res, undefined);
+        RestResponse.send200(res);
       })
       .catch(error => {
         console.log("user-rest deleteLeague: an error occurred while deleting league id  " + req.params.leagueId);
@@ -102,7 +102,7 @@ export class LeagueRest {
     console.log("league-rest addPlayer: userId found in body = " + req.body.userId);
     LeagueLogic.addPlayer(req.params.leagueId, req.body.userId)
       .then(success => { 
-        RestResponse.send200(res, undefined);
+        RestResponse.send200(res);
       })
       .catch(error => { 
         RestResponse.sendAppropriateResponse(res, error);
@@ -113,7 +113,7 @@ export class LeagueRest {
     console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
     LeagueLogic.removePlayer(req.params.leagueId, req.params.userId)
       .then( success => { 
-        RestResponse.send200(res, undefined); 
+        RestResponse.send200(res); 
       })
       .catch(error => { 
         RestResponse.sendAppropriateResponse(res, error);
@@ -133,7 +133,7 @@ export class LeagueRest {
     console.log("league-rest addAddmin: userId found in body = " + req.body.userId);
     LeagueLogic.addAdmin(req.params.leagueId, req.body.userId)
       .then(success => { 
-        RestResponse.send200(res, undefined); 
+        RestResponse.send200(res); 
       })
       .catch(error => { 
         RestResponse.sendAppropriateResponse(res, error);
@@ -144,7 +144,7 @@ export class LeagueRest {
     console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
     LeagueLogic.removeAdmin(req.params.leagueId, req.params.userId)
       .then(success => { 
-        RestResponse.send200(res, undefined); 
+        RestResponse.send200(res); 
       })
       .catch(error => { 
         RestResponse.sendAppropriateResponse(res, error);
