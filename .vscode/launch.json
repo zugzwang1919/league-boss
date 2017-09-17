@@ -9,8 +9,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/server/server.js",
-            "cwd": "${workspaceRoot}/server"
+            "program": "${workspaceRoot}/server/src/start-everything.ts",
+            "outFiles": ["${workspaceRoot}/server/build/**/*.js"], 
+            "cwd": "${workspaceRoot}/server/src"
         },
         {
             "type": "node",

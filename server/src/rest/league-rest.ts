@@ -4,7 +4,6 @@ import {RestResponse} from './rest-response';
 
 // Logic Layer Classes
 import {UserLogic} from '../logic/user-logic';
-import {UserLeagueLogic} from '../logic/user-league-logic';
 import {LeagueLogic} from '../logic/league-logic';
 
 import * as express from 'express';
@@ -160,7 +159,7 @@ export class LeagueRest {
       UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
         .then(user => {
           foundUser = user;
-          return UserLeagueLogic.isLeagueAdmin(user, req.params.leagueId)
+          return UserLogic.isLeagueAdmin(user.id, req.params.leagueId)
         })
         .then(isLeagueAdmin => {
           if (isLeagueAdmin || foundUser.isSuperUser)

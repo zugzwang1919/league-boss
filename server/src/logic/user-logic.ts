@@ -1,6 +1,8 @@
 var DataModel = require('../model/dataModel');
 var User = DataModel.USER;
 
+// Logic Layer Classes
+import {LeagueLogic} from './league-logic';
 import {LogicError} from './logic-error';
 
 
@@ -76,6 +78,37 @@ export class UserLogic {
       })
   }
     
+  static getLeaguesAsPlayer(userId: number) {
+    return UserLogic.findUserById(userId)
+      .then(user => {
+        return user.getPlayerLeague()
+      })
+      .catch(err => {
+        return Promise.reject(LogicError.firmUpError(err));
+      })
+  }
+
+  static getLeaguesAsAdmin(userId: number) {
+    return UserLogic.findUserById(userId)
+      .then(user => {
+        return user.getAdminLeague()
+      })
+      .catch(err => {
+        return Promise.reject(LogicError.firmUpError(err));
+      })
+  }
+
+  static isLeagueAdmin(userId: number, leagueId: number): boolean {
+    return LeagueLogic.findLeagueById(leagueId)
+      .then(league => {
+        return league.hasAdmin(userId)
+      })
+      .catch(err => {
+        Promise.reject(LogicError.firmUpError(err))
+      })
+  }
+
+
   // Private methods
   private static findUser(whereClause) {
     return User.findOne(whereClause)

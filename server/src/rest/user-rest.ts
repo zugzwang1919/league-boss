@@ -5,7 +5,6 @@ import {RestResponse}  from './rest-response';
 
 // Logic Classes
 import {UserLogic} from '../logic/user-logic';
-import {UserLeagueLogic} from '../logic/user-league-logic';
 import {LogicError} from '../logic/logic-error';
 
 import * as express from  'express';
@@ -122,7 +121,7 @@ export class UserRest {
   }
 
   private static retrieveLeaguesForUser(req, res) {
-    UserLeagueLogic.getLeaguesAsPlayer(req.params.userId)
+    UserLogic.getLeaguesAsPlayer(req.params.userId)
       .then(leagues => {
         RestResponse.send200(res, leagues)
       })
@@ -133,7 +132,7 @@ export class UserRest {
 
   private static retrieveLeaguesAsAdmin(req, res) {
     console.log("user-rest getLeaguesAsAdminForUser:  Looking for legues that this user is an admin for  where UserId = " + req.params.userId);
-    UserLeagueLogic.getLeaguesAsAdmin(req.params.userId)
+    UserLogic.getLeaguesAsAdmin(req.params.userId)
       .then(leagues => {
         RestResponse.send200(res, leagues)
       })
