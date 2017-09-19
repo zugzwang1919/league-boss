@@ -1,9 +1,14 @@
-var DataModel = require('../model/dataModel');
-var League = DataModel.LEAGUE;
-
 // Logic level classes
 import {UserLogic} from './user-logic';
 import {LogicError} from './logic-error';
+
+// Model level classes
+import {LeagueModelManager} from '../model/league-model-manager';
+import {LeagueInstance} from '../model/league-model-manager';
+import {LeagueAttribute} from '../model/league-model-manager';
+import {UserInstance} from '../model/user-model-manager';
+
+import * as Promise from 'bluebird';
 
 
 export class LeagueLogic {
@@ -12,29 +17,24 @@ export class LeagueLogic {
     return LeagueLogic.findLeague({ where: { "id": id } });
   }
   
-  static createLeague(leagueData, creatingUserId) {
+  static createLeague(leagueData: LeagueAttribute, creatingUserId: number): Promise<LeagueInstance> {
     console.log("league-logic.create() - createLeague has been called.");
     // Ensure all of the required inputs are present
     if (!LeagueLogic.isNewLeagueValid(leagueData)) {
       return Promise.reject(LeagueLogic.buildIncompleteAttributesError());
     }
   
-    var leagueToReturn;
+    let leagueToReturn: LeagueInstance;
   
     // If we're here, we should be able to create a league, so...
     // Create the league
-    return League.create({
-      leagueName: leagueData.leagueName,
-      description: leagueData.description,
-      seasonTypeIndex: leagueData.seasonTypeIndex,
-      leagueTypeIndex: leagueData.leagueTypeIndex
-    })
+    return LeagueModelManager.leagueModel.create(leagueData)
   
-      .then(league => {
+      .then((league: LeagueInstance) => {
         console.log("league-logic.create() " + leagueData.leagueName + " was successfully created.");
         console.log("league-logic.create() - Preparing to add admin");
         leagueToReturn = league;
-        return league.addAdmin(creatingUserId.userId)
+        return league.addAdmin(creatingUserId)
       })
       .then(stuff => {
         return Promise.resolve(leagueToReturn)
@@ -44,7 +44,7 @@ export class LeagueLogic {
       })
   }
 
-  static updateLeague(leagueData) {
+  static updateLeague(leagueData: LeagueAttribute): Promise<LeagueInstance> {
     console.log("league-logic.update() - updateLeague has been called.");
   
     // Ensure all of the required inputs are present
@@ -54,13 +54,7 @@ export class LeagueLogic {
   
     // If we're here, we should be able to update a league, so...
     // Update the league
-    return League.update({
-      leagueName: leagueData.leagueName,
-      description: leagueData.description,
-      seasonTypeIndex: leagueData.seasonTypeIndex,
-      leagueTypeIndex: leagueData.leagueTypeIndex
-    },
-      { where: { id: leagueData.id } }
+    return LeagueModelManager.leagueModel.update(leagueData, { where: { id: leagueData.id } }
     )
       .then(result => {
         console.log("league-logic.update() " + leagueData.leagueName + " was successfully updated.");
@@ -71,8 +65,8 @@ export class LeagueLogic {
   
   static deleteLeague(leagueId: number) {
     console.log("league-logic.delete() - deleteLeague has been called.");
-    return League.destroy({ where: { id: leagueId } })
-      .then(numberLeaguesDeleted => {
+    return LeagueModelManager.leagueModel.destroy({ where: { id: leagueId } })
+      .then((numberLeaguesDeleted: number) => {
         if (numberLeaguesDeleted === 1) {
           console.log("league-logic.delete() - League with ID of " + leagueId + " was successfully deleted.");
           return Promise.resolve(true);
@@ -90,94 +84,97 @@ export class LeagueLogic {
   
   static getAdmins(leagueId: number) {
     return this.findLeagueById(leagueId)
-      .then(league => {
+      .then((league: LeagueInstance) => {
         return league.getAdmin()
       })
       .catch(err => { return Promise.reject(LogicError.firmUpError(err)); })
   }
   
-  static addAdmin(leagueId: number, userId: number) {
-    var foundLeague;
+  static addAdmin(leagueId: number, userId: number): Promise<boolean> {
+    let foundLeague: LeagueInstance;
     return UserLogic.findUserById(userId)
-      .then(user => {
+      .then((user: UserInstance) => {
         return this.findLeagueById(leagueId)
       })
-      .then(league => {
+      .then((league: LeagueInstance) => {
         foundLeague = league;
         return foundLeague.hasAdmin(userId)
       })
-      .then(leagueAlreadyHasAdmin => {
+      .then((leagueAlreadyHasAdmin: boolean) => {
         if (leagueAlreadyHasAdmin)
           return Promise.reject(LogicError.DUPLICATE);
         else
           return foundLeague.addAdmin(userId);
       })
       .then(newLeagueAdmin => {
-        return true;
+        return Promise.resolve(true);
       })
       .catch(err => {
         return Promise.reject(LogicError.firmUpError(err));
       })
   }
   
-  static removeAdmin(leagueId: number, userId: number) {
+  static removeAdmin(leagueId: number, userId: number): Promise<boolean> {
     return this.findLeagueById(leagueId)
-      .then(league => {
-        return league.removeAdmin(userId)
+      .then((league: LeagueInstance) => {
+        let userIds: Array<number> = [userId];
+        return league.removeAdmin(userIds)
       })
-      .then(numAdminsRemoved => {
-        if (numAdminsRemoved === 1) {
-          return true;
+      .then((numberAdminsRemoved: number) => {
+        if (numberAdminsRemoved === 1) {
+          return Promise.resolve(true);
         }
         else {
           return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
         }
+        
       })
       .catch(err => {
         return Promise.reject(LogicError.firmUpError(err));
       })
   }
   
-  static getPlayers(leagueId: number) {
+  static getPlayers(leagueId: number): Promise<LeagueInstance[]> {
     return this.findLeagueById(leagueId)
-      .then(league => {
+      .then((league: LeagueInstance) => {
         return league.getPlayer()
       })
       .catch(err => { return Promise.reject(LogicError.firmUpError(err)); })
   }
   
-  static addPlayer(leagueId: number, userId: number) {
-    var foundLeague;
+  static addPlayer(leagueId: number, userId: number): Promise<boolean> {
+    let foundLeague: LeagueInstance;
     return UserLogic.findUserById(userId)
-      .then(user => {
+      .then((user: UserInstance) => {
         return this.findLeagueById(leagueId)
       })
-      .then(league => {
+      .then((league: LeagueInstance) => {
         foundLeague = league;
         return foundLeague.hasPlayer(userId)
       })
-      .then(playerAlreadyInLeague => {
+      .then((playerAlreadyInLeague: boolean) => {
         if (playerAlreadyInLeague)
           return Promise.reject(LogicError.DUPLICATE);
         else
           return foundLeague.addPlayer(userId);
       })
-      .then(wasPlayerAddedToLeague => {
-        return true;
+      .then((wasPlayerAddedToLeague: boolean) => {
+        return Promise.resolve(true);
       })
       .catch(err => {
         return Promise.reject(LogicError.firmUpError(err));
       })
   }
   
-  static removePlayer(leagueId: number, userId:number) {
+  static removePlayer(leagueId: number, userId:number): Promise<boolean> {
     return this.findLeagueById(leagueId)
-      .then(league => {
-        return league.removePlayer(userId)
+      .then((league: LeagueInstance) => {
+        let userIds: Array<number> = [userId];
+        return league.removePlayer(userIds)
       })
-      .then(numPlayersRemoved => {
-        if (numPlayersRemoved === 1) {
-          return true;
+      .then((numberPlayersRemoved: number) => {
+        if (numberPlayersRemoved === 1) {
+          return Promise.resolve(true);
         }
         else {
           return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
@@ -192,9 +189,9 @@ export class LeagueLogic {
 // Private functions
   
 
-  private static findLeague(whereClause) {
-    return League.findOne(whereClause)
-      .then(league => {
+  private static findLeague(whereClause: any): Promise<LeagueInstance> {
+    return LeagueModelManager.leagueModel.findOne(whereClause)
+      .then((league: LeagueInstance) => {
         if (league != null) {
           console.log("league-logic - league found!!!");
           return Promise.resolve(league)
@@ -209,12 +206,12 @@ export class LeagueLogic {
       })
   }
           
-  private static isNewLeagueValid(leagueData): boolean {
+  private static isNewLeagueValid(leagueData: LeagueAttribute): boolean {
     return (leagueData.leagueName != null &&
       leagueData.description != null)
   }
 
-  private static isExistingLeagueValid(leagueData): boolean {
+  private static isExistingLeagueValid(leagueData: LeagueAttribute): boolean {
     return (leagueData.id != null &&
       leagueData.leagueName != null &&
       leagueData.description != null)

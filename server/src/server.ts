@@ -1,16 +1,19 @@
 // For sequelizeThings()
-import * as  sequelize from './model/index';
-import * as  DataModel from './model/dataModel';
+//import * as  sequelize from './model/index';
+//import * as  DataModel from './model/dataModel';
 
 
 // For start()
 import * as express from  'express';
 import * as bodyParser from  'body-parser';
 
+// Rest Layer Classes
 import {UserRest}  from './rest/user-rest';
 import {LeagueRest} from './rest/league-rest';
 import {LoginRest} from './rest/login-rest';
 
+// Model Layer Classes
+import {ModelManager} from './model/model-manager';
 
   
 export class Server {
@@ -23,7 +26,8 @@ export class Server {
 
   private constructor() {
     // Set up Persistence Mechanisms
-    this.sequelizeThings();    
+    new ModelManager(true);
+    //this.sequelizeThings();    
     //create expressjs application
     this.app = express();
     //configure application
@@ -56,7 +60,7 @@ export class Server {
     this.app.use('/league', LeagueRest.getRouter());
     this.app.use('/', LoginRest.getRouter());
   }
-
+  /*
   private sequelizeThings() {
     // Prepopulate the DB... 
     // Comment out these lines most of the time.
@@ -119,6 +123,7 @@ export class Server {
       console.log("error name = " + err.name + ".  Error Message = " + err.message)
     })   
   }
+*/
 }
 
 

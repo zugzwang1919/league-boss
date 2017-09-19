@@ -1,27 +1,32 @@
-var DataModel = require('../model/dataModel');
-var User = DataModel.USER;
+
+import * as Promise from 'bluebird';
 
 // Logic Layer Classes
 import {LeagueLogic} from './league-logic';
 import {LogicError} from './logic-error';
 
+// Model Layer Classes
+import {ModelManager} from '../model/model-manager';
+import {UserModelManager} from '../model/user-model-manager';
+import {UserInstance} from '../model/user-model-manager';
+import {UserAttribute} from '../model/user-model-manager';
 
 
 export class UserLogic {
 
-  static findUserById(id: number) {
+  static findUserById(id: number): Promise<UserInstance> {
     return UserLogic.findUser({ where: { "id": id } });
   }
   
-  static findUserByAuthenticationToken(token: string) {
+  static findUserByAuthenticationToken(token: string): Promise<UserInstance> {
     return UserLogic.findUser({ where: { "authenticationToken": token } });
   }
   
-  static findUserByUserName(userName: string) {
+  static findUserByUserName(userName: string): Promise<UserInstance> {
     return UserLogic.findUser({ where: { "userName": userName } })
   }
   
-  static createUser(userData) {
+  static createUser(userData: UserAttribute): Promise<UserInstance> {
     console.log("user-logic.create() - createUser has been called.");
     // Ensure all of the required inputs are present
     if (!UserLogic.isNewUserValid(userData)) {
@@ -30,38 +35,38 @@ export class UserLogic {
   
     // If we're here, we should be able to create a user, so...
     // Create the user
-    return User.create({
+    return UserModelManager.userModel.create({
       userName: userData.userName,
       password: userData.password,
       emailAddress: userData.emailAddress,
       isSuperUser: false,
     })
-      .then(user => {
+      .then((createdUser: UserInstance) => {
         console.log("user-logic.create() " + userData.userName + " was successfully created.");
-        return Promise.resolve(user);
+        return Promise.resolve(createdUser);
       })
       .catch(err => { return Promise.reject(UserLogic.buildCleanError(err)); })
   }
          
-  static updateUser(userId: number, userData) {
+  static updateUser(userId: number, userData: UserAttribute): Promise<UserInstance> {
     console.log("user-logic.update() - updateUser has been called.");
   
     // If we're here, we should be able to update a user, so...
     // Update the user
-    return User.update(userData, { where: { id: userId } })
-      .then(user => {
+    return UserModelManager.userModel.update(userData, { where: { id: userId } })
+      .then(updatedUser => {
         console.log("user-logic.update() " + userData.userName + " was successfully updated.");
-        return Promise.resolve(user);
+        return Promise.resolve(updatedUser);
       })
       .catch(err => { return Promise.reject(UserLogic.buildCleanError(err)); })
   }
 
-  static deleteUser(userId: number) {
+  static deleteUser(userId: number): Promise<boolean> {
     console.log("user-logic.delete() - deleteUser has been called.");
   
     // If we're here, we should be able to delete a user, so...
     // Delete the user
-    return User.destroy({ where: { id: userId } })
+    return UserModelManager.userModel.destroy({ where: { id: userId } })
       .then(numberUsersDeleted => {
         if (numberUsersDeleted === 1) {
           console.log("user-logic.delete() - User with ID of " + userId + " was successfully deleted.");
@@ -98,7 +103,7 @@ export class UserLogic {
       })
   }
 
-  static isLeagueAdmin(userId: number, leagueId: number): boolean {
+  static isLeagueAdmin(userId: number, leagueId: number): Promise<boolean> {
     return LeagueLogic.findLeagueById(leagueId)
       .then(league => {
         return league.hasAdmin(userId)
@@ -110,8 +115,8 @@ export class UserLogic {
 
 
   // Private methods
-  private static findUser(whereClause) {
-    return User.findOne(whereClause)
+  private static findUser(whereClause: any): Promise<UserInstance> {
+    return UserModelManager.userModel.findOne(whereClause)
       .then(user => {
         if (user != null) {
           console.log("user-logic - user found!!!");
@@ -127,7 +132,7 @@ export class UserLogic {
       })
   }
   
-  private static isNewUserValid(userData) {
+  private static isNewUserValid(userData: UserAttribute) {
     return (userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null)
@@ -138,7 +143,7 @@ export class UserLogic {
     return new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.")
   }
   
-  private static buildCleanError(err): LogicError {
+  private static buildCleanError(err: any): LogicError {
     var cleanError;
     // Try to clean up expected errors.  
     // We could see the SequelizeUniqueConstraintError when someone tries to create a new user

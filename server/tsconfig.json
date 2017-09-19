@@ -8,12 +8,11 @@
     "sourceMap": true,
     "sourceRoot": "src",
     "outDir": "build",
+    "allowJs": false,
     // NOTE: FIXME: This eventually needs to be set back to true
-    "declaration": false,
+    "declaration": true,
     // NOTE: FIXME: This eventually needs to be set back to true
-    "noImplicitAny": false,
-    // NOTE: FIXME: This eventually needs to be removed
-    "allowJs": true
+    "noImplicitAny": true
   },
   "exclude": [
     "build",

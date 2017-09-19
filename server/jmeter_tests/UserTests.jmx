@@ -387,7 +387,7 @@
                 <stringProp name="1798119345">&quot;userName&quot;:&quot;${normalUser1userName}&quot;</stringProp>
                 <stringProp name="-1200664197">&quot;password&quot;:&quot;${normalUser1password}&quot;</stringProp>
                 <stringProp name="2000286517">&quot;emailAddress&quot;:&quot;${normalUser1emailAddress}&quot;</stringProp>
-                <stringProp name="1055910431">&quot;isSuperUser&quot;:1</stringProp>
+                <stringProp name="289283296">&quot;isSuperUser&quot;:true</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>

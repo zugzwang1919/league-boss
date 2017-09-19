@@ -4,24 +4,24 @@ import * as express from 'express';
 
 export class RestResponse {
 
-  static send200(res, optionalBody ?) {
+  static send200(res: express.Response, optionalBody ?: any) {
     RestResponse.sendResponse(res, 200, optionalBody);
   }
 
-  static send200WithHeader(res, headerKey, headerValue, optionalBody) {
+  static send200WithHeader(res: express.Response, headerKey: string, headerValue: string, optionalBody?: any) {
     RestResponse.sendResponse(res, 200, optionalBody, { "key": headerKey, "value": headerValue });
   }
 
-  static send401(res, optionalMessage ?: string) {
+  static send401(res: express.Response, optionalMessage ?: string) {
     const jsonBody = RestResponse.buildJSONfromMessage(optionalMessage !== undefined ? optionalMessage : "Authentication failed. Successful login required.");
     RestResponse.sendResponse(res, 401, jsonBody);
   }
 
-  static send403(res) {
+  static send403(res: express.Response) {
     RestResponse.sendResponse(res, 403, RestResponse.buildJSONfromMessage("Not Authorized."));
   }
 
-  static sendAppropriateResponse(res, error: LogicError) {
+  static sendAppropriateResponse(res: express.Response, error: LogicError) {
     var statusCode;
     switch (error.name) {
       case LogicError.FORBIDDEN.name:
@@ -42,7 +42,7 @@ export class RestResponse {
 
   // Private methods
 
-  private static sendResponse(res, statusCode: number, optionalBody ?, optionalHeader ?) {
+  private static sendResponse(res: express.Response, statusCode: number, optionalBody ?: any, optionalHeader ?:any) {
     console.log("Building a response with a status code of " + statusCode);
     var body = RestResponse.buildJSONfromMessage("Success!!!");
     if (optionalBody) {
@@ -51,12 +51,12 @@ export class RestResponse {
     }
     if (optionalHeader) {
       console.log("A header is being added to the response.");
-      res.append(optionalHeader.key, optionalHeader.value);
+      res.header(optionalHeader.key, optionalHeader.value);
     }
     res.status(statusCode).json(body);
   }
 
-  private static buildJSONfromMessage(message) {
+  private static buildJSONfromMessage(message: string) {
     return { "message": message };
   }
 

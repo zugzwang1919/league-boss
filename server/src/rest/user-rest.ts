@@ -7,6 +7,9 @@ import {RestResponse}  from './rest-response';
 import {UserLogic} from '../logic/user-logic';
 import {LogicError} from '../logic/logic-error';
 
+// Model Classes
+import {UserAttribute} from '../model/user-model-manager';
+
 import * as express from  'express';
 
 
@@ -27,7 +30,7 @@ export class UserRest {
     UserRest.router.get('/:userId/leagueAsAdmin', RestUtil.ensureAuthenticated, UserRest.retrieveLeaguesAsAdmin);
   }
 
-  private static retrieveUserById (req, res) {
+  private static retrieveUserById (req: express.Request, res: express.Response) {
     console.log("user-rest getUser:  Looking for user with an id of " + req.params.userId);
     UserLogic.findUserById(req.params.userId)
       .then(user => { 
@@ -38,7 +41,7 @@ export class UserRest {
       })
   }
 
-  private static retrieveUser (req, res) {
+  private static retrieveUser (req: express.Request, res: express.Response) {
     console.log("user-rest getUser:  Looking for user with a name of " + req.query.userName);
     UserLogic.findUserByUserName(req.query.userName)
       .then(user => {
@@ -49,14 +52,15 @@ export class UserRest {
       });
   }
 
-  private static createUser(req, res) {
+  private static createUser(req: express.Request, res: express.Response) {
     console.log("user-rest createUser: userName found in body = " + req.body.userName);
-    UserLogic.createUser({
+    let newUser: UserAttribute = {
       userName: req.body.userName,
       password: req.body.password,
       emailAddress: req.body.emailAddress,
       isSuperUser: false
-    })
+    } 
+    UserLogic.createUser(newUser)
       .then(createdUser => {
         RestResponse.send200(res, createdUser)
       })
@@ -65,48 +69,46 @@ export class UserRest {
       });
   }
 
-  private static updateUser(req, res) {
+  private static updateUser(req: express.Request, res: express.Response) {
     console.log("user-rest updateUser: userName found in body = " + req.body.userName);
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-      .then(currentUser => {
+      .then((currentUser: UserAttribute) => {
         if (currentUser.isSuperUser) {
-          var superUserData =
-            {
-              userName: req.body.userName,
-              password: req.body.password,
-              emailAddress: req.body.emailAddress,
-              isSuperUser: req.body.isSuperUser,
-            };
-          if (!UserRest.isUserDataValidForUpdateBySuperUser(superUserData)) {
+          let user: UserAttribute = {
+            userName: req.body.userName,
+            password: req.body.password,
+            emailAddress: req.body.emailAddress,
+            isSuperUser: req.body.isSuperUser
+          } 
+          if (!UserRest.isUserDataValidForUpdateBySuperUser(user)) {
             const error = new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
             return Promise.reject(error);
           }
-          return UserLogic.updateUser(req.params.userId, superUserData);
+          return UserLogic.updateUser(req.params.userId, user);
         }
         else {
-          var userData =
-            {
-              userName: req.body.userName,
-              password: req.body.password,
-              emailAddress: req.body.emailAddress,
-            };
+          let regularUser: UserAttribute = {
+            userName: req.body.userName,
+            password: req.body.password,
+            emailAddress: req.body.emailAddress
+          }
   
-          if (!UserRest.isUserDataValidForUpdate(userData)) {
+          if (!UserRest.isUserDataValidForUpdate(regularUser)) {
             const error = new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
             return Promise.reject(error);
           }
-          return UserLogic.updateUser(req.params.userId, userData);
+          return UserLogic.updateUser(req.params.userId, regularUser);
         }
       })
-      .then(user => { 
-        RestResponse.send200(res, user); 
+      .then((updatedUser: UserAttribute) => { 
+        RestResponse.send200(res, updatedUser); 
       })
       .catch(error => { 
         RestResponse.sendAppropriateResponse(res, error); 
       });
   }
 
-  private static deleteUser(req, res) {
+  private static deleteUser(req: express.Request, res: express.Response) {
     console.log("user-rest deleteUser: entering");
     console.log("user-rest deleteUser: userId found in url = " + req.params.userId);
     UserLogic.deleteUser(req.params.userId)
@@ -120,7 +122,7 @@ export class UserRest {
       })  
   }
 
-  private static retrieveLeaguesForUser(req, res) {
+  private static retrieveLeaguesForUser(req: express.Request, res: express.Response) {
     UserLogic.getLeaguesAsPlayer(req.params.userId)
       .then(leagues => {
         RestResponse.send200(res, leagues)
@@ -130,7 +132,7 @@ export class UserRest {
       })
   }
 
-  private static retrieveLeaguesAsAdmin(req, res) {
+  private static retrieveLeaguesAsAdmin(req: express.Request, res: express.Response) {
     console.log("user-rest getLeaguesAsAdminForUser:  Looking for legues that this user is an admin for  where UserId = " + req.params.userId);
     UserLogic.getLeaguesAsAdmin(req.params.userId)
       .then(leagues => {
@@ -144,7 +146,7 @@ export class UserRest {
   
   // Private Utility Functions
 
-  private static ensureSuperUserOrSelf(req, res, next): void {
+  private static ensureSuperUserOrSelf(req: express.Request, res: express.Response, next: express.NextFunction): void {
     // Get the user associated with the token
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then(foundUser => {
@@ -170,7 +172,7 @@ export class UserRest {
       })
   }
 
-  private static isUserDataValidForUpdate(userData): boolean {
+  private static isUserDataValidForUpdate(userData: UserAttribute): boolean {
     const result: boolean = userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null &&
@@ -178,7 +180,7 @@ export class UserRest {
     return result;
   }
 
-  private static isUserDataValidForUpdateBySuperUser(userData): boolean {
+  private static isUserDataValidForUpdateBySuperUser(userData: UserAttribute): boolean {
     const result: boolean = userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null &&

@@ -1,8 +1,13 @@
+import * as express from  'express';
+
 // Rest Layer Classes
 import {RestResponse} from './rest-response';
 
 // Logic Layer Classes
 import {UserLogic} from '../logic/user-logic';
+
+// Model Layer Classes
+import {UserInstance} from '../model/user-model-manager';
 
 // Common Classes
 import {DateUtil} from '../common/date-util';
@@ -10,14 +15,14 @@ import {DateUtil} from '../common/date-util';
 
 export class RestUtil {
 
-  static ensureAuthenticated(req, res, next) {
+  static ensureAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
     var token = req.header('Wolfe-Authentication-Token');
     if (token) {
       UserLogic.findUserByAuthenticationToken(token)
         // User found
-        .then(user => {
+        .then((user: UserInstance) => {
           // If the session hasn't timed out...
-          if (user.authenticationTokenExpiration > Date.now()) {
+          if (user.authenticationTokenExpiration.valueOf() > Date.now()) {
             // Bump the expiration date
             return UserLogic.updateUser(user.id, { authenticationTokenExpiration: DateUtil.createAuthenticationExpirationDate() });
           }
@@ -28,7 +33,7 @@ export class RestUtil {
         })
         // Update went OK
         .then(user => {
-          res.append('Wolfe-Authentication-Token', token);
+          res.header('Wolfe-Authentication-Token', token);
           next();
         })
         // Something went wrong
@@ -44,7 +49,7 @@ export class RestUtil {
   }
 
 
-  static ensureSuperUser(req, res, next) {
+  static ensureSuperUser(req: express.Request, res: express.Response, next: express.NextFunction) {
     // Get the user associated with the token
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then(foundUser => {

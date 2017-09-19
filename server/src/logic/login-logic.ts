@@ -3,9 +3,14 @@
 import {UserLogic} from './user-logic';
 import {LogicError} from './logic-error';
 
-// Common classe
+// Model level classes
+import {UserAttribute} from '../model/user-model-manager';
+
+// Common classes
 import {MathUtil} from '../common/math-util';
 import {DateUtil} from '../common/date-util';
+
+import * as Promise from 'bluebird';
 
 export class LoginCredentials {
   private readonly _userName: string;
@@ -29,17 +34,16 @@ export class LoginLogic {
 
   static login(loginCredentials: LoginCredentials): Promise<any> {
 
-    var guid = MathUtil.createGuid();
+    const guid: string = MathUtil.createGuid();
     // This is the only error message that we will provide in the 
     // event that we're being hacked.
-    var errorMessage = "Login Credentials were not correct.";
-    var foundUser;
+    let foundUser: UserAttribute;
 
     return UserLogic.findUserByUserName(loginCredentials.userName)
-      .then(user => {
+      .then((user: UserAttribute) => {
         if (user != null && user.password === loginCredentials.password) {
           foundUser = user;
-          // Only update the 
+          // Only update the authentication token and its expiration date 
           return UserLogic.updateUser(user.id,
             {
               authenticationToken: guid,
@@ -51,7 +55,7 @@ export class LoginLogic {
         }
       })
 
-      .then(junk => { return Promise.resolve({ "user": foundUser, "wolfeAuthenticationToken": guid }); })
+      .then((updatedUser: UserAttribute) => { return Promise.resolve({ "user": foundUser, "wolfeAuthenticationToken": guid }); })
 
       .catch(err => {
         console.log("login-logic.login() - Landed in generic catch - Login Failed");
@@ -61,13 +65,13 @@ export class LoginLogic {
 
   }
 
-  static logout (userName: string): Promise<any> {
+  static logout (userName: string): Promise<void> {
     return UserLogic.findUserByUserName(userName)
       .then(user => {
         return UserLogic.updateUser(user.id, { authenticationTokenExpiration: new Date() });
       })
-      .then(junk => {
-        return Promise.resolve(null);
+      .then( (updatedUser: UserAttribute) => {
+        return Promise.resolve();
       })
       .catch(err => {
         // If an error occurred, get it into a proper format and log it
