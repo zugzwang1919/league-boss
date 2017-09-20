@@ -2,4 +2,4 @@
 
 import {Server} from "./server";
 
-Server.bootstrap();
+const ourServer: Server = new Server();

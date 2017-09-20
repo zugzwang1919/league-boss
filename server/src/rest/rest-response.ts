@@ -4,25 +4,25 @@ import * as express from 'express';
 
 export class RestResponse {
 
-  static send200(res: express.Response, optionalBody ?: any) {
+  public static send200(res: express.Response, optionalBody ?: any) {
     RestResponse.sendResponse(res, 200, optionalBody);
   }
 
-  static send200WithHeader(res: express.Response, headerKey: string, headerValue: string, optionalBody?: any) {
-    RestResponse.sendResponse(res, 200, optionalBody, { "key": headerKey, "value": headerValue });
+  public static send200WithHeader(res: express.Response, headerKey: string, headerValue: string, optionalBody?: any) {
+    RestResponse.sendResponse(res, 200, optionalBody, { key: headerKey, value: headerValue });
   }
 
-  static send401(res: express.Response, optionalMessage ?: string) {
+  public static send401(res: express.Response, optionalMessage ?: string) {
     const jsonBody = RestResponse.buildJSONfromMessage(optionalMessage !== undefined ? optionalMessage : "Authentication failed. Successful login required.");
     RestResponse.sendResponse(res, 401, jsonBody);
   }
 
-  static send403(res: express.Response) {
+  public static send403(res: express.Response) {
     RestResponse.sendResponse(res, 403, RestResponse.buildJSONfromMessage("Not Authorized."));
   }
 
-  static sendAppropriateResponse(res: express.Response, error: LogicError) {
-    var statusCode;
+  public static sendAppropriateResponse(res: express.Response, error: LogicError) {
+    let statusCode;
     switch (error.name) {
       case LogicError.FORBIDDEN.name:
         statusCode = 403;
@@ -42,9 +42,9 @@ export class RestResponse {
 
   // Private methods
 
-  private static sendResponse(res: express.Response, statusCode: number, optionalBody ?: any, optionalHeader ?:any) {
+  private static sendResponse(res: express.Response, statusCode: number, optionalBody ?: any, optionalHeader ?: any) {
     console.log("Building a response with a status code of " + statusCode);
-    var body = RestResponse.buildJSONfromMessage("Success!!!");
+    let body = RestResponse.buildJSONfromMessage("Success!!!");
     if (optionalBody) {
       console.log("A non-default body will be sent.");
       body = optionalBody;
@@ -56,8 +56,8 @@ export class RestResponse {
     res.status(statusCode).json(body);
   }
 
-  private static buildJSONfromMessage(message: string) {
-    return { "message": message };
+  private static buildJSONfromMessage(inputMessage: string) {
+    return { message: inputMessage };
   }
 
 }

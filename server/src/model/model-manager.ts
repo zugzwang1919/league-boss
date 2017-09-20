@@ -1,4 +1,4 @@
-import * as  Sequelize from  'sequelize';
+import * as  Sequelize from 'sequelize';
 
 import {UserModelManager} from './user-model-manager';
 import {UserInstance} from './user-model-manager';
@@ -6,22 +6,22 @@ import {UserModel} from './user-model-manager';
 
 import {LeagueModelManager} from './league-model-manager';
 import {LeagueInstance} from './league-model-manager';
-import {LeagueModel} from './league-model-manager'; 
+import {LeagueModel} from './league-model-manager';
 
 export class ModelManager {
-  
+
   public constructor( populateWithTestData?: boolean) {
 
-    let sequelize: Sequelize.Sequelize = new Sequelize('leagueboss', 'root', 'tchssoccer', {
+    const sequelize: Sequelize.Sequelize = new Sequelize('leagueboss', 'root', 'tchssoccer', {
         host: 'localhost',
         dialect: 'mysql',
         pool: {
           max: 5,
           min: 0,
-          idle: 10000
-        }
+          idle: 10000,
+        },
     });
-    
+
     // Create the Sequelize Models for all of our persistent objects
     UserModelManager.initialize(sequelize);
     LeagueModelManager.initialize(sequelize);
@@ -29,7 +29,7 @@ export class ModelManager {
     // Describe the relationships between the presistent objects
     const userModel: UserModel = UserModelManager.userModel;
     const leagueModel: LeagueModel = LeagueModelManager.leagueModel;
-    
+
     userModel.belongsToMany(leagueModel, {as: 'PlayerLeague', through: 'LeaguePlayer' });
     leagueModel.belongsToMany(userModel, {as: 'Player', through: 'LeaguePlayer'});
     userModel.belongsToMany(leagueModel, {as: 'AdminLeague', through: 'LeagueAdmin' });
@@ -41,7 +41,7 @@ export class ModelManager {
 
     }
   }
-  
+
   private seedTestData(sequelize: Sequelize.Sequelize) {
 
     let user1: UserInstance;
@@ -49,14 +49,14 @@ export class ModelManager {
     let league1: LeagueInstance;
     let league2: LeagueInstance;
 
-    sequelize.sync({'force': true})
-      .then(syncResults => {
+    sequelize.sync({force: true})
+      .then((syncResults) => {
         return UserModelManager.userModel.create({
           userName: 'RWW',
           password: 'RWW',
           emailAddress: 'russ.wolfe@gmail.com',
-          isSuperUser: true
-        })
+          isSuperUser: true,
+        });
       })
       .then((createdUser: UserInstance) => {
         user1 = createdUser;
@@ -65,7 +65,7 @@ export class ModelManager {
           password: 'TB',
           emailAddress: 'tom.brady@gmail.com',
           isSuperUser: false,
-        })
+        });
       })
       .then((createdUser: UserInstance) => {
         user2 = createdUser;
@@ -73,9 +73,9 @@ export class ModelManager {
           leagueName: 'NFL Chumps',
           description: 'The worst collection ever of NFL enthusiasts.',
           seasonTypeIndex: 0,
-          leagueTypeIndex: 0
-    
-        })
+          leagueTypeIndex: 0,
+
+        });
       })
       .then((createdLeague: LeagueInstance) => {
         league1 = createdLeague;
@@ -87,17 +87,17 @@ export class ModelManager {
           leagueName: 'Winners not Weiners',
           description: 'Yeah, we are that good.',
           seasonTypeIndex: 1,
-          leagueTypeIndex: 2
-        })
+          leagueTypeIndex: 2,
+        });
       })
-      .then(league => {
+      .then((league) => {
           league2 = league;
           league2.addPlayer(user2);
           return league2.addAdmin(user2);
       })
-      .catch(err => {
-        console.log("error name = " + err.name + ".  Error Message = " + err.message)
-      })                   
+      .catch((err) => {
+        console.log("error name = " + err.name + ".  Error Message = " + err.message);
+      });
   }
 
 }

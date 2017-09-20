@@ -1,0 +1,31 @@
+{
+"extends": "tslint:recommended",
+  "rules": {
+      "max-line-length": {
+          "options": [160]
+      },
+      // Gotta have semicolons at the end of statments
+      "semicolon": [true, "always", "ignore-interfaces", "ignore-bound-class-methods"],
+      // For now, we don't care what type of quote marks are used
+      "quotemark": false,
+      // For now, allow the use of the console
+      "no-console": false,
+      "one-line": [true, "check-open-brace", "check-whitespace"],
+      "variable-name": {
+        "options": [
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ]
+      },
+      "max-classes-per-file": false,
+      "object-literal-sort-keys": false,
+      // Data first, then methods
+      "member-ordering": [true, {"order": "fields-first"}] 
+  },
+  "jsRules": {
+      "max-line-length": {
+          "options": [120]
+      }
+  }
+}

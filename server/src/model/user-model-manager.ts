@@ -1,15 +1,17 @@
-import * as  Sequelize from  'sequelize';
-
+// Model level classes
 import {LeagueAttribute} from './league-model-manager';
 
+// Javascript packages
+import * as Sequelize from 'sequelize';
+
 export interface UserAttribute {
-  id?:number;
-  userName?:string;
-  password?:string;
-  emailAddress?:string;
-  isSuperUser?:boolean;
-  authenticationToken?:string;
-  authenticationTokenExpiration?:Date;
+  id?: number;
+  userName?: string;
+  password?: string;
+  emailAddress?: string;
+  isSuperUser?: boolean;
+  authenticationToken?: string;
+  authenticationTokenExpiration?: Date;
 }
 
 export interface UserInstance extends Sequelize.Instance<UserAttribute>, UserAttribute {
@@ -20,33 +22,33 @@ export interface UserInstance extends Sequelize.Instance<UserAttribute>, UserAtt
 export interface UserModel extends Sequelize.Model<UserInstance, UserAttribute> {}
 
 export class UserModelManager {
-  static userModel: UserModel;
-  
-  static initialize(sequelize: Sequelize.Sequelize) {
+  public static userModel: UserModel;
+
+  public static initialize(sequelize: Sequelize.Sequelize) {
     UserModelManager.userModel = sequelize.define<UserInstance, UserAttribute>('user', {
       userName: {
         type: Sequelize.STRING,
-        unique: true
+        unique: true,
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       emailAddress: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       isSuperUser: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       authenticationToken: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       authenticationTokenExpiration: {
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     },
       {
-        freezeTableName: true // Model tableName will be the same as the model name
-      }
-    )  
+        freezeTableName: true, // Model tableName will be the same as the model name
+      },
+    );
   }
 }

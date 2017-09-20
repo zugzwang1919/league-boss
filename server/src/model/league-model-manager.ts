@@ -1,13 +1,13 @@
-import * as  Sequelize from  'sequelize';
+import * as  Sequelize from 'sequelize';
 
 import {UserAttribute} from './user-model-manager';
 
 export interface LeagueAttribute {
-  id?:number;
-  leagueName?:string;
-  description?:string;
-  seasonTypeIndex?:number;
-  leagueTypeIndex?:number;
+  id?: number;
+  leagueName?: string;
+  description?: string;
+  seasonTypeIndex?: number;
+  leagueTypeIndex?: number;
 }
 
 export interface LeagueInstance extends Sequelize.Instance<LeagueAttribute>, LeagueAttribute {
@@ -36,26 +36,26 @@ export interface LeagueInstance extends Sequelize.Instance<LeagueAttribute>, Lea
 export interface LeagueModel extends Sequelize.Model<LeagueInstance, LeagueAttribute> {}
 
 export class LeagueModelManager {
-  static leagueModel: LeagueModel;
-  
-  static initialize(sequelize: Sequelize.Sequelize) {
+  public static leagueModel: LeagueModel;
+
+  public static initialize(sequelize: Sequelize.Sequelize) {
     LeagueModelManager.leagueModel = sequelize.define('league', {
       leagueName: {
         type: Sequelize.STRING,
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       seasonTypeIndex: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       leagueTypeIndex: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
     },
       {
-        freezeTableName: true // Model tableName will be the same as the model name
-      }
-    )
+        freezeTableName: true, // Model tableName will be the same as the model name
+      },
+    );
   }
 }

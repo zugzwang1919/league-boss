@@ -1,4 +1,4 @@
-import * as express from  'express';
+import * as express from 'express';
 
 // Rest Layer Classes
 import {RestResponse} from './rest-response';
@@ -12,11 +12,10 @@ import {UserInstance} from '../model/user-model-manager';
 // Common Classes
 import {DateUtil} from '../common/date-util';
 
-
 export class RestUtil {
 
-  static ensureAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
-    var token = req.header('Wolfe-Authentication-Token');
+  public static ensureAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const token = req.header('Wolfe-Authentication-Token');
     if (token) {
       UserLogic.findUserByAuthenticationToken(token)
         // User found
@@ -28,16 +27,16 @@ export class RestUtil {
           }
           // Session timed out
           else {
-            return Promise.reject({ "name": "SESSION_TIMEOUT", "message": "Session timed out." });
+            return Promise.reject({ name: "SESSION_TIMEOUT", message: "Session timed out." });
           }
         })
         // Update went OK
-        .then(user => {
+        .then((user) => {
           res.header('Wolfe-Authentication-Token', token);
           next();
         })
         // Something went wrong
-        .catch(err => {
+        .catch((err) => {
           console.log("err.name = " + err.name);
           console.log("err.message = " + err.message);
           RestResponse.send401(res);
@@ -48,24 +47,23 @@ export class RestUtil {
     }
   }
 
-
-  static ensureSuperUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public static ensureSuperUser(req: express.Request, res: express.Response, next: express.NextFunction) {
     // Get the user associated with the token
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-      .then(foundUser => {
+      .then((foundUser) => {
         // If this is a superuser, we're good to go (call next())
         if (foundUser.isSuperUser) {
           next();
         }
         // Otherwise, reject the request
         else {
-          return Promise.reject({ "name": "NOT_SUPER_USER", "message": "The current user is not a super user." });
+          return Promise.reject({ name: "NOT_SUPER_USER", message: "The current user is not a super user." });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // If anything goes wrong, we're sending back a 403
         RestResponse.send403(res);
-      })
+      });
   }
 
 }

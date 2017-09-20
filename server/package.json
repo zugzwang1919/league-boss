@@ -1,15 +1,16 @@
 {
-  "name": "first-server",
+  "name": "league-boss-server",
   "version": "1.0.0",
-  "description": "My first RESTful server",
+  "description": "RESTful server for League Boss",
   "scripts": {
+    "clean": "rimraf build",
+    "lintfix": "tslint --fix src/**/*.ts",
+    "lint": "tslint src/**/*.ts",
+    "prebuild": "npm run clean",
     "build": "tsc",
-    "start": "tsc && concurrently \"tsc -w\" \"nodemon ./build/start-everything.js\" "
+    "start": "npm run build && concurrently \"tsc -w\" \"nodemon ./build/start-everything.js\" "
   },
   "dependencies": {
-    "@types/body-parser": "^1.16.5",
-    "@types/express": "^4.0.37",
-    "@types/sequelize": "^4.0.73",
     "body-parser": "^1.16.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
@@ -17,8 +18,14 @@
     "sequelize": "^3.30.0"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.16.5",
+    "@types/express": "^4.0.37",
+    "@types/sequelize": "^4.0.73",
     "concurrently": "^3.5.0",
     "nodemon": "^1.11.0",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   }
+
 }
