@@ -1,12 +1,12 @@
 import * as  Sequelize from 'sequelize';
 
 import {UserModelManager} from './user-model-manager';
-import {UserInstance} from './user-model-manager';
-import {UserModel} from './user-model-manager';
+import {IUserInstance} from './user-model-manager';
+import {IUserModel} from './user-model-manager';
 
 import {LeagueModelManager} from './league-model-manager';
-import {LeagueInstance} from './league-model-manager';
-import {LeagueModel} from './league-model-manager';
+import {ILeagueInstance} from './league-model-manager';
+import {ILeagueModel} from './league-model-manager';
 
 export class ModelManager {
 
@@ -27,8 +27,8 @@ export class ModelManager {
     LeagueModelManager.initialize(sequelize);
 
     // Describe the relationships between the presistent objects
-    const userModel: UserModel = UserModelManager.userModel;
-    const leagueModel: LeagueModel = LeagueModelManager.leagueModel;
+    const userModel: IUserModel = UserModelManager.userModel;
+    const leagueModel: ILeagueModel = LeagueModelManager.leagueModel;
 
     userModel.belongsToMany(leagueModel, {as: 'PlayerLeague', through: 'LeaguePlayer' });
     leagueModel.belongsToMany(userModel, {as: 'Player', through: 'LeaguePlayer'});
@@ -44,10 +44,10 @@ export class ModelManager {
 
   private seedTestData(sequelize: Sequelize.Sequelize) {
 
-    let user1: UserInstance;
-    let user2: UserInstance;
-    let league1: LeagueInstance;
-    let league2: LeagueInstance;
+    let user1: IUserInstance;
+    let user2: IUserInstance;
+    let league1: ILeagueInstance;
+    let league2: ILeagueInstance;
 
     sequelize.sync({force: true})
       .then((syncResults) => {
@@ -58,7 +58,7 @@ export class ModelManager {
           isSuperUser: true,
         });
       })
-      .then((createdUser: UserInstance) => {
+      .then((createdUser: IUserInstance) => {
         user1 = createdUser;
         return UserModelManager.userModel.create({
           userName: 'TB',
@@ -67,7 +67,7 @@ export class ModelManager {
           isSuperUser: false,
         });
       })
-      .then((createdUser: UserInstance) => {
+      .then((createdUser: IUserInstance) => {
         user2 = createdUser;
         return LeagueModelManager.leagueModel.create({
           leagueName: 'NFL Chumps',
@@ -77,7 +77,7 @@ export class ModelManager {
 
         });
       })
-      .then((createdLeague: LeagueInstance) => {
+      .then((createdLeague: ILeagueInstance) => {
         league1 = createdLeague;
         league1.addPlayer(user1);
         league1.addPlayer(user2);

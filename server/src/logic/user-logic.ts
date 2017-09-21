@@ -8,24 +8,24 @@ import {LogicError} from './logic-error';
 // Model Layer Classes
 import {ModelManager} from '../model/model-manager';
 import {UserModelManager} from '../model/user-model-manager';
-import {UserInstance} from '../model/user-model-manager';
-import {UserAttribute} from '../model/user-model-manager';
+import {IUserInstance} from '../model/user-model-manager';
+import {IUserAttribute} from '../model/user-model-manager';
 
 export class UserLogic {
 
-  public static findUserById(userId: number): Promise<UserInstance> {
+  public static findUserById(userId: number): Promise<IUserInstance> {
     return UserLogic.findUser({ where: { id: userId } });
   }
 
-  public static findUserByAuthenticationToken(token: string): Promise<UserInstance> {
+  public static findUserByAuthenticationToken(token: string): Promise<IUserInstance> {
     return UserLogic.findUser({ where: { authenticationToken: token } });
   }
 
-  public static findUserByUserName(uName: string): Promise<UserInstance> {
+  public static findUserByUserName(uName: string): Promise<IUserInstance> {
     return UserLogic.findUser({ where: { userName: uName } });
   }
 
-  public static createUser(userData: UserAttribute): Promise<UserInstance> {
+  public static createUser(userData: IUserAttribute): Promise<IUserInstance> {
     console.log("user-logic.create() - createUser has been called.");
     // Ensure all of the required inputs are present
     if (!UserLogic.isNewUserValid(userData)) {
@@ -40,14 +40,14 @@ export class UserLogic {
       emailAddress: userData.emailAddress,
       isSuperUser: false,
     })
-      .then((createdUser: UserInstance) => {
+      .then((createdUser: IUserInstance) => {
         console.log("user-logic.create() " + userData.userName + " was successfully created.");
         return Promise.resolve(createdUser);
       })
       .catch((err) => Promise.reject(UserLogic.buildCleanError(err)));
   }
 
-  public static updateUser(userId: number, userData: UserAttribute): Promise<UserInstance> {
+  public static updateUser(userId: number, userData: IUserAttribute): Promise<IUserInstance> {
     console.log("user-logic.update() - updateUser has been called.");
 
     // If we're here, we should be able to update a user, so...
@@ -113,7 +113,7 @@ export class UserLogic {
   }
 
   // Private methods
-  private static findUser(whereClause: any): Promise<UserInstance> {
+  private static findUser(whereClause: any): Promise<IUserInstance> {
     return UserModelManager.userModel.findOne(whereClause)
       .then((user) => {
         if (user != null) {
@@ -130,7 +130,7 @@ export class UserLogic {
       });
   }
 
-  private static isNewUserValid(userData: UserAttribute) {
+  private static isNewUserValid(userData: IUserAttribute) {
     return (userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null);

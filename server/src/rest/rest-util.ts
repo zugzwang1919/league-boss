@@ -7,7 +7,7 @@ import {RestResponse} from './rest-response';
 import {UserLogic} from '../logic/user-logic';
 
 // Model Layer Classes
-import {UserInstance} from '../model/user-model-manager';
+import {IUserInstance} from '../model/user-model-manager';
 
 // Common Classes
 import {DateUtil} from '../common/date-util';
@@ -19,7 +19,7 @@ export class RestUtil {
     if (token) {
       UserLogic.findUserByAuthenticationToken(token)
         // User found
-        .then((user: UserInstance) => {
+        .then((user: IUserInstance) => {
           // If the session hasn't timed out...
           if (user.authenticationTokenExpiration.valueOf() > Date.now()) {
             // Bump the expiration date

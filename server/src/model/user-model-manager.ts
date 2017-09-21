@@ -1,31 +1,34 @@
 // Model level classes
-import {LeagueAttribute} from './league-model-manager';
+import {ILeague} from './league-model-manager';
 
 // Javascript packages
 import * as Sequelize from 'sequelize';
 
-export interface UserAttribute {
+export interface IUser {
   id?: number;
   userName?: string;
   password?: string;
   emailAddress?: string;
   isSuperUser?: boolean;
+}
+
+export interface IUserAttribute extends IUser {
   authenticationToken?: string;
   authenticationTokenExpiration?: Date;
 }
 
-export interface UserInstance extends Sequelize.Instance<UserAttribute>, UserAttribute {
-  getPlayerLeague: Sequelize.HasManyGetAssociationsMixin<LeagueAttribute>;
-  getAdminLeague: Sequelize.HasManyGetAssociationsMixin<LeagueAttribute>;
+export interface IUserInstance extends Sequelize.Instance<IUserAttribute>, IUserAttribute {
+  getPlayerLeague: Sequelize.HasManyGetAssociationsMixin<ILeague>;
+  getAdminLeague: Sequelize.HasManyGetAssociationsMixin<ILeague>;
 }
 
-export interface UserModel extends Sequelize.Model<UserInstance, UserAttribute> {}
+export interface IUserModel extends Sequelize.Model<IUserInstance, IUserAttribute> {}
 
 export class UserModelManager {
-  public static userModel: UserModel;
+  public static userModel: IUserModel;
 
   public static initialize(sequelize: Sequelize.Sequelize) {
-    UserModelManager.userModel = sequelize.define<UserInstance, UserAttribute>('user', {
+    UserModelManager.userModel = sequelize.define<IUserInstance, IUserAttribute>('user', {
       userName: {
         type: Sequelize.STRING,
         unique: true,

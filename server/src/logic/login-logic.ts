@@ -4,7 +4,7 @@ import {LogicError} from './logic-error';
 import {UserLogic} from './user-logic';
 
 // Model level classes
-import {UserAttribute} from '../model/user-model-manager';
+import {IUserAttribute} from '../model/user-model-manager';
 
 // Common classes
 import {DateUtil} from '../common/date-util';
@@ -36,10 +36,10 @@ export class LoginLogic {
     const guid: string = MathUtil.createGuid();
     // This is the only error message that we will provide in the
     // event that we're being hacked.
-    let foundUser: UserAttribute;
+    let foundUser: IUserAttribute;
 
     return UserLogic.findUserByUserName(loginCredentials.userName)
-      .then((user: UserAttribute) => {
+      .then((user: IUserAttribute) => {
         if (user != null && user.password === loginCredentials.password) {
           foundUser = user;
           // Only update the authentication token and its expiration date
@@ -54,7 +54,7 @@ export class LoginLogic {
         }
       })
 
-      .then((updatedUser: UserAttribute) => Promise.resolve({ user: foundUser, wolfeAuthenticationToken: guid }))
+      .then((updatedUser: IUserAttribute) => Promise.resolve({ user: foundUser, wolfeAuthenticationToken: guid }))
 
       .catch((err) => {
         console.log("login-logic.login() - Landed in generic catch - Login Failed");
@@ -69,7 +69,7 @@ export class LoginLogic {
       .then((user) => {
         return UserLogic.updateUser(user.id, { authenticationTokenExpiration: new Date() });
       })
-      .then( (updatedUser: UserAttribute) => {
+      .then( (updatedUser: IUserAttribute) => {
         return Promise.resolve();
       })
       .catch((err) => {

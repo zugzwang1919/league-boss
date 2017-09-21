@@ -10,6 +10,7 @@
       "quotemark": false,
       // For now, allow the use of the console
       "no-console": false,
+      "no-empty-interface": false,
       "one-line": [true, "check-open-brace", "check-whitespace"],
       "variable-name": {
         "options": [

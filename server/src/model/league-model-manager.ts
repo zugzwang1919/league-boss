@@ -1,8 +1,8 @@
 import * as  Sequelize from 'sequelize';
 
-import {UserAttribute} from './user-model-manager';
+import {IUserAttribute} from './user-model-manager';
 
-export interface LeagueAttribute {
+export interface ILeague {
   id?: number;
   leagueName?: string;
   description?: string;
@@ -10,21 +10,23 @@ export interface LeagueAttribute {
   leagueTypeIndex?: number;
 }
 
-export interface LeagueInstance extends Sequelize.Instance<LeagueAttribute>, LeagueAttribute {
-  getAdmin: Sequelize.HasManyGetAssociationsMixin<UserAttribute>;
-  hasAdmin: Sequelize.HasManyHasAssociationMixin<UserAttribute, number>;
-  addAdmin: Sequelize.HasManyAddAssociationMixin<UserAttribute, number>;
-  removeAdmin: Sequelize.HasManyRemoveAssociationsMixin<UserAttribute, number>;
+export interface ILeagueAttribute extends ILeague {}
+
+export interface ILeagueInstance extends Sequelize.Instance<ILeagueAttribute>, ILeagueAttribute {
+  getAdmin: Sequelize.HasManyGetAssociationsMixin<IUserAttribute>;
+  hasAdmin: Sequelize.HasManyHasAssociationMixin<IUserAttribute, number>;
+  addAdmin: Sequelize.HasManyAddAssociationMixin<IUserAttribute, number>;
+  removeAdmin: Sequelize.HasManyRemoveAssociationsMixin<IUserAttribute, number>;
   /*
   removeAdmin ( oldAssociated?: UserAttribute | number,
                 options?: Sequelize.HasManyRemoveAssociationMixinOptions | Sequelize.InstanceUpdateOptions
                ): Promise<number>;
   */
 
-  getPlayer: Sequelize.HasManyGetAssociationsMixin<UserAttribute>;
-  hasPlayer: Sequelize.HasManyHasAssociationMixin<UserAttribute, number>;
-  addPlayer: Sequelize.HasManyAddAssociationMixin<UserAttribute, number>;
-  removePlayer: Sequelize.HasManyRemoveAssociationsMixin<UserAttribute, number>;
+  getPlayer: Sequelize.HasManyGetAssociationsMixin<IUserAttribute>;
+  hasPlayer: Sequelize.HasManyHasAssociationMixin<IUserAttribute, number>;
+  addPlayer: Sequelize.HasManyAddAssociationMixin<IUserAttribute, number>;
+  removePlayer: Sequelize.HasManyRemoveAssociationsMixin<IUserAttribute, number>;
   /*
   removePlayer( oldAssociated?: UserAttribute | number,
                 options?: Sequelize.HasManyRemoveAssociationMixinOptions | Sequelize.InstanceUpdateOptions
@@ -33,10 +35,10 @@ export interface LeagueInstance extends Sequelize.Instance<LeagueAttribute>, Lea
 
 }
 
-export interface LeagueModel extends Sequelize.Model<LeagueInstance, LeagueAttribute> {}
+export interface ILeagueModel extends Sequelize.Model<ILeagueInstance, ILeagueAttribute> {}
 
 export class LeagueModelManager {
-  public static leagueModel: LeagueModel;
+  public static leagueModel: ILeagueModel;
 
   public static initialize(sequelize: Sequelize.Sequelize) {
     LeagueModelManager.leagueModel = sequelize.define('league', {

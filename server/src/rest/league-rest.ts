@@ -7,7 +7,7 @@ import {LeagueLogic} from '../logic/league-logic';
 import {UserLogic} from '../logic/user-logic';
 
 // Model Layer Classes
-import {UserAttribute} from '../model/user-model-manager';
+import {IUserAttribute} from '../model/user-model-manager';
 
 import * as express from 'express';
 
@@ -157,9 +157,9 @@ export class LeagueRest {
   private static ensureSuperUserOrLeagueAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
 
       // Get the user associated with the token
-      let foundUser: UserAttribute;
+      let foundUser: IUserAttribute;
       UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-        .then((user: UserAttribute) => {
+        .then((user: IUserAttribute) => {
           foundUser = user;
           return UserLogic.isLeagueAdmin(user.id, req.params.leagueId);
         })

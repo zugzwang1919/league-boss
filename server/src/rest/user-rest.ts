@@ -7,7 +7,7 @@ import {LogicError} from '../logic/logic-error';
 import {UserLogic} from '../logic/user-logic';
 
 // Model Classes
-import {UserAttribute} from '../model/user-model-manager';
+import {IUserAttribute} from '../model/user-model-manager';
 
 // Javascript packages
 import * as express from 'express';
@@ -53,7 +53,7 @@ export class UserRest {
 
   private static createUser(req: express.Request, res: express.Response) {
     console.log("user-rest createUser: userName found in body = " + req.body.userName);
-    const newUser: UserAttribute = {
+    const newUser: IUserAttribute = {
       userName: req.body.userName,
       password: req.body.password,
       emailAddress: req.body.emailAddress,
@@ -71,9 +71,9 @@ export class UserRest {
   private static updateUser(req: express.Request, res: express.Response) {
     console.log("user-rest updateUser: userName found in body = " + req.body.userName);
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-      .then((currentUser: UserAttribute) => {
+      .then((currentUser: IUserAttribute) => {
         if (currentUser.isSuperUser) {
-          const user: UserAttribute = {
+          const user: IUserAttribute = {
             userName: req.body.userName,
             password: req.body.password,
             emailAddress: req.body.emailAddress,
@@ -86,7 +86,7 @@ export class UserRest {
           return UserLogic.updateUser(req.params.userId, user);
         }
         else {
-          const regularUser: UserAttribute = {
+          const regularUser: IUserAttribute = {
             userName: req.body.userName,
             password: req.body.password,
             emailAddress: req.body.emailAddress,
@@ -99,7 +99,7 @@ export class UserRest {
           return UserLogic.updateUser(req.params.userId, regularUser);
         }
       })
-      .then((updatedUser: UserAttribute) => {
+      .then((updatedUser: IUserAttribute) => {
         RestResponse.send200(res, updatedUser);
       })
       .catch((error) => {
@@ -170,7 +170,7 @@ export class UserRest {
       });
   }
 
-  private static isUserDataValidForUpdate(userData: UserAttribute): boolean {
+  private static isUserDataValidForUpdate(userData: IUserAttribute): boolean {
     const result: boolean = userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null &&
@@ -178,7 +178,7 @@ export class UserRest {
     return result;
   }
 
-  private static isUserDataValidForUpdateBySuperUser(userData: UserAttribute): boolean {
+  private static isUserDataValidForUpdateBySuperUser(userData: IUserAttribute): boolean {
     const result: boolean = userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null &&
