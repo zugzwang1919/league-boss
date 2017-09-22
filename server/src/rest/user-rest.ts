@@ -7,6 +7,8 @@ import {LogicError} from '../logic/logic-error';
 import {UserLogic} from '../logic/user-logic';
 
 // Model Classes
+import {ILeague} from '../model/league';
+import {ILeagueAttribute, LeagueModelManager} from '../model/league-model-manager';
 import {IUser} from '../model/user';
 import {IUserInstance, UserModelManager} from '../model/user-model-manager';
 
@@ -125,9 +127,11 @@ export class UserRest {
   private static retrieveLeaguesForUser(req: express.Request, res: express.Response): any {
     console.log("user-rest retriveLeaguesForUser:  Looking for leagues that this user as player for user id " + req.params.userId);
     UserLogic.getLeaguesAsPlayer(req.params.userId)
-      .then((leagues) => {
+      .then((leagues: ILeagueAttribute[]) => {
         console.log("user-rest retriveLeaguesForUser: succesful retrival of leagues as player for user id " + req.params.userId);
-        RestResponse.send200(res, leagues);
+        // Transform the array of ILeagueAttributes to an array of ILeagues (our form that users of our RESTful service should be using)
+        const returnLeagues: ILeague[] = leagues.map(LeagueModelManager.createILeagueFromAnything);
+        RestResponse.send200(res, returnLeagues);
       })
       .catch((error) => {
         console.log("user-rest retriveLeaguesForUser: an error occurred while retrieving leagues as player for user id " + req.params.userId);
@@ -138,9 +142,11 @@ export class UserRest {
   private static retrieveLeaguesAsAdmin(req: express.Request, res: express.Response): any {
     console.log("user-rest retriveLeaguesAsAdmin:  Looking for leagues that this user is an admin for user id " + req.params.userId);
     UserLogic.getLeaguesAsAdmin(req.params.userId)
-      .then((leagues) => {
+      .then((leagues: ILeagueAttribute[]) => {
         console.log("user-rest retriveLeaguesAsAdmin: succesful retrival of leagues as admin for  " + req.params.userId);
-        RestResponse.send200(res, leagues);
+        // Transform the array of ILeagueAttributes to an array of ILeagues (our form that users of our RESTful service should be using)
+        const returnLeagues: ILeague[] = leagues.map(LeagueModelManager.createILeagueFromAnything);
+        RestResponse.send200(res, returnLeagues);
       })
       .catch((error) => {
         console.log("user-rest retriveLeaguesAsAdmin: an error occurred while retrieving leagues as admin for user id " + req.params.userId);
