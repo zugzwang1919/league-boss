@@ -10,7 +10,8 @@ import {UserLogic} from '../logic/user-logic';
 import {ILeague} from '../model/league';
 import {LeagueModelManager} from '../model/league-model-manager';
 import {ILeagueInstance} from '../model/league-model-manager';
-import {IUserInstance} from '../model/user-model-manager';
+import {IUser} from '../model/user';
+import {IUserInstance, UserModelManager} from '../model/user-model-manager';
 
 import * as express from 'express';
 
@@ -102,7 +103,11 @@ export class LeagueRest {
   private static retrievePlayers(req: express.Request, res: express.Response): any {
     console.log("league-rest getPlayers:  ");
     LeagueLogic.getPlayers(req.params.leagueId)
-      .then((players) => { RestResponse.send200(res, players); })
+      .then((players: IUserInstance[]) => {
+        // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
+        const returnPlayers: IUser[] = players.map(UserModelManager.createIUserFromAnything);
+        RestResponse.send200(res, returnPlayers);
+      })
       .catch((error) => { RestResponse.sendAppropriateResponse(res, error); });
   }
 
@@ -133,7 +138,11 @@ export class LeagueRest {
   private static retrieveAdmins(req: express.Request, res: express.Response): any {
     console.log("league-rest getAddmins: leagueId found in body = " + req.params.leagueId);
     LeagueLogic.getAdmins(req.params.leagueId)
-      .then((admins) => { RestResponse.send200(res, admins); })
+      .then((admins: IUserInstance[]) => {
+        // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
+        const returnPlayers: IUser[] = admins.map(UserModelManager.createIUserFromAnything);
+        RestResponse.send200(res, returnPlayers);
+      })
       .catch((error) => { RestResponse.sendAppropriateResponse(res, error); });
   }
 

@@ -135,7 +135,7 @@ export class LeagueLogic {
       });
   }
 
-  public static getPlayers(leagueId: number): Promise<ILeagueInstance[]> {
+  public static getPlayers(leagueId: number): Promise<IUserInstance[]> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.getPlayer();
