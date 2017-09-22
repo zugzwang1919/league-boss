@@ -9,9 +9,7 @@
     "sourceRoot": "src",
     "outDir": "build",
     "allowJs": false,
-    // NOTE: FIXME: This eventually needs to be set back to true
     "declaration": true,
-    // NOTE: FIXME: This eventually needs to be set back to true
     "noImplicitAny": true
   },
   "exclude": [

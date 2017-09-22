@@ -31,8 +31,8 @@ export class LogicError {
     }
     // Otherwise, let's start with an UNKNOWN message and try to improve it
     // If it has a name or message property, then use it.
-    let name = LogicError.UNKNOWN.name;
-    let message = LogicError.UNKNOWN.message;
+    let name: string = LogicError.UNKNOWN.name;
+    let message: string = LogicError.UNKNOWN.message;
     if (err != null) {
       if (err.name != null) {
         name = err.name;

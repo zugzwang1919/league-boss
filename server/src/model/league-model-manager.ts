@@ -1,15 +1,13 @@
 import * as  Sequelize from 'sequelize';
 
+import {ILeague} from './league';
 import {IUserAttribute} from './user-model-manager';
 
-export interface ILeague {
-  id?: number;
-  leagueName?: string;
-  description?: string;
-  seasonTypeIndex?: number;
-  leagueTypeIndex?: number;
-}
-
+// NOTE:  We're not tacking any additional information onto the interface created for
+// external users (ILeague), so ILeagueAttribute has no additional attributes.  While
+// we couild get rid of ILeagueAttribute, it's included to be consistent with the other
+// sequelize models - and in the event we ever want to add an attribute to the database
+// that is not going to be included in the external user's view.
 export interface ILeagueAttribute extends ILeague {}
 
 export interface ILeagueInstance extends Sequelize.Instance<ILeagueAttribute>, ILeagueAttribute {
@@ -40,7 +38,7 @@ export interface ILeagueModel extends Sequelize.Model<ILeagueInstance, ILeagueAt
 export class LeagueModelManager {
   public static leagueModel: ILeagueModel;
 
-  public static initialize(sequelize: Sequelize.Sequelize) {
+  public static initialize(sequelize: Sequelize.Sequelize): void {
     LeagueModelManager.leagueModel = sequelize.define('league', {
       leagueName: {
         type: Sequelize.STRING,
@@ -59,5 +57,18 @@ export class LeagueModelManager {
         freezeTableName: true, // Model tableName will be the same as the model name
       },
     );
+  }
+
+  /* Creates an actual object that implements the ILeague interface from
+  any other object */
+  public static createILeagueFromAnything(anyObject: any): ILeague {
+    const createdLeague: ILeague = {
+      id: anyObject.id,
+      leagueName: anyObject.leagueName,
+      description: anyObject.description,
+      seasonTypeIndex: anyObject.seasonTypeIndex,
+      leagueTypeIndex: anyObject.leagueTypeIndex,
+    };
+    return createdLeague;
   }
 }

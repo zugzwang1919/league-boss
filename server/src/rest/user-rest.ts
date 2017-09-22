@@ -7,7 +7,8 @@ import {LogicError} from '../logic/logic-error';
 import {UserLogic} from '../logic/user-logic';
 
 // Model Classes
-import {IUserAttribute} from '../model/user-model-manager';
+import {IUser} from '../model/user';
+import {IUserInstance, UserModelManager} from '../model/user-model-manager';
 
 // Javascript packages
 import * as express from 'express';
@@ -19,7 +20,7 @@ export class UserRest {
     return UserRest.router;
   }
 
-  public static init() {
+  public static init(): void {
     UserRest.router.get('/:userId', RestUtil.ensureAuthenticated, UserRest.retrieveUserById);
     UserRest.router.get('/', RestUtil.ensureAuthenticated, UserRest.retrieveUser);
     UserRest.router.post('/', UserRest.createUser);
@@ -29,86 +30,86 @@ export class UserRest {
     UserRest.router.get('/:userId/leagueAsAdmin', RestUtil.ensureAuthenticated, UserRest.retrieveLeaguesAsAdmin);
   }
 
-  private static retrieveUserById(req: express.Request, res: express.Response) {
+  private static retrieveUserById(req: express.Request, res: express.Response): any {
     console.log("user-rest getUser:  Looking for user with an id of " + req.params.userId);
     UserLogic.findUserById(req.params.userId)
-      .then((user) => {
-        RestResponse.send200(res, user);
+      .then((userInstance: IUserInstance) => {
+        // Transform the IUserInstance to an IUser (our form that users of our RESTful service should be using)
+        const returnedUser: IUser = UserModelManager.createIUserFromAnything(userInstance);
+        RestResponse.send200(res, returnedUser);
       })
       .catch((error) => {
         RestResponse.sendAppropriateResponse(res, error);
       });
   }
 
-  private static retrieveUser(req: express.Request, res: express.Response) {
+  private static retrieveUser(req: express.Request, res: express.Response): any {
     console.log("user-rest getUser:  Looking for user with a name of " + req.query.userName);
     UserLogic.findUserByUserName(req.query.userName)
-      .then((user) => {
-        RestResponse.send200(res, user);
+      .then((userInstance: IUserInstance) => {
+        // Transform the IUserInstance to an IUser (our form that users of our RESTful service should be using)
+        const returnedUser: IUser = UserModelManager.createIUserFromAnything(userInstance);
+        RestResponse.send200(res, returnedUser);
       })
       .catch((error) => {
         RestResponse.sendAppropriateResponse(res, error);
       });
   }
 
-  private static createUser(req: express.Request, res: express.Response) {
+  private static createUser(req: express.Request, res: express.Response): any {
     console.log("user-rest createUser: userName found in body = " + req.body.userName);
-    const newUser: IUserAttribute = {
-      userName: req.body.userName,
-      password: req.body.password,
-      emailAddress: req.body.emailAddress,
-      isSuperUser: false,
-    };
+    // Transform the request body to an IUser (our form that users of our RESTful service should be using)
+    const newUser: IUser = UserModelManager.createIUserFromAnything(req.body);
+    // Regardless of what the user sent, set id to undefined and isSuperUser to false
+    newUser.id = undefined;
+    newUser.isSuperUser = false;
+
     UserLogic.createUser(newUser)
-      .then((createdUser) => {
-        RestResponse.send200(res, createdUser);
+      .then((createdUser: IUserInstance) => {
+        // Transform the IUserInstance to an IUser (our form that users of our RESTful service should be using)
+        const returnedUser: IUser = UserModelManager.createIUserFromAnything(createdUser);
+        RestResponse.send200(res, returnedUser);
       })
       .catch((error) => {
         RestResponse.sendAppropriateResponse(res, error);
       });
   }
 
-  private static updateUser(req: express.Request, res: express.Response) {
+  private static updateUser(req: express.Request, res: express.Response): any {
     console.log("user-rest updateUser: userName found in body = " + req.body.userName);
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-      .then((currentUser: IUserAttribute) => {
+      .then((currentUser: IUserInstance) => {
+        // Transform the request body to an IUser (the form that users of our RESTful service should be using)
+        const userNeedingUpdate: IUser = UserModelManager.createIUserFromAnything(req.body);
+        // If a SuperUser is making the request
         if (currentUser.isSuperUser) {
-          const user: IUserAttribute = {
-            userName: req.body.userName,
-            password: req.body.password,
-            emailAddress: req.body.emailAddress,
-            isSuperUser: req.body.isSuperUser,
-          };
-          if (!UserRest.isUserDataValidForUpdateBySuperUser(user)) {
-            const error = new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
+          // Make sure the data is complete/valid
+          if (!UserRest.isUserDataValidForUpdateBySuperUser(userNeedingUpdate)) {
+            const error: LogicError = new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
             return Promise.reject(error);
           }
-          return UserLogic.updateUser(req.params.userId, user);
         }
+        // ... else a normal user is making the request
         else {
-          const regularUser: IUserAttribute = {
-            userName: req.body.userName,
-            password: req.body.password,
-            emailAddress: req.body.emailAddress,
-          };
-
-          if (!UserRest.isUserDataValidForUpdate(regularUser)) {
-            const error = new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
+          // Clear out the SuperUser flag, as a regular user cannot make someone a superuser
+          userNeedingUpdate.isSuperUser = undefined;
+          // Make sure the data is complete/valid
+          if (!UserRest.isUserDataValidForUpdate(userNeedingUpdate)) {
+            const error: LogicError = new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
             return Promise.reject(error);
           }
-          return UserLogic.updateUser(req.params.userId, regularUser);
         }
+        return UserLogic.updateUser(req.params.userId, userNeedingUpdate);
       })
-      .then((updatedUser: IUserAttribute) => {
-        RestResponse.send200(res, updatedUser);
+      .then((success) => {
+        RestResponse.send200(res);
       })
       .catch((error) => {
         RestResponse.sendAppropriateResponse(res, error);
       });
   }
 
-  private static deleteUser(req: express.Request, res: express.Response) {
-    console.log("user-rest deleteUser: entering");
+  private static deleteUser(req: express.Request, res: express.Response): any {
     console.log("user-rest deleteUser: userId found in url = " + req.params.userId);
     UserLogic.deleteUser(req.params.userId)
       .then((success) => {
@@ -121,30 +122,35 @@ export class UserRest {
       });
   }
 
-  private static retrieveLeaguesForUser(req: express.Request, res: express.Response) {
+  private static retrieveLeaguesForUser(req: express.Request, res: express.Response): any {
+    console.log("user-rest retriveLeaguesForUser:  Looking for leagues that this user as player for user id " + req.params.userId);
     UserLogic.getLeaguesAsPlayer(req.params.userId)
       .then((leagues) => {
+        console.log("user-rest retriveLeaguesForUser: succesful retrival of leagues as player for user id " + req.params.userId);
         RestResponse.send200(res, leagues);
       })
       .catch((error) => {
+        console.log("user-rest retriveLeaguesForUser: an error occurred while retrieving leagues as player for user id " + req.params.userId);
         RestResponse.sendAppropriateResponse(res, error);
       });
   }
 
-  private static retrieveLeaguesAsAdmin(req: express.Request, res: express.Response) {
-    console.log("user-rest getLeaguesAsAdminForUser:  Looking for legues that this user is an admin for  where UserId = " + req.params.userId);
+  private static retrieveLeaguesAsAdmin(req: express.Request, res: express.Response): any {
+    console.log("user-rest retriveLeaguesAsAdmin:  Looking for leagues that this user is an admin for user id " + req.params.userId);
     UserLogic.getLeaguesAsAdmin(req.params.userId)
       .then((leagues) => {
+        console.log("user-rest retriveLeaguesAsAdmin: succesful retrival of leagues as admin for  " + req.params.userId);
         RestResponse.send200(res, leagues);
       })
       .catch((error) => {
+        console.log("user-rest retriveLeaguesAsAdmin: an error occurred while retrieving leagues as admin for user id " + req.params.userId);
         RestResponse.sendAppropriateResponse(res, error);
       });
   }
 
   // Private Utility Functions
 
-  private static ensureSuperUserOrSelf(req: express.Request, res: express.Response, next: express.NextFunction): void {
+  private static ensureSuperUserOrSelf(req: express.Request, res: express.Response, next: express.NextFunction): any {
     // Get the user associated with the token
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((foundUser) => {
@@ -170,7 +176,7 @@ export class UserRest {
       });
   }
 
-  private static isUserDataValidForUpdate(userData: IUserAttribute): boolean {
+  private static isUserDataValidForUpdate(userData: IUser): boolean {
     const result: boolean = userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null &&
@@ -178,7 +184,7 @@ export class UserRest {
     return result;
   }
 
-  private static isUserDataValidForUpdateBySuperUser(userData: IUserAttribute): boolean {
+  private static isUserDataValidForUpdateBySuperUser(userData: IUser): boolean {
     const result: boolean = userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null &&

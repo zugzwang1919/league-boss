@@ -4,7 +4,8 @@ import {LogicError} from './logic-error';
 import {UserLogic} from './user-logic';
 
 // Model level classes
-import {IUserAttribute} from '../model/user-model-manager';
+import {IUser} from '../model/user';
+import { IUserInstance, UserModelManager } from '../model/user-model-manager';
 
 // Common classes
 import {DateUtil} from '../common/date-util';
@@ -31,15 +32,15 @@ export class LoginCredentials {
 
 export class LoginLogic {
 
-  public static login(loginCredentials: LoginCredentials): Promise<any> {
+  public static login(loginCredentials: LoginCredentials): Promise<[IUserInstance, string]> {
 
     const guid: string = MathUtil.createGuid();
     // This is the only error message that we will provide in the
     // event that we're being hacked.
-    let foundUser: IUserAttribute;
+    let foundUser: IUserInstance;
 
     return UserLogic.findUserByUserName(loginCredentials.userName)
-      .then((user: IUserAttribute) => {
+      .then((user: IUserInstance) => {
         if (user != null && user.password === loginCredentials.password) {
           foundUser = user;
           // Only update the authentication token and its expiration date
@@ -54,7 +55,9 @@ export class LoginLogic {
         }
       })
 
-      .then((updatedUser: IUserAttribute) => Promise.resolve({ user: foundUser, wolfeAuthenticationToken: guid }))
+      .then((success) => {
+        return Promise.resolve([foundUser, guid]);
+      })
 
       .catch((err) => {
         console.log("login-logic.login() - Landed in generic catch - Login Failed");
@@ -69,12 +72,12 @@ export class LoginLogic {
       .then((user) => {
         return UserLogic.updateUser(user.id, { authenticationTokenExpiration: new Date() });
       })
-      .then( (updatedUser: IUserAttribute) => {
+      .then( (success) => {
         return Promise.resolve();
       })
       .catch((err) => {
         // If an error occurred, get it into a proper format and log it
-        const logicError = LogicError.firmUpError(err);
+        const logicError: LogicError = LogicError.firmUpError(err);
         console.log("login-logic.logout() - " + logicError.message);
         // If any error occurred, just indicate that the logout unexpectedly failed
         return Promise.reject(logicError);

@@ -42,7 +42,7 @@ export class ModelManager {
     }
   }
 
-  private seedTestData(sequelize: Sequelize.Sequelize) {
+  private seedTestData(sequelize: Sequelize.Sequelize): void {
 
     let user1: IUserInstance;
     let user2: IUserInstance;

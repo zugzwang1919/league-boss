@@ -6,7 +6,9 @@ import {LeagueLogic} from './league-logic';
 import {LogicError} from './logic-error';
 
 // Model Layer Classes
+import {ILeagueAttribute} from '../model/league-model-manager';
 import {ModelManager} from '../model/model-manager';
+import {IUser} from '../model/user';
 import {UserModelManager} from '../model/user-model-manager';
 import {IUserInstance} from '../model/user-model-manager';
 import {IUserAttribute} from '../model/user-model-manager';
@@ -25,21 +27,15 @@ export class UserLogic {
     return UserLogic.findUser({ where: { userName: uName } });
   }
 
-  public static createUser(userData: IUserAttribute): Promise<IUserInstance> {
+  public static createUser(userData: IUser): Promise<IUserInstance> {
     console.log("user-logic.create() - createUser has been called.");
     // Ensure all of the required inputs are present
     if (!UserLogic.isNewUserValid(userData)) {
       return Promise.reject(UserLogic.buildIncompleteAttributesError());
     }
-
     // If we're here, we should be able to create a user, so...
     // Create the user
-    return UserModelManager.userModel.create({
-      userName: userData.userName,
-      password: userData.password,
-      emailAddress: userData.emailAddress,
-      isSuperUser: false,
-    })
+    return UserModelManager.userModel.create(userData)
       .then((createdUser: IUserInstance) => {
         console.log("user-logic.create() " + userData.userName + " was successfully created.");
         return Promise.resolve(createdUser);
@@ -47,24 +43,22 @@ export class UserLogic {
       .catch((err) => Promise.reject(UserLogic.buildCleanError(err)));
   }
 
-  public static updateUser(userId: number, userData: IUserAttribute): Promise<IUserInstance> {
+  public static updateUser(userId: number, userData: IUserAttribute): Promise<boolean> {
     console.log("user-logic.update() - updateUser has been called.");
-
-    // If we're here, we should be able to update a user, so...
-    // Update the user
+    // NOTE:  We do allow the partial update of a user (i.e. I just want to update the token expiration field, etc)
+    // so there is no checking here for a "fully-formed" user
+    // This makes me a little uncomfortable given its difference from other model types; therefore, making a case for
+    // breaking the token stuff out into its own object
     return UserModelManager.userModel.update(userData, { where: { id: userId } })
-      .then((updatedUser) => {
-        console.log("user-logic.update() " + userData.userName + " was successfully updated.");
-        return Promise.resolve(updatedUser);
+      .then((success) => {
+        console.log("user-logic.update() - User ID " + userId + " was successfully updated.");
+        return Promise.resolve(true);
       })
       .catch((err) => Promise.reject(UserLogic.buildCleanError(err)));
   }
 
   public static deleteUser(userId: number): Promise<boolean> {
     console.log("user-logic.delete() - deleteUser has been called.");
-
-    // If we're here, we should be able to delete a user, so...
-    // Delete the user
     return UserModelManager.userModel.destroy({ where: { id: userId } })
       .then((numberUsersDeleted) => {
         if (numberUsersDeleted === 1) {
@@ -82,7 +76,7 @@ export class UserLogic {
       });
   }
 
-  public static getLeaguesAsPlayer(userId: number) {
+  public static getLeaguesAsPlayer(userId: number): Promise<ILeagueAttribute[]> {
     return UserLogic.findUserById(userId)
       .then((user) => {
         return user.getPlayerLeague();
@@ -92,7 +86,7 @@ export class UserLogic {
       });
   }
 
-  public static getLeaguesAsAdmin(userId: number) {
+  public static getLeaguesAsAdmin(userId: number): Promise<ILeagueAttribute[]> {
     return UserLogic.findUserById(userId)
       .then((user) => {
         return user.getAdminLeague();
@@ -130,19 +124,19 @@ export class UserLogic {
       });
   }
 
-  private static isNewUserValid(userData: IUserAttribute) {
+  private static isNewUserValid(userData: IUserAttribute): boolean {
     return (userData.userName != null &&
       userData.password != null &&
       userData.emailAddress != null);
   }
 
-  private static buildIncompleteAttributesError() {
+  private static buildIncompleteAttributesError(): LogicError {
     console.log("user-logic - Building error indicating that all required attributes were not specified.");
     return new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required user attributes is missing.");
   }
 
   private static buildCleanError(err: any): LogicError {
-    let cleanError;
+    let cleanError: LogicError;
     // Try to clean up expected errors.
     // We could see the SequelizeUniqueConstraintError when someone tries to create a new user
     // or update an existing user and the desired username is already in existence

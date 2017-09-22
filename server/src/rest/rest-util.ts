@@ -14,8 +14,8 @@ import {DateUtil} from '../common/date-util';
 
 export class RestUtil {
 
-  public static ensureAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const token = req.header('Wolfe-Authentication-Token');
+  public static ensureAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction): any {
+    const token: string = req.header('Wolfe-Authentication-Token');
     if (token) {
       UserLogic.findUserByAuthenticationToken(token)
         // User found
@@ -47,7 +47,7 @@ export class RestUtil {
     }
   }
 
-  public static ensureSuperUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public static ensureSuperUser(req: express.Request, res: express.Response, next: express.NextFunction): any {
     // Get the user associated with the token
     UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((foundUser) => {

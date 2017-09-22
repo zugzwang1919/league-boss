@@ -6,13 +6,13 @@ import {UserLogic} from './user-logic';
 import {LeagueModelManager} from '../model/league-model-manager';
 import {ILeagueInstance} from '../model/league-model-manager';
 import {ILeagueAttribute} from '../model/league-model-manager';
-import {IUserInstance} from '../model/user-model-manager';
+import {IUserAttribute, IUserInstance} from '../model/user-model-manager';
 
 import * as Promise from 'bluebird';
 
 export class LeagueLogic {
 
-  public static findLeagueById(leagueId: number) {
+  public static findLeagueById(leagueId: number): Promise<ILeagueInstance> {
     return LeagueLogic.findLeague({ where: { id: leagueId } });
   }
 
@@ -43,7 +43,7 @@ export class LeagueLogic {
       });
   }
 
-  public static updateLeague(leagueData: ILeagueAttribute): Promise<ILeagueInstance> {
+  public static updateLeague(leagueData: ILeagueAttribute): Promise<boolean> {
     console.log("league-logic.update() - updateLeague has been called.");
 
     // Ensure all of the required inputs are present
@@ -54,14 +54,15 @@ export class LeagueLogic {
     // If we're here, we should be able to update a league, so...
     // Update the league
     return LeagueModelManager.leagueModel.update(leagueData, { where: { id: leagueData.id } })
-      .then((result) => {
+      .then((thing: [number, ILeagueInstance[]]) => {
         console.log("league-logic.update() " + leagueData.leagueName + " was successfully updated.");
-        return Promise.resolve(null);
+        // const updatedLeague: ILeagueInstance = thing as ILeagueInstance;
+        return Promise.resolve(true);
       })
       .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }
 
-  public static deleteLeague(leagueId: number) {
+  public static deleteLeague(leagueId: number): Promise<boolean> {
     console.log("league-logic.delete() - deleteLeague has been called.");
     return LeagueModelManager.leagueModel.destroy( { where: { id: leagueId } })
       .then((numberLeaguesDeleted: number) => {
@@ -80,7 +81,7 @@ export class LeagueLogic {
       });
   }
 
-  public static getAdmins(leagueId: number) {
+  public static getAdmins(leagueId: number): Promise<IUserAttribute[]> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.getAdmin();
@@ -208,16 +209,20 @@ export class LeagueLogic {
 
   private static isNewLeagueValid(leagueData: ILeagueAttribute): boolean {
     return (leagueData.leagueName != null &&
-      leagueData.description != null);
+      leagueData.description != null &&
+      leagueData.leagueTypeIndex != null &&
+      leagueData.seasonTypeIndex != null);
   }
 
   private static isExistingLeagueValid(leagueData: ILeagueAttribute): boolean {
     return (leagueData.id != null &&
       leagueData.leagueName != null &&
-      leagueData.description != null);
+      leagueData.description != null &&
+      leagueData.leagueTypeIndex != null &&
+      leagueData.seasonTypeIndex != null);
   }
 
-  private static buildIncompleteAttributesError() {
+  private static buildIncompleteAttributesError(): LogicError {
     console.log("league-logic - Building error indicating that all required attributes were not specified.");
     return new LogicError(LogicError.INCOMPLETE_INPUT.name, "At least one of the required league attributes is missing.");
   }

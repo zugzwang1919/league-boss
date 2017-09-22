@@ -22,7 +22,7 @@ export class LoginService {
       .then((res: Response) => {
         // Save the login info in our currentUserService
         // Notice that angular has "de-capitalized the name of the header"... Weird
-        this.currentUserService.currentUser = res.json().user;
+        this.currentUserService.currentUser = res.json();
         this.currentUserService.wolfeAuthenticationToken = res.headers.get('wolfe-authentication-token');
         return Promise.resolve(new ServiceResponse(res));
       })

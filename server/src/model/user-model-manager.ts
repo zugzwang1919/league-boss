@@ -1,16 +1,9 @@
 // Model level classes
-import {ILeague} from './league-model-manager';
+import {ILeagueAttribute} from './league-model-manager';
+import {IUser} from './user';
 
 // Javascript packages
 import * as Sequelize from 'sequelize';
-
-export interface IUser {
-  id?: number;
-  userName?: string;
-  password?: string;
-  emailAddress?: string;
-  isSuperUser?: boolean;
-}
 
 export interface IUserAttribute extends IUser {
   authenticationToken?: string;
@@ -18,8 +11,8 @@ export interface IUserAttribute extends IUser {
 }
 
 export interface IUserInstance extends Sequelize.Instance<IUserAttribute>, IUserAttribute {
-  getPlayerLeague: Sequelize.HasManyGetAssociationsMixin<ILeague>;
-  getAdminLeague: Sequelize.HasManyGetAssociationsMixin<ILeague>;
+  getPlayerLeague: Sequelize.HasManyGetAssociationsMixin<ILeagueAttribute>;
+  getAdminLeague: Sequelize.HasManyGetAssociationsMixin<ILeagueAttribute>;
 }
 
 export interface IUserModel extends Sequelize.Model<IUserInstance, IUserAttribute> {}
@@ -27,7 +20,7 @@ export interface IUserModel extends Sequelize.Model<IUserInstance, IUserAttribut
 export class UserModelManager {
   public static userModel: IUserModel;
 
-  public static initialize(sequelize: Sequelize.Sequelize) {
+  public static initialize(sequelize: Sequelize.Sequelize): void {
     UserModelManager.userModel = sequelize.define<IUserInstance, IUserAttribute>('user', {
       userName: {
         type: Sequelize.STRING,
@@ -53,5 +46,18 @@ export class UserModelManager {
         freezeTableName: true, // Model tableName will be the same as the model name
       },
     );
+  }
+
+  /* Creates an actual object that implements the IUser interface from
+  any other object */
+  public static createIUserFromAnything(anyObject: any): IUser {
+    const createdLeague: IUser = {
+      id: anyObject.id,
+      userName: anyObject.userName,
+      password: anyObject.password,
+      emailAddress: anyObject.emailAddress,
+      isSuperUser: anyObject.isSuperUser,
+    };
+    return createdLeague;
   }
 }

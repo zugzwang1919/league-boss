@@ -272,6 +272,7 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;:${createdLeagueId},&#xd;
 	&quot;leagueName&quot;:&quot;NFL Losers&quot;,&#xd;
 	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;,&#xd;
 	&quot;leagueTypeIndex&quot;: 0,&#xd;

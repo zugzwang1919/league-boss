@@ -32,7 +32,7 @@ export class Server {
     this.app.listen(1919);
   }
 
-  private config() {
+  private config(): void {
     // Indicate that we'll be using JSON in the bodies of requests and responses
     this.app.use(bodyParser.json());
 
@@ -47,7 +47,7 @@ export class Server {
     });
   }
 
-  private addRestRoutes() {
+  private addRestRoutes(): void {
     // Routes to our REST code
     this.app.use('/user', UserRest.getRouter());
     this.app.use('/league', LeagueRest.getRouter());
