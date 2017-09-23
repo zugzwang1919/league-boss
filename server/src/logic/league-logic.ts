@@ -118,24 +118,22 @@ export class LeagueLogic {
   public static removeAdmin(leagueId: number, userId: number): Promise<boolean> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
-        const userIds: number[] = [userId];
-        return league.removeAdmin(userIds);
+        return league.removeAdmin(userId);
       })
-      .then((numberAdminsRemoved: number) => {
-        if (numberAdminsRemoved === 1) {
+      .then((numberDeleted: number) => {
+        if (numberDeleted > 0) {
           return Promise.resolve(true);
         }
         else {
           return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
         }
-
       })
       .catch((err) => {
         return Promise.reject(LogicError.firmUpError(err));
       });
   }
 
-  public static getPlayers(leagueId: number): Promise<IUserInstance[]> {
+  public static getPlayers(leagueId: number): Promise<IUserAttribute[]> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.getPlayer();
@@ -172,11 +170,10 @@ export class LeagueLogic {
   public static removePlayer(leagueId: number, userId: number): Promise<boolean> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
-        const userIds: number[] = [userId];
-        return league.removePlayer(userIds);
+        return league.removePlayer(userId);
       })
-      .then((numberPlayersRemoved: number) => {
-        if (numberPlayersRemoved === 1) {
+      .then((numberDeleted: number) => {
+        if (numberDeleted > 0) {
           return Promise.resolve(true);
         }
         else {

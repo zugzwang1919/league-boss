@@ -11,6 +11,7 @@ export interface IUserAttribute extends IUser {
 }
 
 export interface IUserInstance extends Sequelize.Instance<IUserAttribute>, IUserAttribute {
+  // NOTE: Not sure why these are not named getPlayerLeagues and getAdminLeagues respectively
   getPlayerLeague: Sequelize.HasManyGetAssociationsMixin<ILeagueAttribute>;
   getAdminLeague: Sequelize.HasManyGetAssociationsMixin<ILeagueAttribute>;
 }

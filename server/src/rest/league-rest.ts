@@ -11,7 +11,7 @@ import {ILeague} from '../model/league';
 import {LeagueModelManager} from '../model/league-model-manager';
 import {ILeagueInstance} from '../model/league-model-manager';
 import {IUser} from '../model/user';
-import {IUserInstance, UserModelManager} from '../model/user-model-manager';
+import {IUserAttribute, IUserInstance, UserModelManager} from '../model/user-model-manager';
 
 import * as express from 'express';
 
@@ -103,7 +103,7 @@ export class LeagueRest {
   private static retrievePlayers(req: express.Request, res: express.Response): any {
     console.log("league-rest getPlayers:  ");
     LeagueLogic.getPlayers(req.params.leagueId)
-      .then((players: IUserInstance[]) => {
+      .then((players: IUserAttribute[]) => {
         // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
         const returnPlayers: IUser[] = players.map(UserModelManager.createIUserFromAnything);
         RestResponse.send200(res, returnPlayers);
@@ -125,7 +125,7 @@ export class LeagueRest {
   private static removePlayer(req: express.Request, res: express.Response): any {
     console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
     LeagueLogic.removePlayer(req.params.leagueId, req.params.userId)
-      .then( (success) => {
+      .then((success) => {
         RestResponse.send200(res);
       })
       .catch((error) => {
@@ -138,7 +138,7 @@ export class LeagueRest {
   private static retrieveAdmins(req: express.Request, res: express.Response): any {
     console.log("league-rest getAddmins: leagueId found in body = " + req.params.leagueId);
     LeagueLogic.getAdmins(req.params.leagueId)
-      .then((admins: IUserInstance[]) => {
+      .then((admins: IUserAttribute[]) => {
         // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
         const returnPlayers: IUser[] = admins.map(UserModelManager.createIUserFromAnything);
         RestResponse.send200(res, returnPlayers);

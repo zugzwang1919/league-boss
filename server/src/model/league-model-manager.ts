@@ -1,7 +1,7 @@
 import * as  Sequelize from 'sequelize';
 
 import {ILeague} from './league';
-import {IUserAttribute} from './user-model-manager';
+import {IUserAttribute, IUserInstance} from './user-model-manager';
 
 // NOTE:  We're not tacking any additional information onto the interface created for
 // external users (ILeague), so ILeagueAttribute has no additional attributes.  While
@@ -11,25 +11,36 @@ import {IUserAttribute} from './user-model-manager';
 export interface ILeagueAttribute extends ILeague {}
 
 export interface ILeagueInstance extends Sequelize.Instance<ILeagueAttribute>, ILeagueAttribute {
-  getAdmin: Sequelize.HasManyGetAssociationsMixin<IUserAttribute>;
-  hasAdmin: Sequelize.HasManyHasAssociationMixin<IUserAttribute, number>;
-  addAdmin: Sequelize.HasManyAddAssociationMixin<IUserAttribute, number>;
-  removeAdmin: Sequelize.HasManyRemoveAssociationsMixin<IUserAttribute, number>;
-  /*
-  removeAdmin ( oldAssociated?: UserAttribute | number,
-                options?: Sequelize.HasManyRemoveAssociationMixinOptions | Sequelize.InstanceUpdateOptions
-               ): Promise<number>;
-  */
 
-  getPlayer: Sequelize.HasManyGetAssociationsMixin<IUserAttribute>;
-  hasPlayer: Sequelize.HasManyHasAssociationMixin<IUserAttribute, number>;
-  addPlayer: Sequelize.HasManyAddAssociationMixin<IUserAttribute, number>;
-  removePlayer: Sequelize.HasManyRemoveAssociationsMixin<IUserAttribute, number>;
-  /*
-  removePlayer( oldAssociated?: UserAttribute | number,
-                options?: Sequelize.HasManyRemoveAssociationMixinOptions | Sequelize.InstanceUpdateOptions
-              ): Promise<number>;
-  */
+  // Note: Not sure why this first name needs to be 'getAdmin' vs 'getAdmins'
+  getAdmin: Sequelize.HasManyGetAssociationsMixin<IUserInstance>;
+  setAdmins: Sequelize.HasManySetAssociationsMixin<IUserInstance, number>;
+  addAdmins: Sequelize.HasManyAddAssociationsMixin<IUserInstance, number>;
+  addAdmin: Sequelize.HasManyAddAssociationMixin<IUserInstance, number>;
+  createAdmin: Sequelize.HasManyCreateAssociationMixin<IUserInstance, IUserInstance>;
+  // Note removeAdmin signature provided below, as this didn't seem to match
+  // removeAdmin: Sequelize.HasManyRemoveAssociationMixin<IUserInstance, number>;
+  removeAdmins: Sequelize.HasManyRemoveAssociationsMixin<IUserInstance, number>;
+  hasAdmin: Sequelize.HasManyHasAssociationMixin<IUserInstance, number>;
+  hasAdmins: Sequelize.HasManyHasAssociationsMixin<IUserInstance, number>;
+  countAdmins: Sequelize.HasManyCountAssociationsMixin;
+
+  // Note: Not sure why this first name needs to be 'getPlayer' vs 'getPlayers'
+  getPlayer: Sequelize.HasManyGetAssociationsMixin<IUserInstance>;
+  setPlayers: Sequelize.HasManySetAssociationsMixin<IUserInstance, number>;
+  addPlayers: Sequelize.HasManyAddAssociationsMixin<IUserInstance, number>;
+  addPlayer: Sequelize.HasManyAddAssociationMixin<IUserInstance, number>;
+  createPlayer: Sequelize.HasManyCreateAssociationMixin<IUserInstance, IUserInstance>;
+  // Note removeAdmin signature provided below, as this didn't seem to match
+  // removePlayer: Sequelize.HasManyRemoveAssociationMixin<IUserInstance, number>;
+  removePlayers: Sequelize.HasManyRemoveAssociationsMixin<IUserInstance, number>;
+  hasPlayer: Sequelize.HasManyHasAssociationMixin<IUserInstance, number>;
+  hasPlayers: Sequelize.HasManyHasAssociationsMixin<IUserInstance, number>;
+  countPlayers: Sequelize.HasManyCountAssociationsMixin;
+
+  // OK... Provide signatures that appear to be different from the typings that we have
+  removeAdmin(index: number): Promise<number>;
+  removePlayer(index: number): Promise<number>;
 
 }
 
