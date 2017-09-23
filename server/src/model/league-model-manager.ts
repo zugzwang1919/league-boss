@@ -12,8 +12,10 @@ export interface ILeagueAttribute extends ILeague {}
 
 export interface ILeagueInstance extends Sequelize.Instance<ILeagueAttribute>, ILeagueAttribute {
 
-  // Note: Not sure why this first name needs to be 'getAdmin' vs 'getAdmins'
-  getAdmin: Sequelize.HasManyGetAssociationsMixin<IUserInstance>;
+  // Define all of the methods that are available.  We don't use all of them, so I can't
+  // guarantee that they all work, but they "should"
+
+  getAdmins: Sequelize.HasManyGetAssociationsMixin<IUserInstance>;
   setAdmins: Sequelize.HasManySetAssociationsMixin<IUserInstance, number>;
   addAdmins: Sequelize.HasManyAddAssociationsMixin<IUserInstance, number>;
   addAdmin: Sequelize.HasManyAddAssociationMixin<IUserInstance, number>;
@@ -25,8 +27,7 @@ export interface ILeagueInstance extends Sequelize.Instance<ILeagueAttribute>, I
   hasAdmins: Sequelize.HasManyHasAssociationsMixin<IUserInstance, number>;
   countAdmins: Sequelize.HasManyCountAssociationsMixin;
 
-  // Note: Not sure why this first name needs to be 'getPlayer' vs 'getPlayers'
-  getPlayer: Sequelize.HasManyGetAssociationsMixin<IUserInstance>;
+  getPlayers: Sequelize.HasManyGetAssociationsMixin<IUserInstance>;
   setPlayers: Sequelize.HasManySetAssociationsMixin<IUserInstance, number>;
   addPlayers: Sequelize.HasManyAddAssociationsMixin<IUserInstance, number>;
   addPlayer: Sequelize.HasManyAddAssociationMixin<IUserInstance, number>;

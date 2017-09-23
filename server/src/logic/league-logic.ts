@@ -84,7 +84,7 @@ export class LeagueLogic {
   public static getAdmins(leagueId: number): Promise<IUserAttribute[]> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
-        return league.getAdmin();
+        return league.getAdmins();
       })
       .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }
@@ -136,7 +136,7 @@ export class LeagueLogic {
   public static getPlayers(leagueId: number): Promise<IUserAttribute[]> {
     return this.findLeagueById(leagueId)
       .then((league: ILeagueInstance) => {
-        return league.getPlayer();
+        return league.getPlayers();
       })
       .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }

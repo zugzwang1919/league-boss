@@ -30,10 +30,10 @@ export class ModelManager {
     const userModel: IUserModel = UserModelManager.userModel;
     const leagueModel: ILeagueModel = LeagueModelManager.leagueModel;
 
-    userModel.belongsToMany(leagueModel, {as: 'PlayerLeague', through: 'LeaguePlayer' });
-    leagueModel.belongsToMany(userModel, {as: 'Player', through: 'LeaguePlayer'});
-    userModel.belongsToMany(leagueModel, {as: 'AdminLeague', through: 'LeagueAdmin' });
-    leagueModel.belongsToMany(userModel, {as: 'Admin', through: 'LeagueAdmin'});
+    userModel.belongsToMany(leagueModel, {as: 'PlayerLeagues', through: 'LeaguePlayer' });
+    leagueModel.belongsToMany(userModel, {as: 'Players', through: 'LeaguePlayer'});
+    userModel.belongsToMany(leagueModel, {as: 'AdminLeagues', through: 'LeagueAdmin' });
+    leagueModel.belongsToMany(userModel, {as: 'Admins', through: 'LeagueAdmin'});
 
     // Seed the DB if requested to do so
     if (populateWithTestData) {

@@ -79,7 +79,7 @@ export class UserLogic {
   public static getLeaguesAsPlayer(userId: number): Promise<ILeagueAttribute[]> {
     return UserLogic.findUserById(userId)
       .then((user) => {
-        return user.getPlayerLeague();
+        return user.getPlayerLeagues();
       })
       .catch((err) => {
         return Promise.reject(LogicError.firmUpError(err));
@@ -89,7 +89,7 @@ export class UserLogic {
   public static getLeaguesAsAdmin(userId: number): Promise<ILeagueAttribute[]> {
     return UserLogic.findUserById(userId)
       .then((user) => {
-        return user.getAdminLeague();
+        return user.getAdminLeagues();
       })
       .catch((err) => {
         return Promise.reject(LogicError.firmUpError(err));
