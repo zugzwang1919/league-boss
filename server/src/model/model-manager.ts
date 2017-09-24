@@ -1,5 +1,3 @@
-import * as  Sequelize from 'sequelize';
-
 import {UserModelManager} from './user-model-manager';
 import {IUserInstance} from './user-model-manager';
 import {IUserModel} from './user-model-manager';
@@ -7,6 +5,13 @@ import {IUserModel} from './user-model-manager';
 import {LeagueModelManager} from './league-model-manager';
 import {ILeagueInstance} from './league-model-manager';
 import {ILeagueModel} from './league-model-manager';
+
+import {ITeam} from './team';
+import {ITeamInstance} from './team-model-manager';
+import {TeamModelManager} from './team-model-manager';
+
+import * as Promise from 'bluebird';
+import * as Sequelize from 'sequelize';
 
 export class ModelManager {
 
@@ -25,6 +30,7 @@ export class ModelManager {
     // Create the Sequelize Models for all of our persistent objects
     UserModelManager.initialize(sequelize);
     LeagueModelManager.initialize(sequelize);
+    TeamModelManager.initialize(sequelize);
 
     // Describe the relationships between the presistent objects
     const userModel: IUserModel = UserModelManager.userModel;
@@ -51,6 +57,9 @@ export class ModelManager {
 
     sequelize.sync({force: true})
       .then((syncResults) => {
+        return this.seedAllTeams();
+      })
+      .then((teamResults) => {
         return UserModelManager.userModel.create({
           userName: 'RWW',
           password: 'RWW',
@@ -100,4 +109,55 @@ export class ModelManager {
       });
   }
 
+  private seedAllTeams(): Promise<boolean> {
+    const results: Array<Promise<ITeamInstance>> = new Array<Promise<ITeamInstance>>();
+    results.push(this.createTeam("Arizona Cardinals", "Cardinals", ["Arizona", "Cardinals", "Ari", "Cards"]));
+    results.push(this.createTeam("Atlanta Falcons", "Falcons", ["Atlanta", "Falcons", "Atl"]));
+    results.push(this.createTeam("Baltimore Ravens", "Ravens", ["Baltimore", "Ravens", "Balt", "Blt"]));
+    results.push(this.createTeam("Buffalo Bills", "Bills", ["Buffalo", "Bills", "Buff", "Buf"]));
+    results.push(this.createTeam("Carolina Panthers", "Panthers", ["Carolina", "Panthers", "Car"]));
+    results.push(this.createTeam("Chicago Bears", "Bears", ["Chciago", "Bears", "Chi"]));
+    results.push(this.createTeam("Cincinnati Bengals", "Bengals", ["Cincinnati", "Bengals", "Cin"]));
+    results.push(this.createTeam("Cleveland Browns", "Browns", ["Cleveland", "Browns", "Cle"]));
+    results.push(this.createTeam("Dallas Cowboys", "Cowboys", ["Dallas", "Cowboys", "Dal"]));
+    results.push(this.createTeam("Denver Broncos", "Broncos", ["Denver", "Broncos", "Den"]));
+    results.push(this.createTeam("Detroit Lions", "Lions", ["Detroit", "Lions", "Det"]));
+    results.push(this.createTeam("Green Bay Packers", "Packers", ["Green Bay", "Packers", "Green", "GB", "Gre"]));
+    results.push(this.createTeam("Houston Texans", "Texans", ["Houston", "Texans", "Hou"]));
+    results.push(this.createTeam("Indianapolis Colts", "Colts", ["Indianapolis", "Colts", "Ind", "Indy"]));
+    results.push(this.createTeam("Jacksonville Jaguars", "Jaguars", ["Jacksonville", "Jaguars", "Jac", "Jack", "Jag", "Jags"]));
+    results.push(this.createTeam("Kansas City Chiefs", "Chiefs", ["Kansas City", "Chiefs", "KC", "Kan"]));
+    results.push(this.createTeam("Los Angeles Chargers", "Chargers", ["LAC", "Chargers"]));
+    results.push(this.createTeam("Los Angeles Rams", "Rams", ["LAR", "Rams"]));
+    results.push(this.createTeam("Miami Dolphins", "Dolphins", ["Miami", "Dolphins", "Mia"]));
+    results.push(this.createTeam("Minnesota Vikings", "Vikings", ["Minnesota", "Vikings", "Minn", "Min"]));
+    results.push(this.createTeam("New England Patriots", "Patriots", ["New England", "Patriots", "NE", "Pats"]));
+    results.push(this.createTeam("New Orleans Saints", "Saints", ["New Orleans", "Saints", "NO"]));
+    results.push(this.createTeam("New York Giants", "Giants", ["Giants", "NYG"]));
+    results.push(this.createTeam("New York Jets", "Jets", ["Jets", "NYJ"]));
+    results.push(this.createTeam("Oakland Raiders", "Raiders", ["Oakland", "Raiders", "Oak"]));
+    results.push(this.createTeam("Philadelphia Eagles", "Eagles", ["Philadalphia", "Eagles", "Phi", "Phil", "Phl"]));
+    results.push(this.createTeam("Pittsburgh Steelers", "Steelers", ["Pittsburgh", "Steelers", "Pit", "Pitt"]));
+    results.push(this.createTeam("San Francisco 49ers", "49ers", ["San Francisco", "49ers", "SF", "San"]));
+    results.push(this.createTeam("Seattle Seahawks", "Seahawks", ["Seattle", "Seahawks", "Sea"]));
+    results.push(this.createTeam("Tampa Bay Bucs", "Bucs", ["Tampa Bay", "Bucs", "TB", "Tam"]));
+    results.push(this.createTeam("Tennessee Titans", "Titans", ["Tennessee", "Titans", "Ten", "Tenn"]));
+    results.push(this.createTeam("Washington Redskins", "Redskins", ["Washington", "Redskins", "Wash", "Was"]));
+    return Promise.all(results)
+      .then((values) => {
+        return Promise.resolve(true);
+      })
+      .catch((error) => {
+        return Promise.reject({ error: "At least one of the teams could not be inserted."});
+      });
+
+  }
+  private createTeam(teamName: string, teamShortName: string, aliases: string[]): Promise<ITeamInstance> {
+    const createdTeam: ITeam = {
+      teamName,
+      teamShortName,
+      aliases,
+    };
+    return TeamModelManager.teamModel.create(createdTeam);
+  }
 }
