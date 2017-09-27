@@ -1,14 +1,8 @@
-import {UserModelManager} from './user-model-manager';
-import {IUserInstance} from './user-model-manager';
-import {IUserModel} from './user-model-manager';
-
-import {LeagueModelManager} from './league-model-manager';
-import {ILeagueInstance} from './league-model-manager';
-import {ILeagueModel} from './league-model-manager';
-
+import {GameModelManager, IGameModel} from './game-model-manager';
+import {ILeagueInstance, ILeagueModel, LeagueModelManager} from './league-model-manager';
 import {ITeam} from './team';
-import {ITeamInstance} from './team-model-manager';
-import {TeamModelManager} from './team-model-manager';
+import {ITeamInstance, ITeamModel, TeamModelManager} from './team-model-manager';
+import {IUserInstance, IUserModel, UserModelManager} from './user-model-manager';
 
 import * as Promise from 'bluebird';
 import * as Sequelize from 'sequelize';
@@ -31,15 +25,21 @@ export class ModelManager {
     UserModelManager.initialize(sequelize);
     LeagueModelManager.initialize(sequelize);
     TeamModelManager.initialize(sequelize);
+    GameModelManager.initialize(sequelize);
 
     // Describe the relationships between the presistent objects
     const userModel: IUserModel = UserModelManager.userModel;
     const leagueModel: ILeagueModel = LeagueModelManager.leagueModel;
+    const teamModel: ITeamModel = TeamModelManager.teamModel;
+    const gameModel: IGameModel = GameModelManager.gameModel;
 
     userModel.belongsToMany(leagueModel, {as: 'PlayerLeagues', through: 'LeaguePlayer' });
     leagueModel.belongsToMany(userModel, {as: 'Players', through: 'LeaguePlayer'});
     userModel.belongsToMany(leagueModel, {as: 'AdminLeagues', through: 'LeagueAdmin' });
     leagueModel.belongsToMany(userModel, {as: 'Admins', through: 'LeagueAdmin'});
+
+    gameModel.hasOne(teamModel, {as: 'TeamOne'});
+    gameModel.hasOne(teamModel, {as: 'TeamTwo'});
 
     // Seed the DB if requested to do so
     if (populateWithTestData) {
