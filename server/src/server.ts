@@ -1,6 +1,7 @@
 // Rest Layer Classes
 import {LeagueRest} from './rest/league-rest';
 import {LoginRest} from './rest/login-rest';
+import {SeasonRest} from './rest/season-rest';
 import {UserRest} from './rest/user-rest';
 
 // Model Layer Classes
@@ -51,6 +52,7 @@ export class Server {
     // Routes to our REST code
     this.app.use('/user', UserRest.getRouter());
     this.app.use('/league', LeagueRest.getRouter());
+    this.app.use('/season', SeasonRest.getRouter());
     this.app.use('/', LoginRest.getRouter());
   }
 

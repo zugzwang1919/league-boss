@@ -5,7 +5,11 @@ import { ITeamInstance } from './team-model-manager';
 // Javascript packages
 import * as Sequelize from 'sequelize';
 
-// Right now, no need to extend IGame beyond what is there.
+// NOTE:  We're not tacking any additional information onto the interface created for
+// external users (IGame), so IGameAttribute has no additional attributes.  While
+// we couild get rid of IGameAttribute, it's included to be consistent with the other
+// sequelize models - and in the event we ever want to add an attribute to the database
+// that is not going to be included in the external user's view.
 // By default, sequelize will add "CreateDate" and "UpdateDate"
 export interface IGameAttribute extends IGame {
 }

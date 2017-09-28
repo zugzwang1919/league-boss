@@ -1,5 +1,6 @@
 import {GameModelManager, IGameModel} from './game-model-manager';
 import {ILeagueInstance, ILeagueModel, LeagueModelManager} from './league-model-manager';
+import {ISeasonInstance, ISeasonModel, SeasonModelManager} from './season-model-manager';
 import {ITeam} from './team';
 import {ITeamInstance, ITeamModel, TeamModelManager} from './team-model-manager';
 import {IUserInstance, IUserModel, UserModelManager} from './user-model-manager';
@@ -26,12 +27,14 @@ export class ModelManager {
     LeagueModelManager.initialize(sequelize);
     TeamModelManager.initialize(sequelize);
     GameModelManager.initialize(sequelize);
+    SeasonModelManager.initialize(sequelize);
 
     // Describe the relationships between the presistent objects
     const userModel: IUserModel = UserModelManager.userModel;
     const leagueModel: ILeagueModel = LeagueModelManager.leagueModel;
     const teamModel: ITeamModel = TeamModelManager.teamModel;
     const gameModel: IGameModel = GameModelManager.gameModel;
+    const seasonModel: ISeasonModel = SeasonModelManager.seasonModel;
 
     userModel.belongsToMany(leagueModel, {as: 'PlayerLeagues', through: 'LeaguePlayer' });
     leagueModel.belongsToMany(userModel, {as: 'Players', through: 'LeaguePlayer'});
@@ -39,7 +42,12 @@ export class ModelManager {
     leagueModel.belongsToMany(userModel, {as: 'Admins', through: 'LeagueAdmin'});
 
     gameModel.hasOne(teamModel, {as: 'TeamOne'});
+    teamModel.belongsToMany(gameModel, {through: 'GameTeamOne'});
     gameModel.hasOne(teamModel, {as: 'TeamTwo'});
+    teamModel.belongsToMany(gameModel, {through: 'GameTeamTwo'});
+
+    seasonModel.hasMany(gameModel);
+    gameModel.belongsTo(seasonModel);
 
     // Seed the DB if requested to do so
     if (populateWithTestData) {
