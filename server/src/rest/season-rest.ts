@@ -9,7 +9,10 @@ import {SeasonLogic} from '../logic/season-logic';
 import {ISeason} from '../model/season';
 import {ISeasonInstance, SeasonModelManager} from '../model/season-model-manager';
 
+import * as parse from 'csv-parse';
 import * as express from 'express';
+import * as fileUpload from 'express-fileupload';
+import * as stream from 'stream';
 
 export class SeasonRest {
 
@@ -27,7 +30,8 @@ export class SeasonRest {
     SeasonRest.router.delete('/:seasonId', RestUtil.ensureAuthenticated, RestUtil.ensureSuperUser, SeasonRest.deleteSeason);
 
     // Add a schedule / games to the season
-    // SeasonRest.router.post('/schedule', RestUtil.ensureSuperUser, SeasonRest.addSchedule);
+    /* RestUtil.ensureAuthenticated, RestUtil.ensureSuperUser, */
+    SeasonRest.router.post('/:seasonId/schedule', fileUpload({debug: true}), SeasonRest.addSchedule);
 
   }
 
@@ -97,6 +101,28 @@ export class SeasonRest {
         console.log("season-rest deleteSeason: an error occurred while deleting season id  " + req.params.seasonId);
         RestResponse.sendAppropriateResponse(res, error);
       });
+  }
+
+  private static addSchedule(req: express.Request, res: express.Response): any {
+    console.log("season-rest addSchedule: seasonId found in url = " + req.params.seasonId);
+    const uploadedFile: fileUpload.UploadedFile = req.files.uploadFile as fileUpload.UploadedFile;
+    const readableStream: stream.Readable = new stream.Readable();
+
+    const parser: parse.Parser = parse({ columns : true }, (error: any, data: any[]) => {
+      if (error) {
+        RestResponse.sendAppropriateResponse(res, error);
+      }
+      console.log(data);
+      RestResponse.send200(res);
+    });
+
+    readableStream.pipe(parser);
+    readableStream.push(uploadedFile.data);
+    readableStream.push(null);
+  }
+
+  private static buildOneGame(oneGame: string[]): void {
+    return;
   }
 
 }
