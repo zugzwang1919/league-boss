@@ -63,7 +63,6 @@ export class GameModelManager {
   any other object */
   public static createFlattenedGame(gameInstance: IGameInstance): Promise<IFlattenedGame> {
     const createdGame: IFlattenedGame = {
-
       id: gameInstance.id,
       teamOneScore: gameInstance.teamOneScore,
       teamOnePointspread: gameInstance.teamOnePointspread,

@@ -92,7 +92,7 @@ export class SeasonLogic {
         if (parseError) {
           reject(parseError);
         }
-        // Get the cache of teams
+        // Get the cache of teams (We'll have to wait for it to be created)
         const teamCache: TeamCache = new TeamCache();
         return teamCache.ready
         .then((success: boolean) => {
