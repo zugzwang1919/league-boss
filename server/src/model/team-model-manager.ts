@@ -1,4 +1,5 @@
 // Model level classes
+import {IGameInstance} from './game-model-manager';
 import {ITeam} from './team';
 
 // Javascript packages
@@ -10,6 +11,11 @@ export interface ITeamAttribute extends ITeam {
 }
 
 export interface ITeamInstance extends Sequelize.Instance<ITeamAttribute>, ITeamAttribute {
+
+  getTeamOne: Sequelize.HasOneGetAssociationMixin<IGameInstance>;
+  setTeamOne: Sequelize.HasOneSetAssociationMixin<IGameInstance, number>
+  getTeamTwo: Sequelize.HasOneGetAssociationMixin<IGameInstance>;
+  setTeamTwo: Sequelize.HasOneSetAssociationMixin<IGameInstance, number>
 }
 
 export interface ITeamModel extends Sequelize.Model<ITeamInstance, ITeamAttribute> {}

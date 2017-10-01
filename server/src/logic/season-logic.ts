@@ -3,9 +3,15 @@ import {LogicError} from './logic-error';
 import {UserLogic} from './user-logic';
 
 // Model level classes
+import {GameModelManager, IGameInstance} from '../model/game-model-manager';
 import {ISeasonAttribute, ISeasonInstance, SeasonModelManager} from '../model/season-model-manager';
+import {ITeamInstance, TeamModelManager} from '../model/team-model-manager';
 
+// Javascript packages
 import * as Promise from 'bluebird';
+import * as parse from 'csv-parse';
+import * as stream from 'stream';
+import { TeamCache } from './team-cache';
 
 export class SeasonLogic {
 
@@ -25,8 +31,6 @@ export class SeasonLogic {
     if (!SeasonLogic.isNewSeasonValid(seasonData)) {
       return Promise.reject(SeasonLogic.buildIncompleteAttributesError());
     }
-
-    // Create the season
     return SeasonModelManager.seasonModel.create(seasonData)
 
       .then((season: ISeasonInstance) => {
@@ -76,7 +80,79 @@ export class SeasonLogic {
       });
   }
 
+  public static addSchedule(seasonId: number, scheduleAsCsv: Buffer): Promise<boolean> {
+    const readableStream: stream.Readable = new stream.Readable();
+    return new Promise<boolean> ((resolve, reject) => {
+      // Create a readable stream from the buffer
+      readableStream.push(scheduleAsCsv);
+      readableStream.push(null);
+
+      // Construct a csv parser using a javascript based npm package
+      const parser: parse.Parser = parse({ columns : true }, (parseError: any, games: any[]) => {
+        if (parseError) {
+          reject(parseError);
+        }
+        // Get the cache of teams
+        const teamCache: TeamCache = new TeamCache();
+        return teamCache.ready
+        .then((success: boolean) => {
+          return Promise.map(games, (gameData: any) => {
+            // OK, this code needs to return a Promise<IGameInstance>
+            if (!gameData.teamOneTwoRelationship) {
+              gameData.teamOneTwoRelationship = "@";
+            }
+            const teamOne: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamOne);
+            if (!teamOne) {
+              return Promise.reject(LogicError.TEAM_NOT_FOUND);
+            }
+            const teamTwo: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamTwo);
+            if (!teamTwo) {
+              return Promise.reject(LogicError.TEAM_NOT_FOUND);
+            }
+            let createdGame: IGameInstance;
+            return GameModelManager.gameModel.create(gameData)
+              .then((returnedGame: IGameInstance) => {
+                createdGame = returnedGame;
+                return createdGame.setTeamOne(teamOne);
+              })
+              .then(() => {
+                return createdGame.setTeamTwo(teamTwo);
+              })
+              .then(() => {
+                return Promise.resolve(createdGame);
+              })
+              .catch((error: any) => {
+                return Promise.reject(error);
+              });
+          });
+        })
+        .then((newGames: IGameInstance[]) => {
+          resolve(true);
+        })
+        .catch((otherError: any) => {
+          reject(otherError);
+        });
+      });
+
+      // Pipe the stream into the parser
+      readableStream.pipe(parser);
+  });
+}
 // Private functions
+
+  private static createGame(gameData: any): Promise<IGameInstance> {
+    if (!gameData.teamOneTwoRelationship) {
+      gameData.teamOneTwoRelationship = "@";
+    }
+    return GameModelManager.gameModel.create(gameData)
+    .then((createdGame: IGameInstance) => {
+      return Promise.resolve(createdGame);
+    })
+    .catch((error: any) => {
+      return Promise.reject(error);
+    });
+
+  }
 
   private static isNewSeasonValid(leagueData: ISeasonAttribute): boolean {
     return (leagueData.seasonName != null &&

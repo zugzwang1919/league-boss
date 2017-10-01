@@ -15,6 +15,7 @@ export interface IGameAttribute extends IGame {
 }
 
 export interface IGameInstance extends Sequelize.Instance<IGameAttribute>, IGameAttribute {
+
   getTeamOne: Sequelize.HasOneGetAssociationMixin<ITeamInstance>;
   setTeamOne: Sequelize.HasOneSetAssociationMixin<ITeamInstance, number>
   getTeamTwo: Sequelize.HasOneGetAssociationMixin<ITeamInstance>;

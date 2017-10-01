@@ -9,7 +9,6 @@ import {SeasonLogic} from '../logic/season-logic';
 import {ISeason} from '../model/season';
 import {ISeasonInstance, SeasonModelManager} from '../model/season-model-manager';
 
-import * as parse from 'csv-parse';
 import * as express from 'express';
 import * as fileUpload from 'express-fileupload';
 import * as stream from 'stream';
@@ -106,19 +105,15 @@ export class SeasonRest {
   private static addSchedule(req: express.Request, res: express.Response): any {
     console.log("season-rest addSchedule: seasonId found in url = " + req.params.seasonId);
     const uploadedFile: fileUpload.UploadedFile = req.files.uploadFile as fileUpload.UploadedFile;
-    const readableStream: stream.Readable = new stream.Readable();
-
-    const parser: parse.Parser = parse({ columns : true }, (error: any, data: any[]) => {
-      if (error) {
-        RestResponse.sendAppropriateResponse(res, error);
-      }
-      console.log(data);
+    SeasonLogic.addSchedule(req.params.seasonId, uploadedFile.data)
+    .then((success) => {
+      console.log("season-rest addSchedule: schedule successfully added for season id " + req.params.seasonId );
       RestResponse.send200(res);
+    })
+    .catch((error) => {
+      console.log("season-rest addSchedule: an error occurred while adding a schedule for season id  " );
+      RestResponse.sendAppropriateResponse(res, error);
     });
-
-    readableStream.pipe(parser);
-    readableStream.push(uploadedFile.data);
-    readableStream.push(null);
   }
 
   private static buildOneGame(oneGame: string[]): void {

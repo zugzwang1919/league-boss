@@ -41,13 +41,13 @@ export class ModelManager {
     userModel.belongsToMany(leagueModel, {as: 'AdminLeagues', through: 'LeagueAdmin' });
     leagueModel.belongsToMany(userModel, {as: 'Admins', through: 'LeagueAdmin'});
 
-    gameModel.hasOne(teamModel, {as: 'TeamOne'});
-    teamModel.belongsToMany(gameModel, {through: 'GameTeamOne'});
-    gameModel.hasOne(teamModel, {as: 'TeamTwo'});
-    teamModel.belongsToMany(gameModel, {through: 'GameTeamTwo'});
+    teamModel.hasMany(gameModel, {as: 'TeamOne', foreignKey: 'teamOneId'});
+    gameModel.belongsTo(teamModel, {as: 'TeamOne', foreignKey: 'teamOneId'});
+    teamModel.hasMany(gameModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
+    gameModel.belongsTo(teamModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
 
-    seasonModel.hasMany(gameModel);
-    gameModel.belongsTo(seasonModel);
+    //  seasonModel.hasMany(gameModel);
+    // gameModel.belongsTo(seasonModel);
 
     // Seed the DB if requested to do so
     if (populateWithTestData) {

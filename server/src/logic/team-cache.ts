@@ -2,8 +2,8 @@
 import {ITeamInstance, TeamModelManager} from '../model/team-model-manager';
 
 export class TeamCache {
+  public ready: Promise<boolean>;
   private allTeams: ITeamInstance[];
-  private ready: Promise<boolean>;
 
   constructor() {
     this.ready = new Promise<boolean>((resolve, reject) => TeamModelManager.teamModel.findAll()
@@ -29,6 +29,7 @@ export class TeamCache {
     });
     switch (count) {
       case 0:
+        console.log("An alias of " + alias + " was not found" );
         return null;
       case 1:
         return foundTeam;
