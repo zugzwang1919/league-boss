@@ -46,6 +46,9 @@ export class ModelManager {
     teamModel.hasMany(gameModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
     gameModel.belongsTo(teamModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
 
+    seasonModel.hasMany(gameModel);
+    gameModel.belongsTo(seasonModel);
+
     //  seasonModel.hasMany(gameModel);
     // gameModel.belongsTo(seasonModel);
 

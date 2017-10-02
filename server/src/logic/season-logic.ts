@@ -127,6 +127,7 @@ export class SeasonLogic {
           });
         })
         .then((newGames: IGameInstance[]) => {
+
           resolve(true);
         })
         .catch((otherError: any) => {
