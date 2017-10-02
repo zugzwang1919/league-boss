@@ -6,7 +6,7 @@ export class LogicError {
   public static FORBIDDEN = new LogicError("Forbidden", "You do not have the authority to access the specified resource.");
   public static INCOMPLETE_INPUT = new LogicError("Incomplete", "There was not enough data provided to fulfill the request.");
   public static DUPLICATE = new LogicError("Duplicate", "This entity already exisits.");
-  public static TEAM_NOT_FOUND = new LogicError("Team not found.", "While creating a schedule a team could not be found.");
+  public static TEAM_NOT_FOUND = new LogicError("Team not found.", "While creating a schedule, a team could not be found.");
   public static UNKNOWN = new LogicError("Unknown", "An unknown error occurred.");
 
   private _name: string;

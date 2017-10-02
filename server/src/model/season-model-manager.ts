@@ -13,16 +13,12 @@ import {ISeason} from './season';
 export interface ISeasonAttribute extends ISeason {}
 
 export interface ISeasonInstance extends Sequelize.Instance<ISeasonAttribute>, ISeasonAttribute {
-
   // Define all of the methods that are available.  We don't use all of them, so I can't
   // guarantee that they all work, but they "should"
-
-  // getGames: Sequelize.HasManyGetAssociationsMixin<IGameInstance>;
-  // setGames: Sequelize.HasManySetAssociationsMixin<IGameInstance, number>;
-  // addGames: Sequelize.HasManyAddAssociationsMixin<IGameInstance, number>;
-  // removeGames: Sequelize.HasManyRemoveAssociationsMixin<IGameInstance, number>;
-  // countGames: Sequelize.HasManyCountAssociationsMixin;
-
+  getGames: Sequelize.HasManyGetAssociationsMixin<IGameInstance>;
+  addGames: Sequelize.HasManyAddAssociationsMixin<IGameInstance, number>;
+  removeGames: Sequelize.HasManyRemoveAssociationsMixin<IGameInstance, number>;
+  countGames: Sequelize.HasManyCountAssociationsMixin;
 }
 
 export interface ISeasonModel extends Sequelize.Model<ISeasonInstance, ISeasonAttribute> {}

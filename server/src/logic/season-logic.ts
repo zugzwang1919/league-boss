@@ -1,5 +1,6 @@
 // Logic level classes
 import {LogicError} from './logic-error';
+import {TeamCache} from './team-cache';
 import {UserLogic} from './user-logic';
 
 // Model level classes
@@ -9,15 +10,25 @@ import {ITeamInstance, TeamModelManager} from '../model/team-model-manager';
 
 // Javascript packages
 import * as Promise from 'bluebird';
-import * as parse from 'csv-parse';
-import * as stream from 'stream';
-import { TeamCache } from './team-cache';
+import * as Parse from 'csv-parse';
+import * as Sequelize from 'sequelize';
+import * as Stream from 'stream';
 
 export class SeasonLogic {
 
   public static findSeasonById(seasonId: number): Promise<ISeasonInstance> {
     console.log("season-logic.findById() - findSeasonById has been called.");
-    return SeasonModelManager.seasonModel.findById(seasonId);
+    return SeasonModelManager.seasonModel.findById(seasonId)
+    .then((foundSeason: ISeasonInstance) => {
+      if (foundSeason != null) {
+        console.log("season-logic - season found!!!");
+        return Promise.resolve(foundSeason);
+      }
+      else {
+        console.log("season-logic - sesaon was not found!!!");
+        return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
+      }
+    });
   }
 
   public static findAllSeasons(): Promise<ISeasonInstance[]> {
@@ -81,53 +92,36 @@ export class SeasonLogic {
   }
 
   public static addSchedule(seasonId: number, scheduleAsCsv: Buffer): Promise<boolean> {
-    const readableStream: stream.Readable = new stream.Readable();
+    const readableStream: Stream.Readable = new Stream.Readable();
     return new Promise<boolean> ((resolve, reject) => {
-      // Create a readable stream from the buffer
-      readableStream.push(scheduleAsCsv);
-      readableStream.push(null);
 
-      // Construct a csv parser using a javascript based npm package
-      const parser: parse.Parser = parse({ columns : true }, (parseError: any, games: any[]) => {
+      // Construct a csv parser (to be used below) using a javascript based npm package that takes a csv,
+      // parses it, and returns the results as an array of game-like objects
+      const parser: Parse.Parser = Parse({ columns : true }, (parseError: any, games: any[]) => {
         if (parseError) {
           reject(parseError);
         }
-        // Get the cache of teams (We'll have to wait for it to be created)
+        // Define a couple of variables that we'll use throughout the Promise chain
         const teamCache: TeamCache = new TeamCache();
-        return teamCache.ready
+        let season: ISeasonInstance;
+        // Find the season
+        return SeasonLogic.findSeasonById(seasonId)
+        .then((foundSeason: ISeasonInstance) => {
+          season = foundSeason;
+          // Wait for the TeamCache to be created
+          return teamCache.ready;
+        })
         .then((success: boolean) => {
-          return Promise.map(games, (gameData: any) => {
-            // OK, this code needs to return a Promise<IGameInstance>
-            if (!gameData.teamOneTwoRelationship) {
-              gameData.teamOneTwoRelationship = "@";
-            }
-            const teamOne: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamOne);
-            if (!teamOne) {
-              return Promise.reject(LogicError.TEAM_NOT_FOUND);
-            }
-            const teamTwo: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamTwo);
-            if (!teamTwo) {
-              return Promise.reject(LogicError.TEAM_NOT_FOUND);
-            }
-            let createdGame: IGameInstance;
-            return GameModelManager.gameModel.create(gameData)
-              .then((returnedGame: IGameInstance) => {
-                createdGame = returnedGame;
-                return createdGame.setTeamOne(teamOne);
-              })
-              .then(() => {
-                return createdGame.setTeamTwo(teamTwo);
-              })
-              .then(() => {
-                return Promise.resolve(createdGame);
-              })
-              .catch((error: any) => {
-                return Promise.reject(error);
-              });
+          // Build all of the games
+          return Promise.map(games, (gameData: any): Promise<IGameInstance> => {
+            return SeasonLogic.createGame(gameData, teamCache);
           });
         })
         .then((newGames: IGameInstance[]) => {
-
+          // Add the games to the season
+          return season.addGames(newGames);
+        })
+        .then(() => {
           resolve(true);
         })
         .catch((otherError: any) => {
@@ -135,23 +129,45 @@ export class SeasonLogic {
         });
       });
 
+      // Now that we have a parser...
+      // Create a readable stream from the buffer
+      readableStream.push(scheduleAsCsv);
+      readableStream.push(null);
       // Pipe the stream into the parser
       readableStream.pipe(parser);
   });
 }
 // Private functions
 
-  private static createGame(gameData: any): Promise<IGameInstance> {
+  private static createGame(gameData: any, teamCache: TeamCache): Promise<IGameInstance> {
+
+    // OK, this code needs to return a Promise<IGameInstance>
     if (!gameData.teamOneTwoRelationship) {
       gameData.teamOneTwoRelationship = "@";
     }
+    const teamOne: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamOne);
+    if (!teamOne) {
+      return Promise.reject(LogicError.TEAM_NOT_FOUND);
+    }
+    const teamTwo: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamTwo);
+    if (!teamTwo) {
+      return Promise.reject(LogicError.TEAM_NOT_FOUND);
+    }
+    let createdGame: IGameInstance;
     return GameModelManager.gameModel.create(gameData)
-    .then((createdGame: IGameInstance) => {
-      return Promise.resolve(createdGame);
-    })
-    .catch((error: any) => {
-      return Promise.reject(error);
-    });
+      .then((returnedGame: IGameInstance) => {
+        createdGame = returnedGame;
+        return createdGame.setTeamOne(teamOne);
+      })
+      .then(() => {
+        return createdGame.setTeamTwo(teamTwo);
+      })
+      .then(() => {
+        return Promise.resolve(createdGame);
+      })
+      .catch((error: any) => {
+        return Promise.reject(error);
+      });
 
   }
 
