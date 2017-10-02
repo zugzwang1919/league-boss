@@ -25,8 +25,10 @@ export interface ISeasonModel extends Sequelize.Model<ISeasonInstance, ISeasonAt
 
 export class SeasonModelManager {
   public static seasonModel: ISeasonModel;
+  public static sequelize: Sequelize.Sequelize;
 
   public static initialize(sequelize: Sequelize.Sequelize): void {
+    SeasonModelManager.sequelize = sequelize;
     SeasonModelManager.seasonModel = sequelize.define('season', {
       seasonName: {
         type: Sequelize.STRING,

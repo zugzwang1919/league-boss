@@ -104,23 +104,31 @@ export class SeasonLogic {
         // Define a couple of variables that we'll use throughout the Promise chain
         const teamCache: TeamCache = new TeamCache();
         let season: ISeasonInstance;
-        // Find the season
-        return SeasonLogic.findSeasonById(seasonId)
-        .then((foundSeason: ISeasonInstance) => {
-          season = foundSeason;
-          // Wait for the TeamCache to be created
-          return teamCache.ready;
-        })
-        .then((success: boolean) => {
-          // Build all of the games
-          return Promise.map(games, (gameData: any): Promise<IGameInstance> => {
-            return SeasonLogic.createGame(gameData, teamCache);
+        let bigFatTransaction: Sequelize.Transaction;
+
+        // Start a Transaction allowing us to ensure that either all of this
+        // will get created or none of it will
+        return SeasonModelManager.sequelize.transaction((t: Sequelize.Transaction) => {
+          // Find the season
+          bigFatTransaction = t;
+          return SeasonLogic.findSeasonById(seasonId)
+          .then((foundSeason: ISeasonInstance) => {
+            season = foundSeason;
+            // Wait for the TeamCache to be created
+            return teamCache.ready;
+          })
+          .then((success: boolean) => {
+            // Build all of the games
+            return Promise.map(games, (gameData: any): Promise<IGameInstance> => {
+              return SeasonLogic.createGame(gameData, teamCache, bigFatTransaction);
+            });
+          })
+          .then((newGames: IGameInstance[]) => {
+            // Add the games to the season
+            return season.addGames(newGames, {transaction: bigFatTransaction});
           });
         })
-        .then((newGames: IGameInstance[]) => {
-          // Add the games to the season
-          return season.addGames(newGames);
-        })
+        // End of Transaction
         .then(() => {
           resolve(true);
         })
@@ -139,7 +147,7 @@ export class SeasonLogic {
 }
 // Private functions
 
-  private static createGame(gameData: any, teamCache: TeamCache): Promise<IGameInstance> {
+  private static createGame(gameData: any, teamCache: TeamCache, currentTransaction: Sequelize.Transaction): Promise<IGameInstance> {
 
     // OK, this code needs to return a Promise<IGameInstance>
     if (!gameData.teamOneTwoRelationship) {
@@ -154,13 +162,13 @@ export class SeasonLogic {
       return Promise.reject(LogicError.TEAM_NOT_FOUND);
     }
     let createdGame: IGameInstance;
-    return GameModelManager.gameModel.create(gameData)
+    return GameModelManager.gameModel.create(gameData, {transaction: currentTransaction})
       .then((returnedGame: IGameInstance) => {
         createdGame = returnedGame;
-        return createdGame.setTeamOne(teamOne);
+        return createdGame.setTeamOne(teamOne, {transaction: currentTransaction});
       })
       .then(() => {
-        return createdGame.setTeamTwo(teamTwo);
+        return createdGame.setTeamTwo(teamTwo, {transaction: currentTransaction});
       })
       .then(() => {
         return Promise.resolve(createdGame);
