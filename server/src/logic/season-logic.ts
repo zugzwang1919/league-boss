@@ -99,7 +99,7 @@ export class SeasonLogic {
       // parses it, and returns the results as an array of game-like objects
       const parser: Parse.Parser = Parse({ columns : true }, (parseError: any, games: any[]) => {
         if (parseError) {
-          reject(parseError);
+          return reject(parseError);
         }
         // Define a couple of variables that we'll use throughout the Promise chain
         const teamCache: TeamCache = new TeamCache();
@@ -154,11 +154,8 @@ export class SeasonLogic {
       gameData.teamOneTwoRelationship = "@";
     }
     const teamOne: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamOne);
-    if (!teamOne) {
-      return Promise.reject(LogicError.TEAM_NOT_FOUND);
-    }
     const teamTwo: ITeamInstance = teamCache.locateTeamWithAlias(gameData.teamTwo);
-    if (!teamTwo) {
+    if (!teamOne || !teamTwo) {
       return Promise.reject(LogicError.TEAM_NOT_FOUND);
     }
     let createdGame: IGameInstance;
@@ -172,11 +169,7 @@ export class SeasonLogic {
       })
       .then(() => {
         return Promise.resolve(createdGame);
-      })
-      .catch((error: any) => {
-        return Promise.reject(error);
       });
-
   }
 
   private static isNewSeasonValid(leagueData: ISeasonAttribute): boolean {

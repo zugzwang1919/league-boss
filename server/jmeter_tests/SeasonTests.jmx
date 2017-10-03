@@ -62,7 +62,7 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Users Not Logged In - Lots of 401&apos;s" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Users Not Logged In - Lots of 401&apos;s" enabled="true"/>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="401 Test - Retrieve All Seasons (without having logged in)" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
@@ -314,7 +314,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Normal User Logged In - Some 403&apos;s" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Normal User Logged In - Some 403&apos;s" enabled="true"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful Normal User Login" enabled="true">
             <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulUserLoginTestFragment.jmx</stringProp>
@@ -476,11 +476,11 @@
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="SuperUser Actions" enabled="true"/>
         <hashTree>
-          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful SuperUser Login" enabled="false">
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful SuperUser Login" enabled="true">
             <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create Season" enabled="false">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create Season" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
@@ -531,7 +531,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update Season" enabled="false">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update Season" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
@@ -563,7 +563,7 @@
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           </HTTPSamplerProxy>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Add a schedule" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Add a schedule" enabled="false">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
                 <elementProp name="C:\SoftwareProjects\league-boss\server\jmeter_tests\TestCsvs\ScheduleOne.csv" elementType="HTTPFileArg">
@@ -607,7 +607,7 @@
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Add a schedule" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Add a schedule" enabled="false">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
                 <elementProp name="C:\SoftwareProjects\league-boss\server\jmeter_tests\TestCsvs\ScheduleOne.csv" elementType="HTTPFileArg">
@@ -652,7 +652,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Normal User - Normal Actions" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Normal User - Normal Actions" enabled="true"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful Normal User Login" enabled="true">
             <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulUserLoginTestFragment.jmx</stringProp>
@@ -727,8 +727,38 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="404 Test - Retrieve Season" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">season/4567</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="404 Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51512">404</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Cleanup with SuperUser" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Cleanup with SuperUser" enabled="true"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Reusable Successful SuperUser Login" enabled="true">
             <stringProp name="IncludeController.includepath">C:\SoftwareProjects\league-boss\server\jmeter_tests\Fragments\SuccessfulSuperUserLoginTestFragment.jmx</stringProp>
