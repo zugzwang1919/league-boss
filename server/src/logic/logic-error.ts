@@ -7,6 +7,7 @@ export class LogicError {
   public static INCOMPLETE_INPUT = new LogicError("Incomplete", "There was not enough data provided to fulfill the request.");
   public static DUPLICATE = new LogicError("Duplicate", "This entity already exisits.");
   public static TEAM_NOT_FOUND = new LogicError("Team not found.", "While creating a schedule, a team could not be found.");
+  public static SCHEDULE_ALREADY_PRESENT = new LogicError("Schedule already present.", "A schedule already exists for the season.  Please remove it prior to adding a new one.");
   public static UNKNOWN = new LogicError("Unknown", "An unknown error occurred.");
 
   private _name: string;

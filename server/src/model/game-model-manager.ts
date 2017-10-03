@@ -52,6 +52,10 @@ export class GameModelManager {
         type: Sequelize.DECIMAL(10, 1),
         unique: true,
       },
+
+      comment: {
+        type: Sequelize.STRING,
+      },
     },
       {
         freezeTableName: true, // Model tableName will be the same as the model name

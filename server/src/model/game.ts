@@ -13,6 +13,8 @@ export interface IGame {
 
   teamTwoScore?: number;
   teamTwoPointspread?: number
+
+  comment?: string; // comment could be something like "In London"
 }
 
 export interface IFlattenedGame extends IGame {

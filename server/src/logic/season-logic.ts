@@ -114,6 +114,12 @@ export class SeasonLogic {
           return SeasonLogic.findSeasonById(seasonId)
           .then((foundSeason: ISeasonInstance) => {
             season = foundSeason;
+            return foundSeason.getGames();
+          })
+          .then((existingSeasonGames: IGameInstance[]) => {
+            if (existingSeasonGames.length !== 0 ) {
+              throw (LogicError.SCHEDULE_ALREADY_PRESENT);
+            }
             // Wait for the TeamCache to be created
             return teamCache.ready;
           })
