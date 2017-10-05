@@ -1,3 +1,6 @@
+// Logic layer classes
+import {LogicUtil} from './logic-util';
+
 // Model layer classes
 import {ITeamInstance, TeamModelManager} from '../model/team-model-manager';
 
@@ -6,7 +9,7 @@ export class TeamCache {
   private allTeams: ITeamInstance[];
 
   constructor() {
-    this.ready = new Promise<boolean>((resolve, reject) => TeamModelManager.teamModel.findAll()
+    this.ready = new Promise<boolean>((resolve, reject) => LogicUtil.instanceOf().findAll(TeamModelManager.teamModel, "team")
       .then(( result: ITeamInstance[]) => {
         this.allTeams = result;
         resolve(true);

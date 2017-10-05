@@ -4,6 +4,7 @@ import * as Promise from 'bluebird';
 // Logic Layer Classes
 import {LeagueLogic} from './league-logic';
 import {LogicError} from './logic-error';
+import {LogicUtil} from './logic-util';
 
 // Model Layer Classes
 import {ILeagueAttribute} from '../model/league-model-manager';
@@ -16,19 +17,19 @@ import {IUserAttribute} from '../model/user-model-manager';
 export class UserLogic {
 
   public static findUserById(userId: number): Promise<IUserInstance> {
-    return UserLogic.findUser({ where: { id: userId } });
+    return LogicUtil.instanceOf().findById(UserModelManager.userModel, userId, "user");
   }
 
   public static findUserByAuthenticationToken(token: string): Promise<IUserInstance> {
-    return UserLogic.findUser({ where: { authenticationToken: token } });
+    return LogicUtil.instanceOf().findOneBasedOnWhereClause(UserModelManager.userModel, { authenticationToken: token }, "user");
   }
 
   public static findUserByUserName(uName: string): Promise<IUserInstance> {
-    return UserLogic.findUser({ where: { userName: uName } });
+    return LogicUtil.instanceOf().findOneBasedOnWhereClause(UserModelManager.userModel, { userName: uName }, "user");
   }
 
   public static createUser(userData: IUser): Promise<IUserInstance> {
-    console.log("user-logic.create() - createUser has been called.");
+    console.log("  user-logic.create() - createUser has been called.");
     // Ensure all of the required inputs are present
     if (!UserLogic.isNewUserValid(userData)) {
       return Promise.reject(UserLogic.buildIncompleteAttributesError());
@@ -44,7 +45,7 @@ export class UserLogic {
   }
 
   public static updateUser(userId: number, userData: IUserAttribute): Promise<boolean> {
-    console.log("user-logic.update() - updateUser has been called.");
+    console.log("  user-logic.update() - updateUser has been called.");
     // NOTE:  We do allow the partial update of a user (i.e. I just want to update the token expiration field, etc)
     // so there is no checking here for a "fully-formed" user
     // This makes me a little uncomfortable given its difference from other model types; therefore, making a case for
@@ -58,22 +59,7 @@ export class UserLogic {
   }
 
   public static deleteUser(userId: number): Promise<boolean> {
-    console.log("user-logic.delete() - deleteUser has been called.");
-    return UserModelManager.userModel.destroy({ where: { id: userId } })
-      .then((numberUsersDeleted) => {
-        if (numberUsersDeleted === 1) {
-          console.log("user-logic.delete() - User with ID of " + userId + " was successfully deleted.");
-          return Promise.resolve(true);
-        }
-        else {
-          console.log("user-logic.delete() - User with ID of " + userId + " was not found.");
-          return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
-        }
-      })
-      .catch((err) => {
-        console.log("user-logic.delete() - Some type of error occurred.  Err message = " + err.message );
-        return Promise.reject(UserLogic.buildCleanError(err));
-      });
+    return LogicUtil.instanceOf().deleteById(UserModelManager.userModel, userId, "user");
   }
 
   public static getLeaguesAsPlayer(userId: number): Promise<ILeagueAttribute[]> {
@@ -107,23 +93,6 @@ export class UserLogic {
   }
 
   // Private methods
-  private static findUser(whereClause: any): Promise<IUserInstance> {
-    return UserModelManager.userModel.findOne(whereClause)
-      .then((user) => {
-        if (user != null) {
-          console.log("user-logic - user found!!!");
-          return Promise.resolve(user);
-        }
-        else {
-          console.log("user-logic - user was not found!!!");
-          return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
-        }
-      })
-      .catch((err) => {
-        return Promise.reject(UserLogic.buildCleanError(err));
-      });
-  }
-
   private static isNewUserValid(userData: IUserAttribute): boolean {
     return (userData.userName != null &&
       userData.password != null &&

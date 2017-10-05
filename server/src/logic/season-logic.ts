@@ -1,5 +1,6 @@
 // Logic level classes
 import {LogicError} from './logic-error';
+import {LogicUtil} from './logic-util';
 import {TeamCache} from './team-cache';
 import {UserLogic} from './user-logic';
 
@@ -17,23 +18,11 @@ import * as Stream from 'stream';
 export class SeasonLogic {
 
   public static findSeasonById(seasonId: number): Promise<ISeasonInstance> {
-    console.log("season-logic.findById() - findSeasonById has been called.");
-    return SeasonModelManager.seasonModel.findById(seasonId)
-    .then((foundSeason: ISeasonInstance) => {
-      if (foundSeason != null) {
-        console.log("season-logic - season found!!!");
-        return Promise.resolve(foundSeason);
-      }
-      else {
-        console.log("season-logic - sesaon was not found!!!");
-        return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
-      }
-    });
+    return LogicUtil.instanceOf().findById(SeasonModelManager.seasonModel, seasonId, "season");
   }
 
   public static findAllSeasons(): Promise<ISeasonInstance[]> {
-    console.log("season-logic.findAllSeasons() - findAllSeasons has been called.");
-    return SeasonModelManager.seasonModel.findAll();
+    return LogicUtil.instanceOf().findAll(SeasonModelManager.seasonModel, "season");
   }
 
   public static createSeason(seasonData: ISeasonAttribute): Promise<ISeasonInstance> {
@@ -73,22 +62,7 @@ export class SeasonLogic {
   }
 
   public static deleteSeason(seasonId: number): Promise<boolean> {
-    console.log("season-logic.delete() - deleteSeason has been called.");
-    return SeasonModelManager.seasonModel.destroy( { where: { id: seasonId } })
-      .then((numberSeasonsDeleted: number) => {
-        if (numberSeasonsDeleted === 1) {
-          console.log("season-logic.delete() - Season with ID of " + seasonId + " was successfully deleted.");
-          return Promise.resolve(true);
-        }
-        else {
-          console.log("season-logic.delete() - Season with ID of " + seasonId + " was not found.");
-          return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
-        }
-      })
-      .catch((err) => {
-        console.log("season-logic.delete() - Some type of error occurred.  Err message = " + err.message );
-        return Promise.reject(LogicError.firmUpError(err));
-      });
+    return LogicUtil.instanceOf().deleteById(SeasonModelManager.seasonModel, seasonId, "season");
   }
 
   public static addSchedule(seasonId: number, scheduleAsCsv: Buffer): Promise<boolean> {

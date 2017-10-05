@@ -1,5 +1,6 @@
 // Logic level classes
 import {LogicError} from './logic-error';
+import {LogicUtil} from './logic-util';
 import {UserLogic} from './user-logic';
 
 // Model level classes
@@ -13,7 +14,7 @@ import * as Promise from 'bluebird';
 export class LeagueLogic {
 
   public static findLeagueById(leagueId: number): Promise<ILeagueInstance> {
-    return LeagueLogic.findLeague({ where: { id: leagueId } });
+    return LogicUtil.instanceOf().findById(LeagueModelManager.leagueModel, leagueId, "league");
   }
 
   public static createLeague(leagueData: ILeagueAttribute, creatingUserId: number): Promise<ILeagueInstance> {
@@ -63,22 +64,7 @@ export class LeagueLogic {
   }
 
   public static deleteLeague(leagueId: number): Promise<boolean> {
-    console.log("league-logic.delete() - deleteLeague has been called.");
-    return LeagueModelManager.leagueModel.destroy( { where: { id: leagueId } })
-      .then((numberLeaguesDeleted: number) => {
-        if (numberLeaguesDeleted === 1) {
-          console.log("league-logic.delete() - League with ID of " + leagueId + " was successfully deleted.");
-          return Promise.resolve(true);
-        }
-        else {
-          console.log("league-logic.delete() - League with ID of " + leagueId + " was not found.");
-          return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
-        }
-      })
-      .catch((err) => {
-        console.log("league-logic.delete() - Some type of error occurred.  Err message = " + err.message );
-        return Promise.reject(LogicError.firmUpError(err));
-      });
+    return LogicUtil.instanceOf().deleteById(LeagueModelManager.leagueModel, leagueId, "league");
   }
 
   public static getAdmins(leagueId: number): Promise<IUserAttribute[]> {
@@ -186,23 +172,6 @@ export class LeagueLogic {
   }
 
 // Private functions
-
-  private static findLeague(whereClause: any): Promise<ILeagueInstance> {
-    return LeagueModelManager.leagueModel.findOne(whereClause)
-      .then((league: ILeagueInstance) => {
-        if (league != null) {
-          console.log("league-logic - league found!!!");
-          return Promise.resolve(league);
-        }
-        else {
-          console.log("league-logic - league was not found!!!");
-          return Promise.reject(LogicError.RESOURCE_NOT_FOUND);
-        }
-      })
-      .catch((err) => {
-        return Promise.reject(LogicError.firmUpError(err));
-      });
-  }
 
   private static isNewLeagueValid(leagueData: ILeagueAttribute): boolean {
     return (leagueData.leagueName != null &&
