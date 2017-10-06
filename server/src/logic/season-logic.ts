@@ -26,39 +26,21 @@ export class SeasonLogic {
   }
 
   public static createSeason(seasonData: ISeasonAttribute): Promise<ISeasonInstance> {
-    console.log("season-logic.create() - createSeason has been called.");
+    console.log("  season-logic.create() - createSeason has been called.");
     // Ensure all of the required inputs are present
     if (!SeasonLogic.isNewSeasonValid(seasonData)) {
       return Promise.reject(SeasonLogic.buildIncompleteAttributesError());
     }
-    return SeasonModelManager.seasonModel.create(seasonData)
-
-      .then((season: ISeasonInstance) => {
-        console.log("season-logic.create() " + seasonData.seasonName + " was successfully created.");
-        return Promise.resolve(season);
-      })
-      .catch((err: any) => {
-        return Promise.reject(LogicError.firmUpError(err));
-      });
+    return LogicUtil.instanceOf().create(SeasonModelManager.seasonModel, seasonData, "season");
   }
 
   public static updateSeason(seasonData: ISeasonAttribute): Promise<boolean> {
-    console.log("season-logic.update() - updateSeason has been called.");
-
+    console.log("  season-logic.update() - updateSeason has been called.");
     // Ensure all of the required inputs are present
     if (!SeasonLogic.isExistingSeasonValid(seasonData)) {
       return Promise.reject(SeasonLogic.buildIncompleteAttributesError());
     }
-
-    // Update the season
-    return SeasonModelManager.seasonModel.update(seasonData, { where: { id: seasonData.id } })
-      .then((thing: [number, ISeasonInstance[]]) => {
-        console.log("season-logic.update() " + seasonData.seasonName + " was successfully updated.");
-        return Promise.resolve(true);
-      })
-      .catch((err) => {
-        Promise.reject(LogicError.firmUpError(err));
-      });
+    return LogicUtil.instanceOf().update(SeasonModelManager.seasonModel, seasonData.id, seasonData, "season");
   }
 
   public static deleteSeason(seasonId: number): Promise<boolean> {

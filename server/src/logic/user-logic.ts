@@ -34,29 +34,28 @@ export class UserLogic {
     if (!UserLogic.isNewUserValid(userData)) {
       return Promise.reject(UserLogic.buildIncompleteAttributesError());
     }
-    // If we're here, we should be able to create a user, so...
-    // Create the user
-    return UserModelManager.userModel.create(userData)
-      .then((createdUser: IUserInstance) => {
-        console.log("user-logic.create() " + userData.userName + " was successfully created.");
-        return Promise.resolve(createdUser);
-      })
-      .catch((err) => Promise.reject(UserLogic.buildCleanError(err)));
+    return LogicUtil.instanceOf().create(UserModelManager.userModel, userData, "user")
+    // Normally, if the "common" logic code throws an error we're happy to let it flow back to the rest layer.
+    // In this instance, if the call above throws an error, we'll actually catch it and try to clean it up
+    // since a user could try to select a username that is already in use.
+      .catch((err) => {
+        return Promise.reject(UserLogic.buildCleanError(err));
+      });
   }
 
   public static updateUser(userId: number, userData: IUserAttribute): Promise<boolean> {
-    console.log("  user-logic.update() - updateUser has been called.");
     // NOTE:  We do allow the partial update of a user (i.e. I just want to update the token expiration field, etc)
     // so there is no checking here for a "fully-formed" user
     // This makes me a little uncomfortable given its difference from other model types; therefore, making a case for
     // breaking the token stuff out into its own object
-    return UserModelManager.userModel.update(userData, { where: { id: userId } })
-      .then((success) => {
-        console.log("user-logic.update() - User ID " + userId + " was successfully updated.");
-        return Promise.resolve(true);
-      })
-      .catch((err) => Promise.reject(UserLogic.buildCleanError(err)));
-  }
+    return LogicUtil.instanceOf().update(UserModelManager.userModel, userId, userData, "user")
+    // Normally, if the "common" logic code throws an error we're happy to let it flow back to the rest layer.
+    // In this instance, if the call above throws an error, we'll actually catch it and try to clean it up
+    // since a user could try to select a username that is already in use.
+      .catch((err) => {
+        return Promise.reject(UserLogic.buildCleanError(err));
+      });
+}
 
   public static deleteUser(userId: number): Promise<boolean> {
     return LogicUtil.instanceOf().deleteById(UserModelManager.userModel, userId, "user");

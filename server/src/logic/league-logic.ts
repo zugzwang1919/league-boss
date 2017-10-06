@@ -18,21 +18,16 @@ export class LeagueLogic {
   }
 
   public static createLeague(leagueData: ILeagueAttribute, creatingUserId: number): Promise<ILeagueInstance> {
-    console.log("league-logic.create() - createLeague has been called.");
+    console.log("  league-logic.create() - createLeague has been called.");
     // Ensure all of the required inputs are present
     if (!LeagueLogic.isNewLeagueValid(leagueData)) {
       return Promise.reject(LeagueLogic.buildIncompleteAttributesError());
     }
-
     let leagueToReturn: ILeagueInstance;
-
-    // If we're here, we should be able to create a league, so...
-    // Create the league
-    return LeagueModelManager.leagueModel.create(leagueData)
-
+    return LogicUtil.instanceOf().create(LeagueModelManager.leagueModel, leagueData, "league")
+      // NOTE:  Most logic would just return the call above, but for leagues, we'll go ahead and add the creator as an admin
       .then((league: ILeagueInstance) => {
-        console.log("league-logic.create() " + leagueData.leagueName + " was successfully created.");
-        console.log("league-logic.create() - Preparing to add admin");
+        console.log("  league-logic.create() - Preparing to add admin");
         leagueToReturn = league;
         return league.addAdmin(creatingUserId);
       })
@@ -45,22 +40,12 @@ export class LeagueLogic {
   }
 
   public static updateLeague(leagueData: ILeagueAttribute): Promise<boolean> {
-    console.log("league-logic.update() - updateLeague has been called.");
-
+    console.log("  league-logic.update() - updateLeague has been called.");
     // Ensure all of the required inputs are present
     if (!LeagueLogic.isExistingLeagueValid(leagueData)) {
       return Promise.reject(LeagueLogic.buildIncompleteAttributesError());
     }
-
-    // If we're here, we should be able to update a league, so...
-    // Update the league
-    return LeagueModelManager.leagueModel.update(leagueData, { where: { id: leagueData.id } })
-      .then((thing: [number, ILeagueInstance[]]) => {
-        console.log("league-logic.update() " + leagueData.leagueName + " was successfully updated.");
-        // const updatedLeague: ILeagueInstance = thing as ILeagueInstance;
-        return Promise.resolve(true);
-      })
-      .catch((err) => Promise.reject(LogicError.firmUpError(err)));
+    return LogicUtil.instanceOf().update(LeagueModelManager.leagueModel, leagueData.id, leagueData, "league");
   }
 
   public static deleteLeague(leagueId: number): Promise<boolean> {
