@@ -5,18 +5,19 @@ import {LogicError} from './logic-error';
 import * as Promise from 'bluebird';
 import * as Sequelize from 'sequelize';
 
-export class LogicUtil {
+export class Logic<T> {
 
-  private static theInstance: LogicUtil = new LogicUtil();
+  private model: Sequelize.Model<T, any>;
 
-  public static instanceOf(): LogicUtil {
-    return LogicUtil.theInstance;
+  constructor(model: Sequelize.Model<T, any>) {
+    this.model = model;
   }
 
-  public findById<M extends Sequelize.Model<any, any>>(model: M, id: number, loggingName: string): Promise<any> {
+  public findById(id: number): Promise<T> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - looking for %s with an id of %s.", loggingName, id);
-    return model.findById(id)
-      .then((foundItem) => {
+    return this.model.findById(id)
+      .then((foundItem: T) => {
         if (foundItem != null) {
           console.log("  logic layer - %s with id of %s was found.", loggingName, id);
           return Promise.resolve(foundItem);
@@ -32,10 +33,11 @@ export class LogicUtil {
       });
   }
 
-  public findAll<M extends Sequelize.Model<any, any>>(model: M, loggingName: string): Promise<any[]> {
+  public findAll(): Promise<T[]> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - looking for  all %s ", loggingName);
-    return model.findAll()
-      .then((items: any[]) => {
+    return this.model.findAll()
+      .then((items: T[]) => {
         console.log("  logic layer - %s %s found.", items.length, loggingName);
         return Promise.resolve(items);
       })
@@ -44,10 +46,11 @@ export class LogicUtil {
       });
   }
 
-  public findOneBasedOnWhereClause<M extends Sequelize.Model<any, any>>(model: M, whereClause: any, loggingName: string): Promise<any> {
+  public findOneBasedOnWhereClause( whereClause: any): Promise<T> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - looking for ONE %s based on a where clause.", loggingName);
-    return this.findBasedOnWhereClause(model, whereClause, loggingName)
-      .then((items: any[]) => {
+    return this.findBasedOnWhereClause(whereClause)
+      .then((items: T[]) => {
         if (items.length === 1) {
           return Promise.resolve(items[0]);
         }
@@ -57,10 +60,11 @@ export class LogicUtil {
       });
   }
 
-  public findBasedOnWhereClause<M extends Sequelize.Model<any, any>>(model: M, whereClause: any, loggingName: string): Promise<any[]> {
+  public findBasedOnWhereClause(whereClause: any): Promise<T[]> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - looking for %s based on a where clause.", loggingName);
-    return model.findAll({ where: whereClause})
-      .then((items: any[]) => {
+    return this.model.findAll({ where: whereClause})
+      .then((items: T[]) => {
         console.log("  logic layer - %s %s found.", items.length, loggingName);
         return Promise.resolve(items);
       })
@@ -70,9 +74,10 @@ export class LogicUtil {
       });
   }
 
-  public create<M extends Sequelize.Model<any, any>>(model: M, createData: any, loggingName: string): Promise<any> {
+  public create(createData: any): Promise<T> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - creating a %s", loggingName);
-    return model.create(createData)
+    return this.model.create(createData)
       .then((createdItem: any) => {
         console.log("  logic layer - %s was successfully created.", loggingName);
         return Promise.resolve(createdItem);
@@ -83,9 +88,10 @@ export class LogicUtil {
       });
   }
 
-  public update<M extends Sequelize.Model<any, any>>(model: M, id: number, updateData: any, loggingName: string): Promise<boolean> {
+  public update(updateData: any): Promise<boolean> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - updating a %s", loggingName);
-    return model.update(updateData, { where: { id } })
+    return this.model.update(updateData, { where: { id: updateData.id } })
       .then((success) => {
         console.log("  logic layer - %s was successfully updated.", loggingName);
         return Promise.resolve(true);
@@ -96,9 +102,10 @@ export class LogicUtil {
       });
   }
 
-  public deleteById<M extends Sequelize.Model<any, any>>(model: M, id: number, loggingName: string): Promise<boolean> {
+  public deleteById(id: number): Promise<boolean> {
+    const loggingName: any = this.model.getTableName();
     console.log("  logic layer - deleting a %s with an id of %s.", loggingName, id);
-    return model.destroy({where: {id}})
+    return this.model.destroy({where: {id}})
       .then((count: number) => {
         if (count > 0) {
           console.log("  logic layer - %s with id of %s was deleted.", loggingName, id);

@@ -44,7 +44,7 @@ export class LoginRest {
   // Logout
   private static logout(req: express.Request, res: express.Response): any {
     console.log("login-rest logout requested: ");
-    UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
     .then((user) => {
       return LoginLogic.logout(user.userName);
     })

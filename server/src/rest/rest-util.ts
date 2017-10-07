@@ -17,13 +17,13 @@ export class RestUtil {
   public static ensureAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction): any {
     const token: string = req.header('Wolfe-Authentication-Token');
     if (token) {
-      UserLogic.findUserByAuthenticationToken(token)
+      UserLogic.instanceOf().findUserByAuthenticationToken(token)
         // User found
         .then((user: IUserInstance) => {
           // If the session hasn't timed out...
           if (user.authenticationTokenExpiration.valueOf() > Date.now()) {
             // Bump the expiration date
-            return UserLogic.updateUser(user.id, { authenticationTokenExpiration: DateUtil.createAuthenticationExpirationDate() });
+            return UserLogic.instanceOf().update({ id: user.id, authenticationTokenExpiration: DateUtil.createAuthenticationExpirationDate() });
           }
           // Session timed out
           else {
@@ -49,7 +49,7 @@ export class RestUtil {
 
   public static ensureSuperUser(req: express.Request, res: express.Response, next: express.NextFunction): any {
     // Get the user associated with the token
-    UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((foundUser) => {
         // If this is a superuser, we're good to go (call next())
         if (foundUser.isSuperUser) {

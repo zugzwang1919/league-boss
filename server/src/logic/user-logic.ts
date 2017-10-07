@@ -3,8 +3,8 @@ import * as Promise from 'bluebird';
 
 // Logic Layer Classes
 import {LeagueLogic} from './league-logic';
+import {Logic} from './logic';
 import {LogicError} from './logic-error';
-import {LogicUtil} from './logic-util';
 
 // Model Layer Classes
 import {ILeagueAttribute} from '../model/league-model-manager';
@@ -14,27 +14,35 @@ import {UserModelManager} from '../model/user-model-manager';
 import {IUserInstance} from '../model/user-model-manager';
 import {IUserAttribute} from '../model/user-model-manager';
 
-export class UserLogic {
+export class UserLogic extends Logic<IUserInstance> {
+  private static theInstance: UserLogic;
 
-  public static findUserById(userId: number): Promise<IUserInstance> {
-    return LogicUtil.instanceOf().findById(UserModelManager.userModel, userId, "user");
+  public static instanceOf(): UserLogic {
+    if (!UserLogic.theInstance) {
+      UserLogic.theInstance = new UserLogic();
+    }
+    return UserLogic.theInstance;
   }
 
-  public static findUserByAuthenticationToken(token: string): Promise<IUserInstance> {
-    return LogicUtil.instanceOf().findOneBasedOnWhereClause(UserModelManager.userModel, { authenticationToken: token }, "user");
+  constructor() {
+    super(UserModelManager.userModel);
   }
 
-  public static findUserByUserName(uName: string): Promise<IUserInstance> {
-    return LogicUtil.instanceOf().findOneBasedOnWhereClause(UserModelManager.userModel, { userName: uName }, "user");
+  public findUserByAuthenticationToken(token: string): Promise<IUserInstance> {
+    return this.findOneBasedOnWhereClause({ authenticationToken: token });
   }
 
-  public static createUser(userData: IUser): Promise<IUserInstance> {
+  public findUserByUserName(uName: string): Promise<IUserInstance> {
+    return this.findOneBasedOnWhereClause({ userName: uName });
+  }
+
+  public create(userData: IUser): Promise<IUserInstance> {
     console.log("  user-logic.create() - createUser has been called.");
     // Ensure all of the required inputs are present
     if (!UserLogic.isNewUserValid(userData)) {
       return Promise.reject(UserLogic.buildIncompleteAttributesError());
     }
-    return LogicUtil.instanceOf().create(UserModelManager.userModel, userData, "user")
+    return super.create(userData)
     // Normally, if the "common" logic code throws an error we're happy to let it flow back to the rest layer.
     // In this instance, if the call above throws an error, we'll actually catch it and try to clean it up
     // since a user could try to select a username that is already in use.
@@ -43,26 +51,19 @@ export class UserLogic {
       });
   }
 
-  public static updateUser(userId: number, userData: IUserAttribute): Promise<boolean> {
-    // NOTE:  We do allow the partial update of a user (i.e. I just want to update the token expiration field, etc)
-    // so there is no checking here for a "fully-formed" user
-    // This makes me a little uncomfortable given its difference from other model types; therefore, making a case for
-    // breaking the token stuff out into its own object
-    return LogicUtil.instanceOf().update(UserModelManager.userModel, userId, userData, "user")
+  public update(userData: any): Promise<boolean> {
+    console.log("  user-logic.update() - updateUser has been called.");
+    return super.update(userData)
     // Normally, if the "common" logic code throws an error we're happy to let it flow back to the rest layer.
     // In this instance, if the call above throws an error, we'll actually catch it and try to clean it up
     // since a user could try to select a username that is already in use.
       .catch((err) => {
         return Promise.reject(UserLogic.buildCleanError(err));
       });
-}
-
-  public static deleteUser(userId: number): Promise<boolean> {
-    return LogicUtil.instanceOf().deleteById(UserModelManager.userModel, userId, "user");
   }
 
-  public static getLeaguesAsPlayer(userId: number): Promise<ILeagueAttribute[]> {
-    return UserLogic.findUserById(userId)
+  public getLeaguesAsPlayer(userId: number): Promise<ILeagueAttribute[]> {
+    return this.findById(userId)
       .then((user) => {
         return user.getPlayerLeagues();
       })
@@ -71,8 +72,8 @@ export class UserLogic {
       });
   }
 
-  public static getLeaguesAsAdmin(userId: number): Promise<ILeagueAttribute[]> {
-    return UserLogic.findUserById(userId)
+  public getLeaguesAsAdmin(userId: number): Promise<ILeagueAttribute[]> {
+    return this.findById(userId)
       .then((user) => {
         return user.getAdminLeagues();
       })
@@ -81,8 +82,8 @@ export class UserLogic {
       });
   }
 
-  public static isLeagueAdmin(userId: number, leagueId: number): Promise<boolean> {
-    return LeagueLogic.findLeagueById(leagueId)
+  public isLeagueAdmin(userId: number, leagueId: number): Promise<boolean> {
+    return LeagueLogic.instanceOf().findById(leagueId)
       .then((league) => {
         return league.hasAdmin(userId);
       })

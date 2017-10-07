@@ -39,13 +39,14 @@ export class LoginLogic {
     // event that we're being hacked.
     let foundUser: IUserInstance;
 
-    return UserLogic.findUserByUserName(loginCredentials.userName)
+    return UserLogic.instanceOf().findUserByUserName(loginCredentials.userName)
       .then((user: IUserInstance) => {
         if (user != null && user.password === loginCredentials.password) {
           foundUser = user;
           // Only update the authentication token and its expiration date
-          return UserLogic.updateUser(user.id,
+          return UserLogic.instanceOf().update(
             {
+              id: user.id,
               authenticationToken: guid,
               authenticationTokenExpiration: DateUtil.createAuthenticationExpirationDate(),
             });
@@ -68,9 +69,9 @@ export class LoginLogic {
   }
 
   public static logout(userName: string): Promise<void> {
-    return UserLogic.findUserByUserName(userName)
+    return UserLogic.instanceOf().findUserByUserName(userName)
       .then((user) => {
-        return UserLogic.updateUser(user.id, { authenticationTokenExpiration: new Date() });
+        return UserLogic.instanceOf().update({ authenticationTokenExpiration: new Date() });
       })
       .then( (success) => {
         return Promise.resolve();

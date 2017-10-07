@@ -1,6 +1,6 @@
 // Logic level classes
+import {Logic} from './logic';
 import {LogicError} from './logic-error';
-import {LogicUtil} from './logic-util';
 import {TeamCache} from './team-cache';
 import {UserLogic} from './user-logic';
 
@@ -15,39 +15,39 @@ import * as Parse from 'csv-parse';
 import * as Sequelize from 'sequelize';
 import * as Stream from 'stream';
 
-export class SeasonLogic {
+export class SeasonLogic extends Logic<ISeasonInstance> {
+  private static theInstance: SeasonLogic;
 
-  public static findSeasonById(seasonId: number): Promise<ISeasonInstance> {
-    return LogicUtil.instanceOf().findById(SeasonModelManager.seasonModel, seasonId, "season");
+  public static instanceOf(): SeasonLogic {
+    if (!SeasonLogic.theInstance) {
+      SeasonLogic.theInstance = new SeasonLogic();
+    }
+    return SeasonLogic.theInstance;
   }
 
-  public static findAllSeasons(): Promise<ISeasonInstance[]> {
-    return LogicUtil.instanceOf().findAll(SeasonModelManager.seasonModel, "season");
+  constructor() {
+    super(SeasonModelManager.seasonModel);
   }
 
-  public static createSeason(seasonData: ISeasonAttribute): Promise<ISeasonInstance> {
+  public create(seasonData: ISeasonAttribute): Promise<ISeasonInstance> {
     console.log("  season-logic.create() - createSeason has been called.");
     // Ensure all of the required inputs are present
     if (!SeasonLogic.isNewSeasonValid(seasonData)) {
       return Promise.reject(SeasonLogic.buildIncompleteAttributesError());
     }
-    return LogicUtil.instanceOf().create(SeasonModelManager.seasonModel, seasonData, "season");
+    return super.create(seasonData);
   }
 
-  public static updateSeason(seasonData: ISeasonAttribute): Promise<boolean> {
+  public update(seasonData: ISeasonAttribute): Promise<boolean> {
     console.log("  season-logic.update() - updateSeason has been called.");
     // Ensure all of the required inputs are present
     if (!SeasonLogic.isExistingSeasonValid(seasonData)) {
       return Promise.reject(SeasonLogic.buildIncompleteAttributesError());
     }
-    return LogicUtil.instanceOf().update(SeasonModelManager.seasonModel, seasonData.id, seasonData, "season");
+    return super.update(seasonData);
   }
 
-  public static deleteSeason(seasonId: number): Promise<boolean> {
-    return LogicUtil.instanceOf().deleteById(SeasonModelManager.seasonModel, seasonId, "season");
-  }
-
-  public static addSchedule(seasonId: number, scheduleAsCsv: Buffer): Promise<boolean> {
+  public addSchedule(seasonId: number, scheduleAsCsv: Buffer): Promise<boolean> {
     const readableStream: Stream.Readable = new Stream.Readable();
     return new Promise<boolean> ((resolve, reject) => {
 
@@ -67,7 +67,7 @@ export class SeasonLogic {
         return SeasonModelManager.sequelize.transaction((t: Sequelize.Transaction) => {
           // Find the season
           bigFatTransaction = t;
-          return SeasonLogic.findSeasonById(seasonId)
+          return this.findById(seasonId)
           .then((foundSeason: ISeasonInstance) => {
             season = foundSeason;
             return foundSeason.getGames();
@@ -107,6 +107,7 @@ export class SeasonLogic {
       readableStream.pipe(parser);
   });
 }
+
 // Private functions
 
   private static createGame(gameData: any, teamCache: TeamCache, currentTransaction: Sequelize.Transaction): Promise<IGameInstance> {

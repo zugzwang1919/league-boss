@@ -40,7 +40,7 @@ export class LeagueRest {
 
   private static retrieveLeagueById(req: express.Request, res: express.Response): any {
     console.log("Request received on server!  Looking for league with an id of " + req.params.leagueId);
-    LeagueLogic.findLeagueById(req.params.leagueId)
+    LeagueLogic.instanceOf().findById(req.params.leagueId)
       .then((foundLeague: ILeagueInstance) => {
         // Transform the ILeagueInstance to an ILeague (our form that users of our RESTful service should be using)
         const returnLeague: ILeague = LeagueModelManager.createILeagueFromAnything(foundLeague);
@@ -53,13 +53,13 @@ export class LeagueRest {
 
   private static createLeague(req: express.Request, res: express.Response): any {
     console.log("league-rest createLeague: leagueName found in body = " + req.body.leagueName);
-    UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((foundUser: IUserInstance) => {
         // Transform the message body to an ILeague (our form that users of our RESTful service should be using)
         const leagueData: ILeague = LeagueModelManager.createILeagueFromAnything(req.body);
         // The caller doesn't get to define the id
         leagueData.id = undefined;
-        return LeagueLogic.createLeague(leagueData, foundUser.id);
+        return LeagueLogic.instanceOf().createLeagueWithUserAsAdmin(leagueData, foundUser.id);
       })
       .then((createdLeague: ILeagueInstance) => {
         // Transform the ILeagueInstance to an ILeague (our form that users of our RESTful service should be using)
@@ -75,7 +75,7 @@ export class LeagueRest {
     console.log("league-rest updateLeague: leagueName found in body = " + req.body.leagueName);
     // Transform the message body to an ILeague (our form that users of our RESTful service should be using)
     const leagueData: ILeague = LeagueModelManager.createILeagueFromAnything(req.body);
-    LeagueLogic.updateLeague(leagueData)
+    LeagueLogic.instanceOf().update(leagueData)
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -87,7 +87,7 @@ export class LeagueRest {
   private static deleteLeague(req: express.Request, res: express.Response): any {
     console.log("league-rest deleteLeague: leagueId found in url = " + req.params.leagueId);
 
-    LeagueLogic.deleteLeague(req.params.leagueId)
+    LeagueLogic.instanceOf().deleteById(req.params.leagueId)
       .then((success) => {
         console.log("league-rest deleteLeague: successful delete for league id " + req.params.leagueId + " has occurred.");
         RestResponse.send200(res);
@@ -102,7 +102,7 @@ export class LeagueRest {
 
   private static retrievePlayers(req: express.Request, res: express.Response): any {
     console.log("league-rest getPlayers:  ");
-    LeagueLogic.getPlayers(req.params.leagueId)
+    LeagueLogic.instanceOf().getPlayers(req.params.leagueId)
       .then((players: IUserAttribute[]) => {
         // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
         const returnPlayers: IUser[] = players.map(UserModelManager.createIUserFromAnything);
@@ -113,7 +113,7 @@ export class LeagueRest {
 
   private static addPlayer(req: express.Request, res: express.Response): any {
     console.log("league-rest addPlayer: userId found in body = " + req.body.userId);
-    LeagueLogic.addPlayer(req.params.leagueId, req.body.userId)
+    LeagueLogic.instanceOf().addPlayer(req.params.leagueId, req.body.userId)
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -124,7 +124,7 @@ export class LeagueRest {
 
   private static removePlayer(req: express.Request, res: express.Response): any {
     console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
-    LeagueLogic.removePlayer(req.params.leagueId, req.params.userId)
+    LeagueLogic.instanceOf().removePlayer(req.params.leagueId, req.params.userId)
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -137,7 +137,7 @@ export class LeagueRest {
 
   private static retrieveAdmins(req: express.Request, res: express.Response): any {
     console.log("league-rest getAddmins: leagueId found in body = " + req.params.leagueId);
-    LeagueLogic.getAdmins(req.params.leagueId)
+    LeagueLogic.instanceOf().getAdmins(req.params.leagueId)
       .then((admins: IUserAttribute[]) => {
         // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
         const returnPlayers: IUser[] = admins.map(UserModelManager.createIUserFromAnything);
@@ -148,7 +148,7 @@ export class LeagueRest {
 
   private static addAdmin(req: express.Request, res: express.Response): any {
     console.log("league-rest addAddmin: userId found in body = " + req.body.userId);
-    LeagueLogic.addAdmin(req.params.leagueId, req.body.userId)
+    LeagueLogic.instanceOf().addAdmin(req.params.leagueId, req.body.userId)
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -159,7 +159,7 @@ export class LeagueRest {
 
   private static deleteAdmin(req: express.Request, res: express.Response): any {
     console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
-    LeagueLogic.removeAdmin(req.params.leagueId, req.params.userId)
+    LeagueLogic.instanceOf().removeAdmin(req.params.leagueId, req.params.userId)
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -174,10 +174,10 @@ export class LeagueRest {
 
       // Get the user associated with the token
       let foundUser: IUserInstance;
-      UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+      UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
         .then((user: IUserInstance) => {
           foundUser = user;
-          return UserLogic.isLeagueAdmin(user.id, req.params.leagueId);
+          return UserLogic.instanceOf().isLeagueAdmin(user.id, req.params.leagueId);
         })
         .then((isLeagueAdmin: boolean) => {
           if (isLeagueAdmin || foundUser.isSuperUser) {

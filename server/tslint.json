@@ -23,7 +23,8 @@
       "object-literal-sort-keys": false,
       "typedef": [true, "call-signature", "parameter", "variable-declaration"],
       // Data first, then methods
-      "member-ordering": [true, {"order": "fields-first"}]
+      "member-ordering": false
+      // "member-ordering": [true, {"order": "fields-first"}]
   },
   "jsRules": {
       "max-line-length": {

@@ -36,7 +36,7 @@ export class SeasonRest {
 
   private static retrieveAllSeasons(req: express.Request, res: express.Response): any {
     console.log("Request received on server!  Looking for season with an id of " + req.params.seasonId);
-    SeasonLogic.findAllSeasons()
+    SeasonLogic.instanceOf().findAll()
       .then((foundSeasons: ISeasonInstance[]) => {
         // Transform the ISeasonInstance to an ISeason (our form that users of our RESTful service should be using)
         const returnSeasons: ISeason[] = foundSeasons.map(SeasonModelManager.createISeasonFromAnything);
@@ -49,7 +49,7 @@ export class SeasonRest {
 
   private static retrieveSeasonById(req: express.Request, res: express.Response): any {
     console.log("Request received on server!  Looking for season with an id of " + req.params.seasonId);
-    SeasonLogic.findSeasonById(req.params.seasonId)
+    SeasonLogic.instanceOf().findById(req.params.seasonId)
       .then((foundSeason: ISeasonInstance) => {
         // Transform the ISeasonInstance to an ISeason (our form that users of our RESTful service should be using)
         const returnSeason: ISeason = SeasonModelManager.createISeasonFromAnything(foundSeason);
@@ -64,7 +64,7 @@ export class SeasonRest {
 
     console.log("season-rest createSeason: seasonName found in body = " + req.body.seasonName);
     const seasonData: ISeason = SeasonModelManager.createISeasonFromAnything(req.body);
-    return SeasonLogic.createSeason(seasonData)
+    return SeasonLogic.instanceOf().create(seasonData)
       .then((createdSeason: ISeasonInstance) => {
         // Transform the ISeasonInstance to an ISeason (our form that users of our RESTful service should be using)
         const returnSeason: ISeason = SeasonModelManager.createISeasonFromAnything(createdSeason);
@@ -80,7 +80,7 @@ export class SeasonRest {
     console.log("season-rest updateSeason: seasonName found in body = " + req.body.seasonName);
     // Transform the ISeasonInstance to an ISeason (our form that users of our RESTful service should be using)
     const seasonData: ISeason = SeasonModelManager.createISeasonFromAnything(req.body);
-    SeasonLogic.updateSeason(seasonData)
+    SeasonLogic.instanceOf().update(seasonData)
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -91,7 +91,7 @@ export class SeasonRest {
 
   private static deleteSeason(req: express.Request, res: express.Response): any {
     console.log("season-rest deleteSeason: seasonId found in url = " + req.params.seasonId);
-    SeasonLogic.deleteSeason(req.params.seasonId)
+    SeasonLogic.instanceOf().deleteById(req.params.seasonId)
       .then((success) => {
         console.log("season-rest deleteSeason: successful delete for season id " + req.params.seasonId + " has occurred.");
         RestResponse.send200(res);
@@ -105,7 +105,7 @@ export class SeasonRest {
   private static addSchedule(req: express.Request, res: express.Response): any {
     console.log("season-rest addSchedule: seasonId found in url = " + req.params.seasonId);
     const uploadedFile: fileUpload.UploadedFile = req.files.uploadFile as fileUpload.UploadedFile;
-    SeasonLogic.addSchedule(req.params.seasonId, uploadedFile.data)
+    SeasonLogic.instanceOf().addSchedule(req.params.seasonId, uploadedFile.data)
     .then((success) => {
       console.log("season-rest addSchedule: schedule successfully added for season id " + req.params.seasonId );
       RestResponse.send200(res);

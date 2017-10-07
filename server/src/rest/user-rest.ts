@@ -34,7 +34,7 @@ export class UserRest {
 
   private static retrieveUserById(req: express.Request, res: express.Response): any {
     console.log("user-rest getUser:  Looking for user with an id of " + req.params.userId);
-    UserLogic.findUserById(req.params.userId)
+    UserLogic.instanceOf().findById(req.params.userId)
       .then((userInstance: IUserInstance) => {
         // Transform the IUserInstance to an IUser (our form that users of our RESTful service should be using)
         const returnedUser: IUser = UserModelManager.createIUserFromAnything(userInstance);
@@ -47,7 +47,7 @@ export class UserRest {
 
   private static retrieveUser(req: express.Request, res: express.Response): any {
     console.log("user-rest getUser:  Looking for user with a name of " + req.query.userName);
-    UserLogic.findUserByUserName(req.query.userName)
+    UserLogic.instanceOf().findUserByUserName(req.query.userName)
       .then((userInstance: IUserInstance) => {
         // Transform the IUserInstance to an IUser (our form that users of our RESTful service should be using)
         const returnedUser: IUser = UserModelManager.createIUserFromAnything(userInstance);
@@ -66,7 +66,7 @@ export class UserRest {
     newUser.id = undefined;
     newUser.isSuperUser = false;
 
-    UserLogic.createUser(newUser)
+    UserLogic.instanceOf().create(newUser)
       .then((createdUser: IUserInstance) => {
         // Transform the IUserInstance to an IUser (our form that users of our RESTful service should be using)
         const returnedUser: IUser = UserModelManager.createIUserFromAnything(createdUser);
@@ -79,7 +79,7 @@ export class UserRest {
 
   private static updateUser(req: express.Request, res: express.Response): any {
     console.log("user-rest updateUser: userName found in body = " + req.body.userName);
-    UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((currentUser: IUserInstance) => {
         // Transform the request body to an IUser (the form that users of our RESTful service should be using)
         const userNeedingUpdate: IUser = UserModelManager.createIUserFromAnything(req.body);
@@ -101,7 +101,7 @@ export class UserRest {
             return Promise.reject(error);
           }
         }
-        return UserLogic.updateUser(req.params.userId, userNeedingUpdate);
+        return UserLogic.instanceOf().update(userNeedingUpdate);
       })
       .then((success) => {
         RestResponse.send200(res);
@@ -113,7 +113,7 @@ export class UserRest {
 
   private static deleteUser(req: express.Request, res: express.Response): any {
     console.log("user-rest deleteUser: userId found in url = " + req.params.userId);
-    UserLogic.deleteUser(req.params.userId)
+    UserLogic.instanceOf().deleteById(req.params.userId)
       .then((success) => {
         console.log("user-rest deleteUser: successful delete for user id " + req.params.userId + " has occurred.");
         RestResponse.send200(res);
@@ -126,7 +126,7 @@ export class UserRest {
 
   private static retrieveLeaguesForUser(req: express.Request, res: express.Response): any {
     console.log("user-rest retriveLeaguesForUser:  Looking for leagues that this user as player for user id " + req.params.userId);
-    UserLogic.getLeaguesAsPlayer(req.params.userId)
+    UserLogic.instanceOf().getLeaguesAsPlayer(req.params.userId)
       .then((leagues: ILeagueAttribute[]) => {
         console.log("user-rest retriveLeaguesForUser: succesful retrival of leagues as player for user id " + req.params.userId);
         // Transform the array of ILeagueAttributes to an array of ILeagues (our form that users of our RESTful service should be using)
@@ -141,7 +141,7 @@ export class UserRest {
 
   private static retrieveLeaguesAsAdmin(req: express.Request, res: express.Response): any {
     console.log("user-rest retriveLeaguesAsAdmin:  Looking for leagues that this user is an admin for user id " + req.params.userId);
-    UserLogic.getLeaguesAsAdmin(req.params.userId)
+    UserLogic.instanceOf().getLeaguesAsAdmin(req.params.userId)
       .then((leagues: ILeagueAttribute[]) => {
         console.log("user-rest retriveLeaguesAsAdmin: succesful retrival of leagues as admin for  " + req.params.userId);
         // Transform the array of ILeagueAttributes to an array of ILeagues (our form that users of our RESTful service should be using)
@@ -158,7 +158,7 @@ export class UserRest {
 
   private static ensureSuperUserOrSelf(req: express.Request, res: express.Response, next: express.NextFunction): any {
     // Get the user associated with the token
-    UserLogic.findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((foundUser) => {
         // If this is a superuser, we're good to go (call next())
         if (foundUser.isSuperUser) {

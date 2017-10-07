@@ -1,6 +1,6 @@
 // Logic level classes
+import {Logic} from './logic';
 import {LogicError} from './logic-error';
-import {LogicUtil} from './logic-util';
 import {UserLogic} from './user-logic';
 
 // Model level classes
@@ -11,20 +11,28 @@ import {IUserAttribute, IUserInstance} from '../model/user-model-manager';
 
 import * as Promise from 'bluebird';
 
-export class LeagueLogic {
+export class LeagueLogic extends Logic<ILeagueInstance> {
+  private static theInstance: LeagueLogic;
 
-  public static findLeagueById(leagueId: number): Promise<ILeagueInstance> {
-    return LogicUtil.instanceOf().findById(LeagueModelManager.leagueModel, leagueId, "league");
+  public static instanceOf(): LeagueLogic {
+    if (!LeagueLogic.theInstance) {
+      LeagueLogic.theInstance = new LeagueLogic();
+    }
+    return LeagueLogic.theInstance;
   }
 
-  public static createLeague(leagueData: ILeagueAttribute, creatingUserId: number): Promise<ILeagueInstance> {
+  constructor() {
+    super(LeagueModelManager.leagueModel);
+  }
+
+  public createLeagueWithUserAsAdmin(leagueData: ILeagueAttribute, creatingUserId: number): Promise<ILeagueInstance> {
     console.log("  league-logic.create() - createLeague has been called.");
     // Ensure all of the required inputs are present
     if (!LeagueLogic.isNewLeagueValid(leagueData)) {
       return Promise.reject(LeagueLogic.buildIncompleteAttributesError());
     }
     let leagueToReturn: ILeagueInstance;
-    return LogicUtil.instanceOf().create(LeagueModelManager.leagueModel, leagueData, "league")
+    return super.create(leagueData)
       // NOTE:  Most logic would just return the call above, but for leagues, we'll go ahead and add the creator as an admin
       .then((league: ILeagueInstance) => {
         console.log("  league-logic.create() - Preparing to add admin");
@@ -39,32 +47,28 @@ export class LeagueLogic {
       });
   }
 
-  public static updateLeague(leagueData: ILeagueAttribute): Promise<boolean> {
+  public update(leagueData: ILeagueAttribute): Promise<boolean> {
     console.log("  league-logic.update() - updateLeague has been called.");
     // Ensure all of the required inputs are present
     if (!LeagueLogic.isExistingLeagueValid(leagueData)) {
       return Promise.reject(LeagueLogic.buildIncompleteAttributesError());
     }
-    return LogicUtil.instanceOf().update(LeagueModelManager.leagueModel, leagueData.id, leagueData, "league");
+    return super.update(leagueData);
   }
 
-  public static deleteLeague(leagueId: number): Promise<boolean> {
-    return LogicUtil.instanceOf().deleteById(LeagueModelManager.leagueModel, leagueId, "league");
-  }
-
-  public static getAdmins(leagueId: number): Promise<IUserAttribute[]> {
-    return this.findLeagueById(leagueId)
+  public getAdmins(leagueId: number): Promise<IUserAttribute[]> {
+    return this.findById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.getAdmins();
       })
       .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }
 
-  public static addAdmin(leagueId: number, userId: number): Promise<boolean> {
+  public addAdmin(leagueId: number, userId: number): Promise<boolean> {
     let foundLeague: ILeagueInstance;
-    return UserLogic.findUserById(userId)
+    return UserLogic.instanceOf().findById(userId)
       .then((user: IUserInstance) => {
-        return this.findLeagueById(leagueId);
+        return this.findById(leagueId);
       })
       .then((league: ILeagueInstance) => {
         foundLeague = league;
@@ -86,8 +90,8 @@ export class LeagueLogic {
       });
   }
 
-  public static removeAdmin(leagueId: number, userId: number): Promise<boolean> {
-    return this.findLeagueById(leagueId)
+  public removeAdmin(leagueId: number, userId: number): Promise<boolean> {
+    return this.findById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.removeAdmin(userId);
       })
@@ -104,19 +108,19 @@ export class LeagueLogic {
       });
   }
 
-  public static getPlayers(leagueId: number): Promise<IUserAttribute[]> {
-    return this.findLeagueById(leagueId)
+  public getPlayers(leagueId: number): Promise<IUserAttribute[]> {
+    return this.findById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.getPlayers();
       })
       .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }
 
-  public static addPlayer(leagueId: number, userId: number): Promise<boolean> {
+  public addPlayer(leagueId: number, userId: number): Promise<boolean> {
     let foundLeague: ILeagueInstance;
-    return UserLogic.findUserById(userId)
+    return UserLogic.instanceOf().findById(userId)
       .then((user: IUserInstance) => {
-        return this.findLeagueById(leagueId);
+        return this.findById(leagueId);
       })
       .then((league: ILeagueInstance) => {
         foundLeague = league;
@@ -138,8 +142,8 @@ export class LeagueLogic {
       });
   }
 
-  public static removePlayer(leagueId: number, userId: number): Promise<boolean> {
-    return this.findLeagueById(leagueId)
+  public removePlayer(leagueId: number, userId: number): Promise<boolean> {
+    return this.findById(leagueId)
       .then((league: ILeagueInstance) => {
         return league.removePlayer(userId);
       })
