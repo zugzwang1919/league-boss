@@ -1,4 +1,4 @@
-gameDate,teamOne,teamOneTwoRelationship,teamTwo
-09/07/17,kc,,pats
-09/10/17,phil,,zzzzzzz
-09/10/17,balt,,cin
+gameGroup,gameDate,teamOne,teamOneTwoRelationship,teamTwo
+Week 1,09/07/17,kc,,pats
+Week 1,09/10/17,phil,,zzzzzzz
+Week 1,09/10/17,balt,,cin

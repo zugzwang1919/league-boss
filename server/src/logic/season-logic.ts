@@ -15,6 +15,11 @@ import * as Parse from 'csv-parse';
 import * as Sequelize from 'sequelize';
 import * as Stream from 'stream';
 
+interface IGameValues  {
+  group: string;
+  game: IGameInstance;
+}
+
 export class SeasonLogic extends Logic<ISeasonInstance> {
   private static theInstance: SeasonLogic;
 
@@ -81,12 +86,13 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
           })
           .then((success: boolean) => {
             // Build all of the games
-            return Promise.map(games, (gameData: any): Promise<IGameInstance> => {
+            return Promise.map(games, (gameData: any): Promise<IGameValues> => {
               return SeasonLogic.createGame(gameData, teamCache, bigFatTransaction);
             });
           })
-          .then((newGames: IGameInstance[]) => {
+          .then((newGameValues: IGameValues[]) => {
             // Add the games to the season
+            const newGames: IGameInstance[] = newGameValues.map((gameValue: IGameValues) => gameValue.game );
             return season.addGames(newGames, {transaction: bigFatTransaction});
           });
         })
@@ -105,12 +111,12 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
       readableStream.push(null);
       // Pipe the stream into the parser
       readableStream.pipe(parser);
-  });
-}
+    });
+  }
 
-// Private functions
+  // Private functions
 
-  private static createGame(gameData: any, teamCache: TeamCache, currentTransaction: Sequelize.Transaction): Promise<IGameInstance> {
+  private static createGame(gameData: any, teamCache: TeamCache, currentTransaction: Sequelize.Transaction): Promise<IGameValues> {
 
     // OK, this code needs to return a Promise<IGameInstance>
     if (!gameData.teamOneTwoRelationship) {
@@ -131,7 +137,7 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
         return createdGame.setTeamTwo(teamTwo, {transaction: currentTransaction});
       })
       .then(() => {
-        return Promise.resolve(createdGame);
+        return Promise.resolve({group: gameData.gameGroup, game: createdGame});
       });
   }
 
