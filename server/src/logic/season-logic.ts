@@ -5,6 +5,7 @@ import {TeamCache} from './team-cache';
 import {UserLogic} from './user-logic';
 
 // Model level classes
+import {GameGroupModelManager, IGameGroupInstance, IGameGroupModel} from '../model/game-group-model-manager';
 import {GameModelManager, IGameInstance} from '../model/game-model-manager';
 import {ISeasonAttribute, ISeasonInstance, SeasonModelManager} from '../model/season-model-manager';
 import {ITeamInstance, TeamModelManager} from '../model/team-model-manager';
@@ -66,7 +67,8 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
         const teamCache: TeamCache = new TeamCache();
         let season: ISeasonInstance;
         let bigFatTransaction: Sequelize.Transaction;
-
+        let gameGroups: IGameGroupInstance[];
+        let arrayOfGameValues: IGameValues[];
         // Start a Transaction allowing us to ensure that either all of this
         // will get created or none of it will
         return SeasonModelManager.sequelize.transaction((t: Sequelize.Transaction) => {
@@ -75,10 +77,10 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
           return this.findById(seasonId)
           .then((foundSeason: ISeasonInstance) => {
             season = foundSeason;
-            return foundSeason.getGames();
+            return foundSeason.getGameGroups();
           })
-          .then((existingSeasonGames: IGameInstance[]) => {
-            if (existingSeasonGames.length !== 0 ) {
+          .then((existingSeasonGameGroups: IGameGroupInstance[]) => {
+            if (existingSeasonGameGroups.length !== 0 ) {
               throw (LogicError.SCHEDULE_ALREADY_PRESENT);
             }
             // Wait for the TeamCache to be created
@@ -87,13 +89,24 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
           .then((success: boolean) => {
             // Build all of the games
             return Promise.map(games, (gameData: any): Promise<IGameValues> => {
-              return SeasonLogic.createGame(gameData, teamCache, bigFatTransaction);
+              return SeasonLogic.createGame(gameData, teamCache, season, bigFatTransaction);
             });
           })
-          .then((newGameValues: IGameValues[]) => {
-            // Add the games to the season
-            const newGames: IGameInstance[] = newGameValues.map((gameValue: IGameValues) => gameValue.game );
-            return season.addGames(newGames, {transaction: bigFatTransaction});
+          .then((createdGameValues: IGameValues[]) => {
+            // Build all of the game groups
+            arrayOfGameValues = createdGameValues;
+            return SeasonLogic.createGameGroups(arrayOfGameValues);
+          })
+          .then((createdGameGroups: IGameGroupInstance[]) => {
+            // Add the game groups to the season
+            gameGroups = createdGameGroups;
+            return season.addGameGroups(createdGameGroups, {transaction: bigFatTransaction});
+          })
+          .then(() => {
+            return Promise.map(arrayOfGameValues, (gameValues: IGameValues): Promise<void> => {
+              const foundGameGroup: IGameGroupInstance = gameGroups.find((gameGroup) => gameGroup.gameGroupName === gameValues.group );
+              return foundGameGroup.addGame(gameValues.game, {transaction: bigFatTransaction});
+            });
           });
         })
         // End of Transaction
@@ -116,9 +129,8 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
 
   // Private functions
 
-  private static createGame(gameData: any, teamCache: TeamCache, currentTransaction: Sequelize.Transaction): Promise<IGameValues> {
-
-    // OK, this code needs to return a Promise<IGameInstance>
+  private static createGame(gameData: any, teamCache: TeamCache, season: ISeasonInstance, currentTransaction: Sequelize.Transaction): Promise<IGameValues> {
+    // OK, this code needs to return a Promise<IGameValues>
     if (!gameData.teamOneTwoRelationship) {
       gameData.teamOneTwoRelationship = "@";
     }
@@ -139,6 +151,18 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
       .then(() => {
         return Promise.resolve({group: gameData.gameGroup, game: createdGame});
       });
+  }
+
+  private static createGameGroups(arrayOfGameValues: IGameValues[]): Promise<IGameGroupInstance[]> {
+    const gameGroupNames: string[] = [];
+    arrayOfGameValues.forEach((gameValues) => {
+      if (gameGroupNames.indexOf(gameValues.group) === -1) {
+        gameGroupNames.push(gameValues.group);
+      }
+    });
+    return Promise.map(gameGroupNames, (gameGroupName): Promise<IGameGroupInstance> => {
+      return GameGroupModelManager.gameGroupModel.create({gameGroupName});
+    });
   }
 
   private static isNewSeasonValid(leagueData: ISeasonAttribute): boolean {

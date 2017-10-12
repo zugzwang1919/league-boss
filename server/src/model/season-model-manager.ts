@@ -1,6 +1,6 @@
 import * as  Sequelize from 'sequelize';
 
-import {IGameInstance} from './game-model-manager';
+import {IGameGroupInstance} from './game-group-model-manager';
 import {ISeason} from './season';
 
 // NOTE:  We're not tacking any additional information onto the interface created for
@@ -15,10 +15,11 @@ export interface ISeasonAttribute extends ISeason {}
 export interface ISeasonInstance extends Sequelize.Instance<ISeasonAttribute>, ISeasonAttribute {
   // Define all of the methods that are available.  We don't use all of them, so I can't
   // guarantee that they all work, but they "should"
-  getGames: Sequelize.HasManyGetAssociationsMixin<IGameInstance>;
-  addGames: Sequelize.HasManyAddAssociationsMixin<IGameInstance, number>;
-  removeGames: Sequelize.HasManyRemoveAssociationsMixin<IGameInstance, number>;
-  countGames: Sequelize.HasManyCountAssociationsMixin;
+  getGameGroups: Sequelize.HasManyGetAssociationsMixin<IGameGroupInstance>;
+  addGameGroup: Sequelize.HasManyAddAssociationMixin<IGameGroupInstance, number>
+  addGameGroups: Sequelize.HasManyAddAssociationsMixin<IGameGroupInstance, number>;
+  removeGameGroups: Sequelize.HasManyRemoveAssociationsMixin<IGameGroupInstance, number>;
+  countGameGroups: Sequelize.HasManyCountAssociationsMixin;
 }
 
 export interface ISeasonModel extends Sequelize.Model<ISeasonInstance, ISeasonAttribute> {}

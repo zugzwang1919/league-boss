@@ -1,3 +1,4 @@
+import {GameGroupModelManager, IGameGroupModel} from './game-group-model-manager';
 import {GameModelManager, IGameModel} from './game-model-manager';
 import {ILeagueInstance, ILeagueModel, LeagueModelManager} from './league-model-manager';
 import {ISeasonInstance, ISeasonModel, SeasonModelManager} from './season-model-manager';
@@ -27,6 +28,7 @@ export class ModelManager {
     LeagueModelManager.initialize(sequelize);
     TeamModelManager.initialize(sequelize);
     GameModelManager.initialize(sequelize);
+    GameGroupModelManager.initialize(sequelize);
     SeasonModelManager.initialize(sequelize);
 
     // Describe the relationships between the presistent objects
@@ -34,6 +36,7 @@ export class ModelManager {
     const leagueModel: ILeagueModel = LeagueModelManager.leagueModel;
     const teamModel: ITeamModel = TeamModelManager.teamModel;
     const gameModel: IGameModel = GameModelManager.gameModel;
+    const gameGroupModel: IGameGroupModel = GameGroupModelManager.gameGroupModel;
     const seasonModel: ISeasonModel = SeasonModelManager.seasonModel;
 
     userModel.belongsToMany(leagueModel, {as: 'PlayerLeagues', through: 'LeaguePlayer' });
@@ -46,8 +49,11 @@ export class ModelManager {
     teamModel.hasMany(gameModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
     gameModel.belongsTo(teamModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
 
-    seasonModel.hasMany(gameModel);
-    gameModel.belongsTo(seasonModel);
+    seasonModel.hasMany(gameGroupModel);
+    gameGroupModel.belongsTo(seasonModel);
+
+    gameGroupModel.hasMany(gameModel);
+    gameModel.belongsTo(gameGroupModel);
 
     //  seasonModel.hasMany(gameModel);
     // gameModel.belongsTo(seasonModel);
