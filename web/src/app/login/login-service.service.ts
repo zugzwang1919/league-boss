@@ -27,12 +27,12 @@ export class LoginService {
         return Promise.resolve(new ServiceResponse(res));
       })
       .catch((error: Response) => {
-        return Promise.reject(new ServiceResponse(error))
+        return Promise.reject(new ServiceResponse(error));
       });
   }
 
   logout(): Promise<Object> {
-    console.log("Inside LoginService: Attemption to log out")
+    console.log("Inside LoginService: Attemption to log out");
     return this.http.post('http://localhost:1919/logout/', {})
       .toPromise()
       .then((res: Response) => {
@@ -41,8 +41,8 @@ export class LoginService {
         return Promise.resolve(null);
       })
       .catch((error: Response) => {
-        return Promise.reject(new ServiceResponse(error))
-      })
+        return Promise.reject(new ServiceResponse(error));
+      });
   }
 
 }

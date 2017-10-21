@@ -2,7 +2,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
-import {FormsModule, NgForm, FormGroup } from '@angular/forms'
+import {FormsModule, NgForm, FormGroup } from '@angular/forms';
 
 import { User } from './user';
 import { League } from '../league/league';
@@ -11,20 +11,19 @@ import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
 import { AngularUtil } from '../common/angular-util';
-
+import { LeagueType } from '../../../../interface/league-type';
+import { SeasonType } from '../../../../interface/season-type';
 
 @Component({
   moduleId: module.id,
   templateUrl: 'user-detail.component.html',
-  styleUrls: ['./user-detail.component.css']
+  styleUrls: ['./user-detail.component.less']
 })
 
 
 export class UserDetailComponent {
 
   // Referential info
-  leagueType: Object[] = require('../../interface/league-type.js');
-  seasonType: Object[] = require('../../interface/season-type.js');
 
 
   user: User;
@@ -35,12 +34,13 @@ export class UserDetailComponent {
   happyMessage: string;
   errorMessage: string;
   @ViewChild('userDetailForm') userDetailForm: FormGroup;
-
+  leagueType = LeagueType;
+  seasonType = SeasonType;
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
-    private currentUserService: CurrentUserService
+    public currentUserService: CurrentUserService,
   ) { }
 
 
@@ -52,14 +52,14 @@ export class UserDetailComponent {
     this.action = 'create';
 
     // Handle the request to begin the "Create", "Edit", (and someday "View") process
-    // Based on the subscribe below, we'll constantly monitor changes to the URL 
+    // Based on the subscribe below, we'll constantly monitor changes to the URL
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
         this.happyMessage = null;
         this.errorMessage = null;
         AngularUtil.markFormPristine(this.userDetailForm);
         console.log("Examining segments in URL within user-detail.component.  Segments = " + segments);
-        if (segments[1].toString() == 'create') {
+        if (segments[1].toString() === 'create') {
           this.user = new User();
           this.action = 'create';
         }
@@ -67,12 +67,14 @@ export class UserDetailComponent {
           this.userService.getUser(+segments[1])
             .then(user => {
               this.user = user;
-              var currentUser: User = this.currentUserService.currentUser;
-              if (currentUser.id === this.user.id  || currentUser.isSuperUser)
+              const currentUser: User = this.currentUserService.currentUser;
+              if (currentUser.id === this.user.id  || currentUser.isSuperUser) {
                 this.action = 'edit';
-              else
+              }
+              else {
                 this.action = 'view';
-              return this.userService.getLeaguesPlayingIn(user.id)
+              }
+                return this.userService.getLeaguesPlayingIn(user.id);
             })
             .then(leagues => {
               this.leaguesAsPlayer = leagues;
@@ -85,9 +87,9 @@ export class UserDetailComponent {
               this.user = new User();
               this.errorMessage = serviceResponse.message;
               this.happyMessage = null;
-            })
+            });
         }
-      })
+      });
   }
 
   createNewUser(): void {
@@ -104,7 +106,7 @@ export class UserDetailComponent {
         this.happyMessage = null;
         this.errorMessage = serviceResponse.getMessage();
         AngularUtil.markFormPristine(this.userDetailForm);
-      })
+      });
   }
 
   updateUser(): void {
@@ -115,21 +117,21 @@ export class UserDetailComponent {
         this.happyMessage = serviceResponse.getMessage();
         this.errorMessage = null;
         AngularUtil.markFormPristine(this.userDetailForm);
-      })      
+      })
       .catch((serviceResponse: ServiceResponse) => {
         console.log("Error message received from failed update  = " + serviceResponse.getMessage());
         this.happyMessage = null;
         this.errorMessage = serviceResponse.getMessage();
         AngularUtil.markFormPristine(this.userDetailForm);
-      })
+      });
   }
 
 
 
   updateButtonShouldBeDisabled(): boolean {
-    var result: boolean = 
-      // If nothing has changed, update button is disabled  
-      !this.userDetailForm.dirty || 
+    const result: boolean =
+      // If nothing has changed, update button is disabled
+      !this.userDetailForm.dirty ||
       // If all of the required fields are not present, the update button is disabled
       StringUtil.isEmptyNullOrUndefined(this.user.userName) || StringUtil.isEmptyNullOrUndefined(this.user.password) ||
       StringUtil.isEmptyNullOrUndefined(this.user.emailAddress) ||
@@ -138,8 +140,8 @@ export class UserDetailComponent {
     return result;
   }
 
-  createButtonShouldBeDisabled(): boolean { 
-    var result: boolean = StringUtil.isEmptyNullOrUndefined(this.user.userName) || StringUtil.isEmptyNullOrUndefined(this.user.password) ||
+  createButtonShouldBeDisabled(): boolean {
+    const result: boolean = StringUtil.isEmptyNullOrUndefined(this.user.userName) || StringUtil.isEmptyNullOrUndefined(this.user.password) ||
       StringUtil.isEmptyNullOrUndefined(this.confirmPassword) || StringUtil.isEmptyNullOrUndefined(this.user.emailAddress) ||
       this.user.password !== this.confirmPassword;
     return result;

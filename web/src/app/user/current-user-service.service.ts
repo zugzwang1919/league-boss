@@ -8,4 +8,4 @@ export class CurrentUserService {
   public currentUser: User;
   public wolfeAuthenticationToken: string;
 
-} 
+}

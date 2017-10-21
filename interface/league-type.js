@@ -1,4 +1,4 @@
-module.exports =
+module.exports.LeagueType =
 [
   {
     'id': 0,

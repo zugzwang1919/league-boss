@@ -1,9 +1,9 @@
-import { Component }  from '@angular/core';
-import { Router }     from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { User }       from './user/user';
-import { UserService }from './user/user-service.service';
-import { CurrentUserService }from './user/current-user-service.service';
+import { User } from './user/user';
+import { UserService } from './user/user-service.service';
+import { CurrentUserService } from './user/current-user-service.service';
 
 import { ServiceResponse } from './common/service-response';
 import { LoginService } from './login/login-service.service';
@@ -12,33 +12,33 @@ import { LoginService } from './login/login-service.service';
   selector: 'my-app',
   moduleId: module.id,
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.less']
 })
 
-export class AppComponent { 
+export class AppComponent {
   displayedUserId: string;
   displayedLeagueId: string;
-  leaguueId
+
   constructor(
     private router: Router,
     private userService: UserService,
-    private currentUserService: CurrentUserService,
+    public currentUserService: CurrentUserService,
     private loginService: LoginService
-  ){}
+  ) { }
 
 
   ngOnInit(): void {
-    this.displayedUserId = "";    
-    this.displayedLeagueId = "";    
+    this.displayedUserId = "";
+    this.displayedLeagueId = "";
   }
 
-  
+
   editUserDetails(): void {
-    this.router.navigate(['/user', this.displayedUserId]);  
+    this.router.navigate(['/user', this.displayedUserId]);
   }
-  
+
   createNew(): void {
-    this.router.navigate(['/user/create']);  
+    this.router.navigate(['/user/create']);
   }
 
   loginNow(): void {
@@ -46,13 +46,13 @@ export class AppComponent {
   }
 
   editLeagueDetails(): void {
-    this.router.navigate(['/league', this.displayedLeagueId]);  
+    this.router.navigate(['/league', this.displayedLeagueId]);
   }
-  
+
   createNewLeague(): void {
-    this.router.navigate(['/league/create']);    
+    this.router.navigate(['/league/create']);
   }
-  
+
   rapidLogin(): void {
     this.loginService.login("RWW", "RWW" )
     .then((serviceResponse: ServiceResponse) => {
@@ -62,8 +62,8 @@ export class AppComponent {
     .catch((serviceResponse: ServiceResponse) => {
       console.log("Error message received from failed login  = " + serviceResponse.getMessage());
       // Shouldn't get here
-    }) 
+    });
   }
 
-  
+
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import {FormsModule, NgForm, FormGroup } from '@angular/forms'
+import {FormsModule, NgForm, FormGroup } from '@angular/forms';
 
 import { User } from './user';
 import { League } from '../league/league';
@@ -14,7 +14,7 @@ import { StringUtil } from '../common/string-util';
   selector: 'selectUserDialog',
   moduleId: module.id,
   templateUrl: 'select-user-dialog.component.html',
-  styleUrls: ['./select-user-dialog.component.css']
+  styleUrls: ['./select-user-dialog.component.less']
 })
 
 
@@ -45,13 +45,13 @@ export class selectUserDialog {
   actionButtonPushed(): void {
     this.userService.getUserByName(this.userName)
     .then((user: User) => {
-      var event: DialogEvent = new DialogEvent(user);
+      const event: DialogEvent = new DialogEvent(user);
       this.actionFunction.emit( event );
       this.errorMessage = null;
     })
     .catch((serviceResponse: ServiceResponse) => {
-      this.errorMessage = "Requested user was not found."
-    }) 
+      this.errorMessage = "Requested user was not found.";
+    });
   }
 
   cancelButtonPushed(): void {

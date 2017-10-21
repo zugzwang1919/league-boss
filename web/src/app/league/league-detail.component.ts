@@ -2,7 +2,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params, UrlSegment } from '@angular/router';
-import { FormsModule, NgForm, FormGroup } from '@angular/forms'
+import { FormsModule, NgForm, FormGroup } from '@angular/forms';
 
 import { League } from './league';
 import { User } from '../user/user';
@@ -13,13 +13,14 @@ import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
 import { AngularUtil } from '../common/angular-util';
 
+import { LeagueType } from '../../../../interface/league-type';
+import { SeasonType } from '../../../../interface/season-type';
+
 @Component({
   moduleId: module.id,
   templateUrl: 'league-detail.component.html',
-  styleUrls: ['./league-detail.component.css']
+  styleUrls: ['./league-detail.component.less']
 })
-
-
 
 export class LeagueDetailComponent {
 
@@ -29,15 +30,15 @@ export class LeagueDetailComponent {
 
   action: string;
   incomingHappyMessage: string;
-  happyMessage: string
+  happyMessage: string;
   errorMessage: string;
 
   adminBeingAdded: boolean;
   playerBeingAdded: boolean;
 
   // Referential Data
-  possibleSeasons: Object[] = require('../../interface/season-type.js');
-  possibleLeagueTypes: Object[] = require('../../interface/league-type.js');
+  possibleSeasons: Object[] = SeasonType;
+  possibleLeagueTypes: Object[] = LeagueType;
 
   @ViewChild('leagueBasicInfoForm') leagueBasicInfoForm: FormGroup;
 
@@ -45,7 +46,7 @@ export class LeagueDetailComponent {
     private router: Router,
     private route: ActivatedRoute,
     private leagueService: LeagueService,
-    private currentUserService: CurrentUserService,
+    public currentUserService: CurrentUserService,
   ) { }
 
 
@@ -56,7 +57,7 @@ export class LeagueDetailComponent {
     this.setUpEmptyLeague();
 
     // Handle the request to begin the "Create", "Edit", (and someday "View") process
-    // Based on the subscribe below, we'll constantly monitor changes to the URL 
+    // Based on the subscribe below, we'll constantly monitor changes to the URL
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
         this.adminBeingAdded = false;
@@ -69,7 +70,7 @@ export class LeagueDetailComponent {
           this.incomingHappyMessage = null;
         }
         console.log("Examining segments in URL within league-detail.component.  Segments = " + segments);
-        if (segments[1].toString() == 'create') {
+        if (segments[1].toString() === 'create') {
           this.setUpEmptyLeague();
           this.action = 'create';
         }
@@ -84,9 +85,10 @@ export class LeagueDetailComponent {
             .then(admins => {
               this.leagueAdmins = admins;
               // override the action to 'edit' if the user has sufficient credentials
-              var currentUser: User = this.currentUserService.currentUser;
-              if (currentUser.isSuperUser || this.isCurrentUserAdmin())
+              const currentUser: User = this.currentUserService.currentUser;
+              if (currentUser.isSuperUser || this.isCurrentUserAdmin()) {
                 this.action = 'edit';
+              }
               return this.leagueService.getPlayers(this.league.id)
             })
             .then(players => {
@@ -95,9 +97,9 @@ export class LeagueDetailComponent {
             .catch(serviceResponse => {
               this.setUpEmptyLeague();
               this.setErrorMessage(serviceResponse.getMessage());
-            })
+            });
         }
-      })
+      });
   }
 
   createNewLeague(): void {
@@ -110,7 +112,7 @@ export class LeagueDetailComponent {
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
-      })
+      });
   }
 
   updateLeague(): void {
@@ -119,11 +121,11 @@ export class LeagueDetailComponent {
       .then((serviceResponse: ServiceResponse) => {
         console.log("Message received from update = " + serviceResponse.getMessage());
         this.setHappyMessage("Update was succesful!");
-        AngularUtil.markFormPristine(this.leagueBasicInfoForm);        
+        AngularUtil.markFormPristine(this.leagueBasicInfoForm);
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
-      })
+      });
   }
 
   addAdmin(): void {
@@ -142,7 +144,7 @@ export class LeagueDetailComponent {
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
-      })
+      });
   }
 
   removeAdmin(admin: User) {
@@ -153,7 +155,7 @@ export class LeagueDetailComponent {
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
-      })
+      });
   }
 
   addPlayer(): void {
@@ -172,7 +174,7 @@ export class LeagueDetailComponent {
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
-      })
+      });
   }
 
   removePlayer(player: User) {
@@ -183,13 +185,13 @@ export class LeagueDetailComponent {
       })
       .catch(serviceResponse => {
         this.setErrorMessage(serviceResponse.getMessage());
-      })
+      });
   }
 
 
 
   setUpEmptyLeague() {
-    var league: League;
+    let league: League;
     league = new League();
     league.id = null;
     league.leagueName = '';
@@ -202,8 +204,8 @@ export class LeagueDetailComponent {
   }
 
   updateButtonShouldBeDisabled(): boolean {
-    let result: boolean =
-      // If nothing has changed, update button is disabled  
+    const result: boolean =
+      // If nothing has changed, update button is disabled
       !this.leagueBasicInfoForm.dirty ||
       // If all of the required fields are not present, the update button is disabled
       StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
@@ -211,15 +213,16 @@ export class LeagueDetailComponent {
   }
 
   createButtonShouldBeDisabled(): boolean {
-    let result: boolean = StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
+    const result: boolean = StringUtil.isEmptyNullOrUndefined(this.league.leagueName) || StringUtil.isEmptyNullOrUndefined(this.league.description);
     return result;
   }
 
   private isCurrentUserAdmin(): boolean {
-    for (var admin of this.leagueAdmins) {
-      var currentUserId: number = this.currentUserService.currentUser.id;
-      if (currentUserId === admin.id)
+    for (const admin of this.leagueAdmins) {
+      const currentUserId: number = this.currentUserService.currentUser.id;
+      if (currentUserId === admin.id) {
         return true;
+      }
     }
     return false;
   }
@@ -240,10 +243,10 @@ export class LeagueDetailComponent {
   }
 
   private removeUserFromArray(array: Array<User>, adminToBeRemoved: User) : void {
-    var i;
-    for (i = 0; i<array.length; i++) {
+    let i;
+    for (i = 0; i < array.length; i++) {
       if (array[i].id === adminToBeRemoved.id) {
-        array.splice(i,1);
+        array.splice(i, 1);
         return;
       }
     }

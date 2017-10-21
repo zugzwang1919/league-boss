@@ -103,6 +103,7 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
             return season.addGameGroups(createdGameGroups, {transaction: bigFatTransaction});
           })
           .then(() => {
+            // Add the games to the game groups
             return Promise.map(arrayOfGameValues, (gameValues: IGameValues): Promise<void> => {
               const foundGameGroup: IGameGroupInstance = gameGroups.find((gameGroup) => gameGroup.gameGroupName === gameValues.group );
               return foundGameGroup.addGame(gameValues.game, {transaction: bigFatTransaction});

@@ -43,4 +43,4 @@ enum ServiceReturnCode {
   OK,
   AUTHENTICATION_ERROR,
   ERROR
-};
+}
