@@ -7,7 +7,7 @@ import { WolfeHttp } from '../common/wolfe-http';
 import { User } from './user';
 import { League } from '../league/league';
 import { ServiceResponse } from '../common/service-response';
-
+import { ServiceUtil } from '../common/service-util';
 
 @Injectable()
 export class UserService {
@@ -18,77 +18,82 @@ export class UserService {
 
   getUser(id: number): Promise<User> {
     console.log("Inside UserService: Starting to look for User with an id of " + id);
-    return this.http.get('http://localhost:1919/user/' + id)
+    const getUserUrl: string = ServiceUtil.buildUrl('/user/' + id);
+    return this.http.get(getUserUrl)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(this.buildUserFromHttpResponse(res))
+        return Promise.resolve(this.buildUserFromHttpResponse(res));
       })
       .catch((res: Response) => {
-        return Promise.reject(new ServiceResponse(res))
-      })
+        return Promise.reject(new ServiceResponse(res));
+      });
   }
 
   getUserByName(userName: string): Promise<User> {
     console.log("Inside UserService: Starting to look for User with a name of " + userName);
-    return this.http.get('http://localhost:1919/user?userName=' + userName)
+    const getUserByNameUrl: string = ServiceUtil.buildUrl('/user?userName=' + userName);
+    return this.http.get(getUserByNameUrl)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(this.buildUserFromHttpResponse(res))
+        return Promise.resolve(this.buildUserFromHttpResponse(res));
       })
       .catch((res: Response) => {
-        return Promise.reject(new ServiceResponse(res))
-      })
+        return Promise.reject(new ServiceResponse(res));
+      });
   }
 
   createUser(user: User): Promise<ServiceResponse> {
     console.log("Inside UserService:  Beginning 'Create User' process");
-
-    return this.http.post('http://localhost:1919/user', user)
+    const createUserUrl: string = ServiceUtil.buildUrl('/user');
+    return this.http.post(createUserUrl, user)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(new ServiceResponse(res))
+        return Promise.resolve(new ServiceResponse(res));
       })
       .catch((res: Response) => {
-        return Promise.reject(new ServiceResponse(res))
-      })
+        return Promise.reject(new ServiceResponse(res));
+      });
   }
 
   updateUser(user: User): Promise<ServiceResponse> {
     console.log("Inside UpdateService:  Beginning 'Update User' process");
-    return this.http.put('http://localhost:1919/user/' + user.id, user)
+    const updateUserUrl: string = ServiceUtil.buildUrl('/user/' + user.id);
+    return this.http.put(updateUserUrl, user)
       .toPromise()
       .then((res: Response) => {
-        var sr: ServiceResponse = new ServiceResponse(res);
-        sr.setMessage("The user's profile was successfully updated.")
+        const sr: ServiceResponse = new ServiceResponse(res);
+        sr.setMessage("The user's profile was successfully updated.");
         return Promise.resolve(sr);
       })
       .catch((res: Response) => {
-        return Promise.reject(new ServiceResponse(res))
-      })
+        return Promise.reject(new ServiceResponse(res));
+      });
   }
 
   getLeaguesPlayingIn(userId: number): Promise<League[]> {
     console.log("Inside UpdateService:  Beginning 'Retrieving Leagues played in by User' process");
-    return this.http.get('http://localhost:1919/user/' + userId + '/leagueAsPlayer')
+    const getLeaguesPlayingInUrl: string = ServiceUtil.buildUrl('/user/' + userId + '/leagueAsPlayer');
+    return this.http.get(getLeaguesPlayingInUrl)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(res.json())
+        return Promise.resolve(res.json());
       })
       .catch((res: Response) => {
-        return Promise.reject(new ServiceResponse(res))
-      })    
+        return Promise.reject(new ServiceResponse(res));
+      });
   }
 
   getLeaguesAdministering(userId: number): Promise<League[]> {
     console.log("Inside UpdateService:  Beginning 'Retrieving Leagues administered by User' process");
-    return this.http.get('http://localhost:1919/user/' + userId + '/leagueAsAdmin')
+    const getLeaguesAdministeringUrl: string = ServiceUtil.buildUrl('/user/' + userId + '/leagueAsAdmin');
+    return this.http.get(getLeaguesAdministeringUrl)
       .toPromise()
       .then((res: Response) => {
-        return Promise.resolve(res.json())
+        return Promise.resolve(res.json());
       })
       .catch((res: Response) => {
-        return Promise.reject(new ServiceResponse(res))
-      })    
+        return Promise.reject(new ServiceResponse(res));
+      });
   }
 
   private buildUserFromHttpResponse(res: Response): User {
@@ -99,7 +104,7 @@ export class UserService {
     }
     else {
       console.log("Inside UserService: Successfully found the requested user.");
-      var u: User = res.json()
+      const u: User = res.json();
       return u;
     }
   }

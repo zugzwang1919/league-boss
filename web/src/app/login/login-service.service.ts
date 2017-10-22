@@ -5,6 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { WolfeHttp } from '../common/wolfe-http';
 import { ServiceResponse } from '../common/service-response';
+import { ServiceUtil } from '../common/service-util';
 import { CurrentUserService } from '../user/current-user-service.service';
 
 @Injectable()
@@ -17,7 +18,8 @@ export class LoginService {
 
   login(userName: string, password: string): Promise<Object> {
     console.log("Inside LoginService: Attempting to log in " + userName);
-    return this.http.post('http://localhost:1919/login/', { "userName": userName, "password": password })
+    const loginUrl: string = ServiceUtil.buildUrl("/login/");
+    return this.http.post(loginUrl, { "userName": userName, "password": password })
       .toPromise()
       .then((res: Response) => {
         // Save the login info in our currentUserService
@@ -33,7 +35,8 @@ export class LoginService {
 
   logout(): Promise<Object> {
     console.log("Inside LoginService: Attemption to log out");
-    return this.http.post('http://localhost:1919/logout/', {})
+    const logoutUrl: string = ServiceUtil.buildUrl("/logout/");
+    return this.http.post(logoutUrl, {})
       .toPromise()
       .then((res: Response) => {
         this.currentUserService.currentUser = null;
