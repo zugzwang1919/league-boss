@@ -95,6 +95,22 @@ export class ModelManager {
       })
       .then((createdUser: IUserInstance) => {
         user2 = createdUser;
+        return UserModelManager.userModel.create({
+          userName: 'Larry',
+          password: 'Larry',
+          emailAddress: 'larry@gmail.com',
+          isSuperUser: true,
+        });
+      })
+      .then((createdUser: IUserInstance) => {
+        return UserModelManager.userModel.create({
+          userName: 'CT',
+          password: 'CT',
+          emailAddress: 'ct@gmail.com',
+          isSuperUser: true,
+        });
+      })
+      .then((createdUser: IUserInstance) => {
         return LeagueModelManager.leagueModel.create({
           leagueName: 'NFL Chumps',
           description: 'The worst collection ever of NFL enthusiasts.',
