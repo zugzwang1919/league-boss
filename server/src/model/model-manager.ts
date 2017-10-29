@@ -80,7 +80,7 @@ export class ModelManager {
         return UserModelManager.userModel.create({
           userName: 'RWW',
           password: 'RWW',
-          emailAddress: 'russ.wolfe@gmail.com',
+          emailAddress: 'russell.wolfe@gmail.com',
           isSuperUser: true,
         });
       })
