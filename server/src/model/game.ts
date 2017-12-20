@@ -12,7 +12,7 @@ export interface IGame {
   teamOneTwoRelationship?: string;
 
   teamTwoScore?: number;
-  teamTwoPointspread?: number
+  teamTwoPointspread?: number;
 
   comment?: string; // comment could be something like "In London"
 }

@@ -1,6 +1,7 @@
 import {GameGroupModelManager, IGameGroupModel} from './game-group-model-manager';
 import {GameModelManager, IGameModel} from './game-model-manager';
 import {ILeagueInstance, ILeagueModel, LeagueModelManager} from './league-model-manager';
+import {IPickModel, PickModelManager} from './pick-model-manager';
 import {ISeasonInstance, ISeasonModel, SeasonModelManager} from './season-model-manager';
 import {ITeam} from './team';
 import {ITeamInstance, ITeamModel, TeamModelManager} from './team-model-manager';
@@ -30,6 +31,7 @@ export class ModelManager {
     GameModelManager.initialize(sequelize);
     GameGroupModelManager.initialize(sequelize);
     SeasonModelManager.initialize(sequelize);
+    PickModelManager.initialize(sequelize);
 
     // Describe the relationships between the presistent objects
     const userModel: IUserModel = UserModelManager.userModel;
@@ -38,25 +40,32 @@ export class ModelManager {
     const gameModel: IGameModel = GameModelManager.gameModel;
     const gameGroupModel: IGameGroupModel = GameGroupModelManager.gameGroupModel;
     const seasonModel: ISeasonModel = SeasonModelManager.seasonModel;
+    const pickModel: IPickModel = PickModelManager.pickModel;
 
+    // Users can belong to many Leagues & Leagues have many Users
+    // (And we want to be able to navigate in both directions)
     userModel.belongsToMany(leagueModel, {as: 'PlayerLeagues', through: 'LeaguePlayer' });
     leagueModel.belongsToMany(userModel, {as: 'Players', through: 'LeaguePlayer'});
     userModel.belongsToMany(leagueModel, {as: 'AdminLeagues', through: 'LeagueAdmin' });
     leagueModel.belongsToMany(userModel, {as: 'Admins', through: 'LeagueAdmin'});
 
+    // Game references two teams
     teamModel.hasMany(gameModel, {as: 'TeamOne', foreignKey: 'teamOneId'});
     gameModel.belongsTo(teamModel, {as: 'TeamOne', foreignKey: 'teamOneId'});
     teamModel.hasMany(gameModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
     gameModel.belongsTo(teamModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
 
+    // Season owns GameGroups
     seasonModel.hasMany(gameGroupModel);
     gameGroupModel.belongsTo(seasonModel);
 
+    // GameGroup owns Games
     gameGroupModel.hasMany(gameModel);
     gameModel.belongsTo(gameGroupModel);
 
-    //  seasonModel.hasMany(gameModel);
-    // gameModel.belongsTo(seasonModel);
+    // Pick references a Game and a Team
+    pickModel.belongsTo(gameModel);
+    pickModel.belongsTo(teamModel, {as: 'TeamPicked', foreignKey: 'teamPickedId'});
 
     // Seed the DB if requested to do so
     if (populateWithTestData) {

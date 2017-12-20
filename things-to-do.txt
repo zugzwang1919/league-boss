@@ -1,5 +1,12 @@
 To do:
 
+Overall - Purchase certificate and encrypt traffic
+Overall - Support forgotten password
+Overall - This week's subschedule
+
+Server - Separate User Session info from User
+Server - Salt and Hash Passwords
+
 
 
 

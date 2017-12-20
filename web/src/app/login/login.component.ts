@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap';
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params, UrlSegment } from '@angular/router';
 
 
@@ -15,7 +15,7 @@ import { User } from '../user/user';
 })
 
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   userName: string;
   password: string;
@@ -38,17 +38,17 @@ export class LoginComponent {
     this.userName = null;
     this.password = null;
 
-    // Handle the request to begin the login or logout process 
+    // Handle the request to begin the login or logout process
     this.route.url
       .subscribe((segments: UrlSegment[]) => {
         this.message = null;
         this.userName = null;
         this.password = null;
         console.log("Examining segments in URL within the login.component.  Segments = " + segments);
-        if (segments[0].toString() == 'logout') {
+        if (segments[0].toString() === 'logout') {
           this.logout();
         }
-      })
+      });
 
   }
 
@@ -62,7 +62,7 @@ export class LoginComponent {
       .catch((serviceResponse: ServiceResponse) => {
         console.log("Error message received from failed login  = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
-      })  
+      });
   }
 
   logout(): void {
@@ -75,8 +75,7 @@ export class LoginComponent {
       .catch((serviceResponse: ServiceResponse) => {
         console.log("Error message received from failed login  = " + serviceResponse.getMessage());
         this.message = serviceResponse.getMessage();
-      })
+      });
   }
-
 
 }
