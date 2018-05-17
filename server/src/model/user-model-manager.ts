@@ -52,13 +52,13 @@ export class UserModelManager {
   /* Creates an actual object that implements the IUser interface from
   any other object */
   public static createIUserFromAnything(anyObject: any): IUser {
-    const createdLeague: IUser = {
+    const createdUser: IUser = {
       id: anyObject.id,
       userName: anyObject.userName,
       password: anyObject.password,
       emailAddress: anyObject.emailAddress,
       isSuperUser: anyObject.isSuperUser,
     };
-    return createdLeague;
+    return createdUser;
   }
 }
