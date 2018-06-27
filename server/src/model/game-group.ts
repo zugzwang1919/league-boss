@@ -5,4 +5,6 @@ should use when interacting with the server.
 export interface IGameGroup {
   id?: number;
   gameGroupName?: string;
+  earliestGameDate?: Date;
+  latestGameDate?: Date;
 }

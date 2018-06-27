@@ -55,12 +55,16 @@ export class ModelManager {
     teamModel.hasMany(gameModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
     gameModel.belongsTo(teamModel, {as: 'TeamTwo', foreignKey: 'teamTwoId'});
 
+    // A League has one season
+    // A Season can be associated with many Leagues
+    leagueModel.belongsTo(seasonModel);
+
     // Season owns GameGroups
-    seasonModel.hasMany(gameGroupModel);
+    seasonModel.hasMany(gameGroupModel, {onDelete: 'cascade'});
     gameGroupModel.belongsTo(seasonModel);
 
     // GameGroup owns Games
-    gameGroupModel.hasMany(gameModel);
+    gameGroupModel.hasMany(gameModel, {onDelete: 'cascade'});
     gameModel.belongsTo(gameGroupModel);
 
     // Pick references a Game and a Team

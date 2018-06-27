@@ -36,6 +36,10 @@ export class LeagueRest {
     LeagueRest.router.get('/:leagueId/admin', RestUtil.ensureAuthenticated, LeagueRest.retrieveAdmins);
     LeagueRest.router.post('/:leagueId/admin', RestUtil.ensureAuthenticated, LeagueRest.ensureSuperUserOrLeagueAdmin, LeagueRest.addAdmin);
     LeagueRest.router.delete('/:leagueId/admin/:userId', RestUtil.ensureAuthenticated, LeagueRest.ensureSuperUserOrLeagueAdmin, LeagueRest.deleteAdmin);
+    // Season associated with this league
+    LeagueRest.router.get('/:leagueId/season', RestUtil.ensureAuthenticated, LeagueRest.retrieveSeason);
+    LeagueRest.router.put('/:leagueId/season', RestUtil.ensureAuthenticated, LeagueRest.ensureSuperUserOrLeagueAdmin, LeagueRest.setSeason);
+
   }
 
   private static retrieveLeagueById(req: express.Request, res: express.Response): any {
@@ -123,7 +127,7 @@ export class LeagueRest {
   }
 
   private static removePlayer(req: express.Request, res: express.Response): any {
-    console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
+    console.log("league-rest removeAdmin: userId found in URL = " + req.params.userId);
     LeagueLogic.instanceOf().removePlayer(req.params.leagueId, req.params.userId)
       .then((success) => {
         RestResponse.send200(res);
@@ -136,18 +140,20 @@ export class LeagueRest {
   // Admins in this league
 
   private static retrieveAdmins(req: express.Request, res: express.Response): any {
-    console.log("league-rest getAddmins: leagueId found in body = " + req.params.leagueId);
+    console.log("league-rest retrieveAdmins: leagueId found in URL = " + req.params.leagueId);
     LeagueLogic.instanceOf().getAdmins(req.params.leagueId)
       .then((admins: IUserAttribute[]) => {
         // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
         const returnPlayers: IUser[] = admins.map(UserModelManager.createIUserFromAnything);
         RestResponse.send200(res, returnPlayers);
       })
-      .catch((error) => { RestResponse.sendAppropriateResponse(res, error); });
+      .catch((error) => {
+        RestResponse.sendAppropriateResponse(res, error);
+      });
   }
 
   private static addAdmin(req: express.Request, res: express.Response): any {
-    console.log("league-rest addAddmin: userId found in body = " + req.body.userId);
+    console.log("league-rest addAdmin: userId found in body = " + req.body.userId);
     LeagueLogic.instanceOf().addAdmin(req.params.leagueId, req.body.userId)
       .then((success) => {
         RestResponse.send200(res);
@@ -158,7 +164,7 @@ export class LeagueRest {
   }
 
   private static deleteAdmin(req: express.Request, res: express.Response): any {
-    console.log("league-rest removeAddmin: userId found in URL = " + req.params.userId);
+    console.log("league-rest deleteAdmin: userId found in URL = " + req.params.userId);
     LeagueLogic.instanceOf().removeAdmin(req.params.leagueId, req.params.userId)
       .then((success) => {
         RestResponse.send200(res);
@@ -168,31 +174,65 @@ export class LeagueRest {
       });
   }
 
+  // Season
+
+  private static retrieveSeason(req: express.Request, res: express.Response): any {
+    console.log("league-rest retrieveSeason: leagueId found in URL = " + req.params.leagueId);
+    RestResponse.send200(res);
+  }
+
+  private static setSeason(req: express.Request, res: express.Response): any {
+    console.log("league-rest setSeason: leagueId found in URL = " + req.params.leagueId);
+    LeagueLogic.instanceOf().setSeason(req.params.leagueId, req.body.userId);
+    RestResponse.send200(res);
+  }
+
   // Utility functions
+
+  private static ensureSuperUserLeagueAdminOrPlayer(req: express.Request, res: express.Response, next: express.NextFunction): any {
+
+    // Get the user associated with the token
+    let foundUser: IUserInstance;
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+      .then((user: IUserInstance) => {
+        foundUser = user;
+        return UserLogic.instanceOf().isLeagueAdminOrPlayer(user.id, req.params.leagueId);
+      })
+      .then((isLeagueAdminOrPlayer: boolean) => {
+        if (isLeagueAdminOrPlayer || foundUser.isSuperUser) {
+          next();
+        }
+      })
+      .catch((error) => {
+        // If anything goes wrong, we're sending back a 403
+        RestResponse.send403(res);
+      });
+  }
 
   private static ensureSuperUserOrLeagueAdmin(req: express.Request, res: express.Response, next: express.NextFunction): any {
 
-      // Get the user associated with the token
-      let foundUser: IUserInstance;
-      UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-        .then((user: IUserInstance) => {
-          foundUser = user;
-          return UserLogic.instanceOf().isLeagueAdmin(user.id, req.params.leagueId);
-        })
-        .then((isLeagueAdmin: boolean) => {
-          if (isLeagueAdmin || foundUser.isSuperUser) {
-            next();
-          }
-          else {
-            RestResponse.send403(res);
-          }
-        })
-        .catch((error) => {
-          // If anything goes wrong, we're sending back a 403
+    // Get the user associated with the token
+    let foundUser: IUserInstance;
+    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+      .then((user: IUserInstance) => {
+        foundUser = user;
+        return UserLogic.instanceOf().isLeagueAdmin(user.id, req.params.leagueId);
+      })
+      .then((isLeagueAdmin: boolean) => {
+        if (isLeagueAdmin || foundUser.isSuperUser) {
+          next();
+        }
+        else {
           RestResponse.send403(res);
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        // If anything goes wrong, we're sending back a 403
+        RestResponse.send403(res);
+      });
   }
+
+}
 
 // Initialize all static data
 LeagueRest.init();

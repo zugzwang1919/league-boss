@@ -17,9 +17,14 @@ export interface ISeasonInstance extends Sequelize.Instance<ISeasonAttribute>, I
   // guarantee that they all work, but they "should"
   getGameGroups: Sequelize.HasManyGetAssociationsMixin<IGameGroupInstance>;
   addGameGroup: Sequelize.HasManyAddAssociationMixin<IGameGroupInstance, number>
-  addGameGroups: Sequelize.HasManyAddAssociationsMixin<IGameGroupInstance, number>;
+  // Note addGameGroups: signature provided below, as this didn't seem to match
+  // addGameGroups: Sequelize.HasManyAddAssociationsMixin<IGameGroupInstance, number>;
   removeGameGroups: Sequelize.HasManyRemoveAssociationsMixin<IGameGroupInstance, number>;
   countGameGroups: Sequelize.HasManyCountAssociationsMixin;
+
+  // Signatures corrected?
+  addGameGroups(gameGroups: IGameGroupInstance[], options?: Sequelize.InstanceUpdateOptions ): Promise<ISeasonInstance>;
+
 }
 
 export interface ISeasonModel extends Sequelize.Model<ISeasonInstance, ISeasonAttribute> {}

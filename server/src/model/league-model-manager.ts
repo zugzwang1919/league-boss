@@ -1,6 +1,7 @@
 import * as  Sequelize from 'sequelize';
 
 import {ILeague} from './league';
+import {ISeasonInstance} from './season-model-manager';
 import {IUserAttribute, IUserInstance} from './user-model-manager';
 
 // NOTE:  We're not tacking any additional information onto the interface created for
@@ -32,12 +33,15 @@ export interface ILeagueInstance extends Sequelize.Instance<ILeagueAttribute>, I
   addPlayers: Sequelize.HasManyAddAssociationsMixin<IUserInstance, number>;
   addPlayer: Sequelize.HasManyAddAssociationMixin<IUserInstance, number>;
   createPlayer: Sequelize.HasManyCreateAssociationMixin<IUserInstance, IUserInstance>;
-  // Note removeAdmin signature provided below, as this didn't seem to match
+  // Note removePlayer signature provided below, as this didn't seem to match
   // removePlayer: Sequelize.HasManyRemoveAssociationMixin<IUserInstance, number>;
   removePlayers: Sequelize.HasManyRemoveAssociationsMixin<IUserInstance, number>;
   hasPlayer: Sequelize.HasManyHasAssociationMixin<IUserInstance, number>;
   hasPlayers: Sequelize.HasManyHasAssociationsMixin<IUserInstance, number>;
   countPlayers: Sequelize.HasManyCountAssociationsMixin;
+
+  getSeason: Sequelize.BelongsToGetAssociationMixin<ISeasonInstance>;
+  setSeason: Sequelize.BelongsToSetAssociationMixin<ISeasonInstance, number>;
 
   // OK... Provide signatures that appear to be different from the typings that we have
   removeAdmin(index: number): Promise<number>;

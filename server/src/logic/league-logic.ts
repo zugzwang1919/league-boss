@@ -7,9 +7,11 @@ import {UserLogic} from './user-logic';
 import {LeagueModelManager} from '../model/league-model-manager';
 import {ILeagueInstance} from '../model/league-model-manager';
 import {ILeagueAttribute} from '../model/league-model-manager';
+import {ISeasonAttribute, ISeasonInstance} from '../model/season-model-manager';
 import {IUserAttribute, IUserInstance} from '../model/user-model-manager';
 
 import * as Promise from 'bluebird';
+import { SeasonLogic } from './season-logic';
 
 export class LeagueLogic extends Logic<ILeagueInstance> {
   private static theInstance: LeagueLogic;
@@ -158,6 +160,27 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
       .catch((err) => {
         return Promise.reject(LogicError.firmUpError(err));
       });
+  }
+
+  public getSeason(leagueId: number): Promise<ISeasonAttribute> {
+    return this.findById(leagueId)
+      .then((league: ILeagueInstance) => {
+        return league.getSeason();
+      })
+      .catch((err) => Promise.reject(LogicError.firmUpError(err)));
+  }
+
+  public setSeason(leagueId: number, seasonId: number): Promise<boolean> {
+    let foundLeague: ILeagueInstance;
+    return this.findById(leagueId)
+      .then((league: ILeagueInstance) => {
+        foundLeague = league;
+        return SeasonLogic.instanceOf().findById(seasonId);
+      })
+      .then((season: ISeasonInstance) => {
+        return foundLeague.setSeason(season);
+      })
+      .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }
 
 // Private functions

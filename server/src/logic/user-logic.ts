@@ -7,7 +7,7 @@ import {Logic} from './logic';
 import {LogicError} from './logic-error';
 
 // Model Layer Classes
-import {ILeagueAttribute} from '../model/league-model-manager';
+import {ILeagueAttribute, ILeagueInstance} from '../model/league-model-manager';
 import {ModelManager} from '../model/model-manager';
 import {IUser} from '../model/user';
 import {UserModelManager} from '../model/user-model-manager';
@@ -86,6 +86,26 @@ export class UserLogic extends Logic<IUserInstance> {
     return LeagueLogic.instanceOf().findById(leagueId)
       .then((league) => {
         return league.hasAdmin(userId);
+      })
+      .catch((err) => {
+        Promise.reject(LogicError.firmUpError(err));
+      });
+  }
+
+  public isLeagueAdminOrPlayer(userId: number, leagueId: number): Promise<boolean> {
+    let foundLeague: ILeagueInstance;
+    return LeagueLogic.instanceOf().findById(leagueId)
+      .then((league) => {
+        foundLeague = league;
+        return foundLeague.hasAdmin(userId);
+      })
+      .then((hasAdmin) => {
+        if (hasAdmin) {
+          return Promise.resolve(true);
+        }
+        else {
+         return foundLeague.hasPlayer(userId);
+        }
       })
       .catch((err) => {
         Promise.reject(LogicError.firmUpError(err));

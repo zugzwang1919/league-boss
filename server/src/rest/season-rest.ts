@@ -6,6 +6,7 @@ import {RestUtil} from './rest-util';
 import {SeasonLogic} from '../logic/season-logic';
 
 // Model Layer Classes
+import {IGameGroupInstance} from '../model/game-group-model-manager';
 import {ISeason} from '../model/season';
 import {ISeasonInstance, SeasonModelManager} from '../model/season-model-manager';
 
@@ -28,14 +29,16 @@ export class SeasonRest {
     SeasonRest.router.put('/:seasonId', RestUtil.ensureAuthenticated, RestUtil.ensureSuperUser, SeasonRest.updateSeason);
     SeasonRest.router.delete('/:seasonId', RestUtil.ensureAuthenticated, RestUtil.ensureSuperUser, SeasonRest.deleteSeason);
 
+    // GameGroups
+    SeasonRest.router.get('/:seasonId/gameGroup', RestUtil.ensureAuthenticated, RestUtil.ensureAuthenticated, SeasonRest.retrieveGameGroups);
+
     // Add a schedule / games to the season
-    /* RestUtil.ensureAuthenticated, RestUtil.ensureSuperUser, */
-    SeasonRest.router.post('/:seasonId/schedule', fileUpload({debug: true}), SeasonRest.addSchedule);
+    SeasonRest.router.post('/:seasonId/schedule', RestUtil.ensureAuthenticated, RestUtil.ensureSuperUser, fileUpload({debug: true}), SeasonRest.addSchedule);
 
   }
 
   private static retrieveAllSeasons(req: express.Request, res: express.Response): any {
-    console.log("Request received on server!  Looking for season with an id of " + req.params.seasonId);
+    console.log("season-rest retrieveAllSeasons: ");
     SeasonLogic.instanceOf().findAll()
       .then((foundSeasons: ISeasonInstance[]) => {
         // Transform the ISeasonInstance to an ISeason (our form that users of our RESTful service should be using)
@@ -48,7 +51,7 @@ export class SeasonRest {
   }
 
   private static retrieveSeasonById(req: express.Request, res: express.Response): any {
-    console.log("Request received on server!  Looking for season with an id of " + req.params.seasonId);
+    console.log("season-rest retrieveSeason:  Looking for season with an id of " + req.params.seasonId);
     SeasonLogic.instanceOf().findById(req.params.seasonId)
       .then((foundSeason: ISeasonInstance) => {
         // Transform the ISeasonInstance to an ISeason (our form that users of our RESTful service should be using)
@@ -61,7 +64,6 @@ export class SeasonRest {
   }
 
   private static createSeason(req: express.Request, res: express.Response): any {
-
     console.log("season-rest createSeason: seasonName found in body = " + req.body.seasonName);
     const seasonData: ISeason = SeasonModelManager.createISeasonFromAnything(req.body);
     return SeasonLogic.instanceOf().create(seasonData)
@@ -73,7 +75,6 @@ export class SeasonRest {
       .catch((error) => {
         RestResponse.sendAppropriateResponse(res, error);
       });
-
   }
 
   private static updateSeason(req: express.Request, res: express.Response): any {
@@ -116,10 +117,17 @@ export class SeasonRest {
     });
   }
 
-  private static buildOneGame(oneGame: string[]): void {
-    return;
+  // Game Groups
+  private static retrieveGameGroups(req: express.Request, res: express.Response): any {
+    console.log("season-rest retrieveGameGroups:  attempting to return all Game Groups.");
+    SeasonLogic.instanceOf().getGameGroups(req.params.seasonId)
+    .then((foundGameGroups: IGameGroupInstance[]) => {
+      RestResponse.send200(res, foundGameGroups);
+    })
+    .catch((error: any) => {
+      RestResponse.sendAppropriateResponse(res, error);
+    });
   }
-
 }
 
 // Initialize all static data

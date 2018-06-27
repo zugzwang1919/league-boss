@@ -88,10 +88,14 @@ export class Logic<T> {
       });
   }
 
-  public update(updateData: any): Promise<boolean> {
+  public update(updateData: any, transaction?: Sequelize.Transaction): Promise<boolean> {
     const loggingName: any = this.model.getTableName();
     console.log("  logic layer - updating a %s", loggingName);
-    return this.model.update(updateData, { where: { id: updateData.id } })
+    const updateOptions: Sequelize.UpdateOptions = { where: {id: updateData.id}};
+    if (transaction) {
+      updateOptions.transaction = transaction;
+    }
+    return this.model.update(updateData, updateOptions)
       .then((success) => {
         console.log("  logic layer - %s was successfully updated.", loggingName);
         return Promise.resolve(true);

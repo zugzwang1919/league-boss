@@ -34,6 +34,13 @@ export class GameGroupModelManager {
       gameGroupName: {
         type: Sequelize.STRING,
       },
+      earliestGameDate: {
+        type: Sequelize.DATEONLY,
+      },
+      latestGameDate: {
+        type: Sequelize.DATEONLY,
+      },
+
     },
       {
         freezeTableName: true, // Model tableName will be the same as the model name
