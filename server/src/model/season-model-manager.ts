@@ -42,10 +42,10 @@ export class SeasonModelManager {
       description: {
         type: Sequelize.STRING,
       },
-      beginDate: {
+      earliestGameDate: {
         type: Sequelize.DATEONLY,
       },
-      endDate: {
+      latestGameDate: {
         type: Sequelize.DATEONLY,
       },
     },
@@ -62,8 +62,8 @@ export class SeasonModelManager {
       id: anyObject.id,
       seasonName: anyObject.seasonName,
       description: anyObject.description,
-      beginDate: anyObject.beginDate,
-      endDate: anyObject.endDate,
+      earliestGameDate: anyObject.earliestGameDate,
+      latestGameDate: anyObject.latestGameDate,
     };
     return createdSeason;
   }

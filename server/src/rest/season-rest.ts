@@ -107,7 +107,7 @@ export class SeasonRest {
     console.log("season-rest addSchedule: seasonId found in url = " + req.params.seasonId);
     const uploadedFile: fileUpload.UploadedFile = req.files.uploadFile as fileUpload.UploadedFile;
     SeasonLogic.instanceOf().addSchedule(req.params.seasonId, uploadedFile.data)
-    .then((success) => {
+    .then((success: boolean) => {
       console.log("season-rest addSchedule: schedule successfully added for season id " + req.params.seasonId );
       RestResponse.send200(res);
     })

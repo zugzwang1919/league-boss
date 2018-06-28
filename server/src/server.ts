@@ -11,7 +11,6 @@ import {ModelManager} from './model/model-manager';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 
-
 export class Server {
 
   private app: express.Application;
@@ -37,7 +36,6 @@ export class Server {
   private config(): void {
     // Indicate that we'll be using body-parser for the JSON in the bodies of requests and responses
     this.app.use(bodyParser.json());
-
 
     // I had to add this to allow javascript served from localhost:3000 to talk to localhost:1919
     // Can't say that I truly understand it

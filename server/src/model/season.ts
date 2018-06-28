@@ -6,6 +6,6 @@ export interface ISeason {
   id?: number;
   seasonName?: string;
   description?: string;
-  beginDate?: Date;
-  endDate?: Date;
+  earliestGameDate?: Date;
+  latestGameDate?: Date;
 }

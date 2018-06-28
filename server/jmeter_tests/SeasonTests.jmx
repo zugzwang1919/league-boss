@@ -711,6 +711,8 @@ ${__FileToString(C:\\SoftwareProjects\\league-boss\\server\\jmeter_tests\\TestCs
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="-2086210664">&quot;seasonName&quot;:&quot;NFL 2017-18&quot;</stringProp>
                 <stringProp name="1341025938">&quot;description&quot;:&quot;NFL 2017-18 Regular Season for Winners&quot;</stringProp>
+                <stringProp name="1980780743">&quot;earliestGameDate&quot;:&quot;2017-09-07T00:00:00.000Z&quot;</stringProp>
+                <stringProp name="300579420">&quot;latestGameDate&quot;:&quot;2017-12-31T00:00:00.000Z&quot;</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
