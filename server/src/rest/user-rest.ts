@@ -13,6 +13,7 @@ import {IUser} from '../model/user';
 import {IUserInstance, UserModelManager} from '../model/user-model-manager';
 
 // Javascript packages
+import * as Promise from 'bluebird';
 import * as express from 'express';
 
 export class UserRest {
@@ -130,7 +131,9 @@ export class UserRest {
       .then((leagues: ILeagueAttribute[]) => {
         console.log("user-rest retriveLeaguesForUser: succesful retrival of leagues as player for user id " + req.params.userId);
         // Transform the array of ILeagueAttributes to an array of ILeagues (our form that users of our RESTful service should be using)
-        const returnLeagues: ILeague[] = leagues.map(LeagueModelManager.createILeagueFromAnything);
+        return Promise.map(leagues, LeagueModelManager.createILeagueFromAnything);
+      })
+      .then((returnLeagues: ILeague[]) => {
         RestResponse.send200(res, returnLeagues);
       })
       .catch((error) => {
@@ -145,7 +148,9 @@ export class UserRest {
       .then((leagues: ILeagueAttribute[]) => {
         console.log("user-rest retriveLeaguesAsAdmin: succesful retrival of leagues as admin for  " + req.params.userId);
         // Transform the array of ILeagueAttributes to an array of ILeagues (our form that users of our RESTful service should be using)
-        const returnLeagues: ILeague[] = leagues.map(LeagueModelManager.createILeagueFromAnything);
+        return Promise.map(leagues, LeagueModelManager.createILeagueFromAnything);
+      })
+      .then((returnLeagues: ILeague[]) => {
         RestResponse.send200(res, returnLeagues);
       })
       .catch((error) => {

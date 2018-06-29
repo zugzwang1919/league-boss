@@ -10,10 +10,13 @@ import {UserLogic} from '../logic/user-logic';
 import {ILeague} from '../model/league';
 import {LeagueModelManager} from '../model/league-model-manager';
 import {ILeagueInstance} from '../model/league-model-manager';
+import {ISeason} from '../model/season';
+import {SeasonModelManager} from '../model/season-model-manager';
 import {IUser} from '../model/user';
 import {IUserAttribute, IUserInstance, UserModelManager} from '../model/user-model-manager';
 
 import * as express from 'express';
+import { ISeasonAttribute } from '../model/season-model-manager';
 
 export class LeagueRest {
 
@@ -47,7 +50,9 @@ export class LeagueRest {
     LeagueLogic.instanceOf().findById(req.params.leagueId)
       .then((foundLeague: ILeagueInstance) => {
         // Transform the ILeagueInstance to an ILeague (our form that users of our RESTful service should be using)
-        const returnLeague: ILeague = LeagueModelManager.createILeagueFromAnything(foundLeague);
+        return LeagueModelManager.createILeagueFromAnything(foundLeague);
+      })
+      .then((returnLeague: ILeague) => {
         RestResponse.send200(res, returnLeague);
       })
       .catch((error) => {
@@ -57,17 +62,23 @@ export class LeagueRest {
 
   private static createLeague(req: express.Request, res: express.Response): any {
     console.log("league-rest createLeague: leagueName found in body = " + req.body.leagueName);
+    let user: IUserInstance;
     UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
       .then((foundUser: IUserInstance) => {
         // Transform the message body to an ILeague (our form that users of our RESTful service should be using)
-        const leagueData: ILeague = LeagueModelManager.createILeagueFromAnything(req.body);
+        user = foundUser;
+        return LeagueModelManager.createILeagueFromAnything(req.body);
+      })
+      .then((inputLeague: ILeague) => {
         // The caller doesn't get to define the id
-        leagueData.id = undefined;
-        return LeagueLogic.instanceOf().createLeagueWithUserAsAdmin(leagueData, foundUser.id);
+        inputLeague.id = undefined;
+        return LeagueLogic.instanceOf().createLeagueWithUserAsAdmin(inputLeague, user.id);
       })
       .then((createdLeague: ILeagueInstance) => {
         // Transform the ILeagueInstance to an ILeague (our form that users of our RESTful service should be using)
-        const returnLeague: ILeague = LeagueModelManager.createILeagueFromAnything(createdLeague);
+        return LeagueModelManager.createILeagueFromAnything(createdLeague);
+      })
+      .then((returnLeague: ILeague) => {
         RestResponse.send200(res, returnLeague);
       })
       .catch((error) => {
@@ -78,8 +89,10 @@ export class LeagueRest {
   private static updateLeague(req: express.Request, res: express.Response): any {
     console.log("league-rest updateLeague: leagueName found in body = " + req.body.leagueName);
     // Transform the message body to an ILeague (our form that users of our RESTful service should be using)
-    const leagueData: ILeague = LeagueModelManager.createILeagueFromAnything(req.body);
-    LeagueLogic.instanceOf().update(leagueData)
+    return LeagueModelManager.createILeagueFromAnything(req.body)
+      .then((inputLeague: ILeague) => {
+        LeagueLogic.instanceOf().update(inputLeague);
+      })
       .then((success) => {
         RestResponse.send200(res);
       })
@@ -178,13 +191,25 @@ export class LeagueRest {
 
   private static retrieveSeason(req: express.Request, res: express.Response): any {
     console.log("league-rest retrieveSeason: leagueId found in URL = " + req.params.leagueId);
-    RestResponse.send200(res);
+    return LeagueLogic.instanceOf().getSeason(req.params.leagueId)
+      .then((foundSeason: ISeasonAttribute) => {
+        const returnSeason: ISeason =  SeasonModelManager.createISeasonFromAnything(foundSeason);
+        RestResponse.send200(res, returnSeason);
+      })
+      .catch((error) => {
+        RestResponse.sendAppropriateResponse(res, error);
+      });
   }
 
   private static setSeason(req: express.Request, res: express.Response): any {
     console.log("league-rest setSeason: leagueId found in URL = " + req.params.leagueId);
-    LeagueLogic.instanceOf().setSeason(req.params.leagueId, req.body.userId);
-    RestResponse.send200(res);
+    return LeagueLogic.instanceOf().setSeason(req.params.leagueId, req.body.seasonId)
+      .then((success) => {
+        RestResponse.send200(res);
+      })
+      .catch((error) => {
+        RestResponse.sendAppropriateResponse(res, error);
+      });
   }
 
   // Utility functions

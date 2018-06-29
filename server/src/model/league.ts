@@ -6,6 +6,6 @@ export interface ILeague {
   id?: number;
   leagueName?: string;
   description?: string;
-  seasonTypeIndex?: number;
+  seasonIndex?: number;
   leagueTypeIndex?: number;
 }

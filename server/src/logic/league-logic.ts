@@ -41,6 +41,14 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
         leagueToReturn = league;
         return league.addAdmin(creatingUserId);
       })
+      // Add the Season specficied by the caller to the league
+      .then(() => {
+        return SeasonLogic.instanceOf().findById(leagueData.seasonIndex)
+          .then((leaguesSeason: ISeasonInstance) => {
+            return leagueToReturn.setSeason(leaguesSeason);
+          });
+      })
+      // Return the League in all its glory
       .then((stuff: any) => {
         return Promise.resolve(leagueToReturn);
       })
@@ -55,7 +63,17 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
     if (!LeagueLogic.isExistingLeagueValid(leagueData)) {
       return Promise.reject(LeagueLogic.buildIncompleteAttributesError());
     }
-    return super.update(leagueData);
+    return super.findById(leagueData.id)
+      .then((leagueToBeUpdated: ILeagueInstance) => {
+        return SeasonLogic.instanceOf().findById(leagueData.seasonIndex)
+          .then((leaguesSeason: ISeasonInstance) => {
+            return leagueToBeUpdated.setSeason(leaguesSeason);
+          });
+      })
+      .then(() => {
+        return super.update(leagueData);
+      })
+      .catch((err) => Promise.reject(LogicError.firmUpError(err)));
   }
 
   public getAdmins(leagueId: number): Promise<IUserAttribute[]> {
@@ -188,16 +206,15 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
   private static isNewLeagueValid(leagueData: ILeagueAttribute): boolean {
     return (leagueData.leagueName != null &&
       leagueData.description != null &&
-      leagueData.leagueTypeIndex != null &&
-      leagueData.seasonTypeIndex != null);
+      leagueData.leagueTypeIndex != null);
   }
 
-  private static isExistingLeagueValid(leagueData: ILeagueAttribute): boolean {
+  private static isExistingLeagueValid(leagueData: ILeagueAttribute | ILeagueInstance): boolean {
     return (leagueData.id != null &&
       leagueData.leagueName != null &&
       leagueData.description != null &&
       leagueData.leagueTypeIndex != null &&
-      leagueData.seasonTypeIndex != null);
+      leagueData.seasonIndex != null);
   }
 
   private static buildIncompleteAttributesError(): LogicError {

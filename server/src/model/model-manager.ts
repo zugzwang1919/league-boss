@@ -57,6 +57,7 @@ export class ModelManager {
 
     // A League has one season
     // A Season can be associated with many Leagues
+    seasonModel.hasMany(leagueModel, {onDelete: 'restrict'});
     leagueModel.belongsTo(seasonModel);
 
     // Season owns GameGroups
@@ -127,7 +128,6 @@ export class ModelManager {
         return LeagueModelManager.leagueModel.create({
           leagueName: 'NFL Chumps',
           description: 'The worst collection ever of NFL enthusiasts.',
-          seasonTypeIndex: 0,
           leagueTypeIndex: 0,
 
         });
@@ -141,7 +141,6 @@ export class ModelManager {
         return LeagueModelManager.leagueModel.create({
           leagueName: 'Winners not Weiners',
           description: 'Yeah, we are that good.',
-          seasonTypeIndex: 1,
           leagueTypeIndex: 2,
         });
       })

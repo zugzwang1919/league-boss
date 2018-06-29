@@ -62,9 +62,6 @@ export class LeagueModelManager {
       description: {
         type: Sequelize.STRING,
       },
-      seasonTypeIndex: {
-        type: Sequelize.INTEGER,
-      },
       leagueTypeIndex: {
         type: Sequelize.INTEGER,
       },
@@ -77,14 +74,28 @@ export class LeagueModelManager {
 
   /* Creates an actual object that implements the ILeague interface from
   any other object */
-  public static createILeagueFromAnything(anyObject: any): ILeague {
-    const createdLeague: ILeague = {
-      id: anyObject.id,
-      leagueName: anyObject.leagueName,
-      description: anyObject.description,
-      seasonTypeIndex: anyObject.seasonTypeIndex,
-      leagueTypeIndex: anyObject.leagueTypeIndex,
-    };
-    return createdLeague;
+  public static createILeagueFromAnything(anyObject: any): Promise<ILeague> {
+    const isAnyObjectAnILeagueInstance: boolean = typeof (anyObject as ILeagueInstance).getSeason === "function";
+    if (isAnyObjectAnILeagueInstance) {
+      return anyObject.getSeason()
+      .then((foundSeason: ISeasonInstance) => {
+        return Promise.resolve({
+          id: anyObject.id,
+          leagueName: anyObject.leagueName,
+          description: anyObject.description,
+          seasonIndex: foundSeason ? foundSeason.id : undefined,
+          leagueTypeIndex: anyObject.leagueTypeIndex,
+        });
+      });
+    }
+    else {
+      return Promise.resolve({
+        id: anyObject.id,
+        leagueName: anyObject.leagueName,
+        description: anyObject.description,
+        seasonIndex: anyObject.seasonIndex,
+        leagueTypeIndex: anyObject.leagueTypeIndex,
+      });
+    }
   }
 }
