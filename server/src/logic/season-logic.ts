@@ -184,7 +184,7 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
 
   private static createGameGroups(arrayOfGameValues: IGameValues[]): Promise<IGameGroupInstance[]> {
     // Get a list of all of the unique Game Group Names
-    const gameGroupNames: string[] = arrayOfGameValues.map((gv: any ) => gv.group);
+    const gameGroupNames: string[] = arrayOfGameValues.map((gv: IGameValues ) => gv.group);
     const uniqueGameGroupNames: string[] = [...new Set(gameGroupNames)];
     // Create all of the Game Groups
     return Promise.map(uniqueGameGroupNames, (gameGroupName): Promise<IGameGroupInstance> => {
