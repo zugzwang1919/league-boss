@@ -17,22 +17,19 @@ export class TeamCache {
   }
 
   public locateTeamWithAlias(alias: string): ITeamInstance {
-    let count: number = 0;
-    let foundTeam: ITeamInstance;
-    this.allTeams.forEach((t: ITeamInstance) => {
-      t.aliases.forEach((a: string) => {
-        if (a.toLowerCase().trim() === alias.toLowerCase().trim()) {
-          foundTeam = t;
-          count++;
-        }
-      });
+
+    // Filter the array of all teams down to an array of all teams that contain the passed in alias
+    const foundTeams: ITeamInstance[] = this.allTeams.filter((t: ITeamInstance) => {
+      return t.aliases.filter((a: string) => a.toLowerCase().trim() === alias.toLowerCase().trim()).length > 0;
     });
-    switch (count) {
+
+    // Now for the easy part, examine the number of teams that match the passed in alias and return an appropriate response
+    switch (foundTeams.length) {
       case 0:
         console.log("An alias of " + alias + " was not found" );
         return null;
       case 1:
-        return foundTeam;
+        return foundTeams[0];
       default:
         throw new Error("More than one team was found with an alias of " + alias);
     }

@@ -112,41 +112,33 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
       .then((arrayOfGamesInGameGroup: IGameInstance[][]) => {
         // Update each GameGroup with its earliest and latest date
         return Promise.map(arrayOfGamesInGameGroup, (gamesInGroup: IGameInstance[], index: number): Promise<any> => {
+          // Sort the games in the group
+          const sortedGames: IGameInstance[] = gamesInGroup.sort((g1: IGameInstance, g2: IGameInstance) =>
+            g1.gameDate.getTime() - g2.gameDate.getTime());
+          // Update the local copy of the GameGroup
           const gameGroup: IGameGroupInstance = gameGroups[index];
-          gamesInGroup.forEach ((game: IGameInstance) => {
-            if ( !gameGroup.earliestGameDate || gameGroup.earliestGameDate > game.gameDate ) {
-              gameGroup.earliestGameDate = game.gameDate;
-            }
-            if ( !gameGroup.latestGameDate || gameGroup.latestGameDate < game.gameDate ) {
-              gameGroup.latestGameDate = game.gameDate;
-            }
-          });
+          gameGroup.earliestGameDate = sortedGames[0].gameDate;
+          gameGroup.latestGameDate = sortedGames[sortedGames.length - 1].gameDate;
+          // Create the "update data" for the GameGroup
           const updateData: any = {
             id: gameGroup.id,
             earliestGameDate:  gameGroup.earliestGameDate,
             latestGameDate: gameGroup.latestGameDate,
           };
+          // Update the persisted GameGroup
           return GameGroupLogic.instanceOf().update(updateData);
         });
       })
       .then(() => {
         // Update the season with its earliest and latest date
-        let earliestGameDate: Date;
-        let latestGameDate: Date;
-        gameGroups.forEach((gg: IGameGroupInstance) => {
-          if (!earliestGameDate || gg.earliestGameDate < earliestGameDate) {
-            earliestGameDate = gg.earliestGameDate;
-          }
-          if (!latestGameDate || gg.latestGameDate > latestGameDate) {
-            latestGameDate = gg.latestGameDate;
-          }
-        });
+        const sortedGameGroups: IGameGroupInstance[] =
+          gameGroups.sort((gg1: IGameGroupInstance, gg2: IGameGroupInstance) => gg1.earliestGameDate.getTime() - gg2.earliestGameDate.getTime());
         return SeasonLogic.instanceOf().update({
           id: season.id,
           seasonName: season.seasonName,
           description: season.description,
-          earliestGameDate,
-          latestGameDate,
+          earliestGameDate: sortedGameGroups[0].earliestGameDate,
+          latestGameDate: sortedGameGroups[sortedGameGroups.length - 1].latestGameDate,
         });
       })
       .catch((err) => {
@@ -191,13 +183,11 @@ export class SeasonLogic extends Logic<ISeasonInstance> {
   }
 
   private static createGameGroups(arrayOfGameValues: IGameValues[]): Promise<IGameGroupInstance[]> {
-    const gameGroupNames: string[] = [];
-    arrayOfGameValues.forEach((gameValues) => {
-      if (gameGroupNames.indexOf(gameValues.group) === -1) {
-        gameGroupNames.push(gameValues.group);
-      }
-    });
-    return Promise.map(gameGroupNames, (gameGroupName): Promise<IGameGroupInstance> => {
+    // Get a list of all of the unique Game Group Names
+    const gameGroupNames: string[] = arrayOfGameValues.map((gv: any ) => gv.group);
+    const uniqueGameGroupNames: string[] = [...new Set(gameGroupNames)];
+    // Create all of the Game Groups
+    return Promise.map(uniqueGameGroupNames, (gameGroupName): Promise<IGameGroupInstance> => {
       return GameGroupModelManager.gameGroupModel.create({gameGroupName});
     });
   }
