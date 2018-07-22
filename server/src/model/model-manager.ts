@@ -1,3 +1,7 @@
+// Logic Layer Files
+import {SeasonLogic} from '../logic/season-logic';
+
+// Model Layer Files
 import {GameGroupModelManager, IGameGroupModel} from './game-group-model-manager';
 import {GameModelManager, IGameModel} from './game-model-manager';
 import {ILeagueInstance, ILeagueModel, LeagueModelManager} from './league-model-manager';
@@ -14,6 +18,7 @@ export class ModelManager {
 
   public constructor( populateWithTestData?: boolean) {
 
+    const FS: any = Promise.promisifyAll(require('fs'));
     const sequelize: Sequelize.Sequelize = new Sequelize('leagueboss', 'root', 'tchssoccer', {
         host: 'localhost',
         dialect: 'mysql',
@@ -74,12 +79,12 @@ export class ModelManager {
 
     // Seed the DB if requested to do so
     if (populateWithTestData) {
-      this.seedTestData(sequelize);
+      this.seedTestData(sequelize, FS);
 
     }
   }
 
-  private seedTestData(sequelize: Sequelize.Sequelize): void {
+  private seedTestData(sequelize: Sequelize.Sequelize, fs: any): void {
 
     let user1: IUserInstance;
     let user2: IUserInstance;
@@ -124,12 +129,24 @@ export class ModelManager {
           isSuperUser: true,
         });
       })
+      // Create a Season and add a schedule to it
       .then((createdUser: IUserInstance) => {
+        return SeasonLogic.instanceOf().create({
+          seasonName: "NFL 2017-18",
+          description: "NFL 2017-18 Regular Season",
+        })
+          .then((createdSeason: ISeasonInstance) => {
+            return fs.readFileAsync('jmeter_tests\\TestCsvs\\ScheduleOne.csv')
+              .then((createdBuffer: Buffer) => {
+                return SeasonLogic.instanceOf().addSchedule(createdSeason.id, createdBuffer);
+              });
+          });
+      })
+      .then(() => {
         return LeagueModelManager.leagueModel.create({
           leagueName: 'NFL Chumps',
           description: 'The worst collection ever of NFL enthusiasts.',
           leagueTypeIndex: 0,
-
         });
       })
       .then((createdLeague: ILeagueInstance) => {
