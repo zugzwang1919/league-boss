@@ -1,12 +1,12 @@
 import 'rxjs/add/operator/switchMap';
 
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
 import {FormsModule, NgForm, FormGroup } from '@angular/forms';
 
 import { User } from './user';
 import { League } from '../league/league';
-import { UserService } from './user-service.service';
+import { UserService } from './user.service';
 import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
@@ -21,7 +21,7 @@ import { SeasonType } from '../../../../interface/season-type';
 })
 
 
-export class UserDetailComponent {
+export class UserDetailComponent implements OnInit {
 
   // Referential info
 

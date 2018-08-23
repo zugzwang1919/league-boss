@@ -3,7 +3,9 @@ import { Http, Headers } from '@angular/http';
 
 import { CurrentUserService } from '../user/current-user-service.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class WolfeHttp {
 
   constructor(

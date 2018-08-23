@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 import {FormsModule, NgForm, FormGroup } from '@angular/forms';
 
 import { User } from './user';
 import { League } from '../league/league';
-import { UserService } from './user-service.service';
+import { UserService } from './user.service';
 import { CurrentUserService } from './current-user-service.service';
 import { ServiceResponse } from '../common/service-response';
 
@@ -11,14 +11,14 @@ import { StringUtil } from '../common/string-util';
 
 
 @Component({
-  selector: 'selectUserDialog',
+  selector: 'app-select-user-dialog',
   moduleId: module.id,
   templateUrl: 'select-user-dialog.component.html',
   styleUrls: ['./select-user-dialog.component.less']
 })
 
 
-export class selectUserDialog {
+export class SelectUserDialogComponent implements OnInit {
 
   @Input() title: string;
   @Input() actionButtonName: string;

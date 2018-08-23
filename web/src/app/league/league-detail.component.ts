@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap';
 
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params, UrlSegment } from '@angular/router';
 import { FormsModule, NgForm, FormGroup } from '@angular/forms';
 
@@ -8,7 +8,7 @@ import { League } from './league';
 import { User } from '../user/user';
 import { CurrentUserService } from '../user/current-user-service.service';
 import { DialogEvent } from '../user/select-user-dialog.component';
-import { LeagueService } from './league-service.service';
+import { LeagueService } from './league.service';
 import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
 import { AngularUtil } from '../common/angular-util';
@@ -22,7 +22,7 @@ import { SeasonType } from '../../../../interface/season-type';
   styleUrls: ['./league-detail.component.less']
 })
 
-export class LeagueDetailComponent {
+export class LeagueDetailComponent implements OnInit {
 
   league: League;
   leagueAdmins: Array<User>;
@@ -80,7 +80,7 @@ export class LeagueDetailComponent {
           this.leagueService.getLeague(+segments[1])
             .then(league => {
               this.league = league;
-              return this.leagueService.getAdmins(this.league.id)
+              return this.leagueService.getAdmins(this.league.id);
             })
             .then(admins => {
               this.leagueAdmins = admins;
@@ -89,7 +89,7 @@ export class LeagueDetailComponent {
               if (currentUser.isSuperUser || this.isCurrentUserAdmin()) {
                 this.action = 'edit';
               }
-              return this.leagueService.getPlayers(this.league.id)
+              return this.leagueService.getPlayers(this.league.id);
             })
             .then(players => {
               this.leaguePlayers = players;
@@ -107,7 +107,7 @@ export class LeagueDetailComponent {
     this.leagueService.createLeague(this.league)
       .then((createdLeague: League) => {
         console.log("League was successfully created.");
-        this.incomingHappyMessage = "Congrats! You've created a new league!"
+        this.incomingHappyMessage = "Congrats! You've created a new league!";
         this.router.navigate(['/league', createdLeague.id]);
       })
       .catch(serviceResponse => {
@@ -242,7 +242,7 @@ export class LeagueDetailComponent {
     this.errorMessage = null;
   }
 
-  private removeUserFromArray(array: Array<User>, adminToBeRemoved: User) : void {
+  private removeUserFromArray(array: Array<User>, adminToBeRemoved: User): void {
     let i;
     for (i = 0; i < array.length; i++) {
       if (array[i].id === adminToBeRemoved.id) {

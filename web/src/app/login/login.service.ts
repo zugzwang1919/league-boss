@@ -8,7 +8,9 @@ import { ServiceResponse } from '../common/service-response';
 import { ServiceUtil } from '../common/service-util';
 import { CurrentUserService } from '../user/current-user-service.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoginService {
 
   constructor(

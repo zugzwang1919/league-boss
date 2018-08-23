@@ -1,9 +1,9 @@
-import { NgModule }               from '@angular/core';
-import { RouterModule, Routes }   from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import { UserDetailComponent }    from './user/user-detail.component';
-import { LoginComponent }         from './login/login.component';
-import { LeagueDetailComponent }  from './league/league-detail.component';
+import { UserDetailComponent } from './user/user-detail.component';
+import { LoginComponent } from './login/login.component';
+import { LeagueDetailComponent } from './league/league-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -13,8 +13,8 @@ const routes: Routes = [
   { path: 'league', component: LeagueDetailComponent },
   { path: 'league/:id', component: LeagueDetailComponent },
   { path: 'league/create', component: LeagueDetailComponent },
-  { path: 'login', component: LoginComponent },  
-  { path: 'logout', component: LoginComponent },  
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LoginComponent },
 ];
 
 @NgModule({

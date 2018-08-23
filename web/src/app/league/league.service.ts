@@ -11,7 +11,9 @@ import { ServiceUtil } from '../common/service-util';
 
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LeagueService {
 
   constructor(

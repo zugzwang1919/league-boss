@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, Params, UrlSegment } from '@angular/router';
 
 
 import { ServiceResponse } from '../common/service-response';
-import { LoginService } from './login-service.service';
+import { LoginService } from './login.service';
 import { CurrentUserService } from '../user/current-user-service.service';
 import { User } from '../user/user';
 

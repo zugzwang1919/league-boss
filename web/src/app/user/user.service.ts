@@ -9,7 +9,9 @@ import { League } from '../league/league';
 import { ServiceResponse } from '../common/service-response';
 import { ServiceUtil } from '../common/service-util';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
 
   constructor(

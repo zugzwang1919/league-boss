@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { User } from './user/user';
-import { UserService } from './user/user-service.service';
+import { UserService } from './user/user.service';
 import { CurrentUserService } from './user/current-user-service.service';
 
 import { ServiceResponse } from './common/service-response';
-import { LoginService } from './login/login-service.service';
+import { LoginService } from './login/login.service';
 
 @Component({
-  selector: 'my-app',
+  selector: 'app-app',
   moduleId: module.id,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   displayedUserId: string;
   displayedLeagueId: string;
 

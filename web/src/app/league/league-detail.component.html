@@ -44,10 +44,10 @@
             </tr>
             <tr *ngFor="let season of possibleSeasons">
               <td>
-                <input type="radio" 
+                <input type="radio"
                   name="leagueSeasonTypeIndex"
-                  [disabled]="(action==='view')" 
-                  [(ngModel)]="league.seasonTypeIndex"  
+                  [disabled]="(action==='view')"
+                  [(ngModel)]="league.seasonTypeIndex"
                   [value]=season.id />{{season.name}}
               </td>
 
@@ -61,10 +61,10 @@
             </tr>
             <tr *ngFor="let leagueType of possibleLeagueTypes">
               <td>
-                <input type="radio" 
+                <input type="radio"
                   name="leagueLeagueTypeIndex"
-                  [disabled]="(action==='view')" 
-                  [(ngModel)]="league.leagueTypeIndex" 
+                  [disabled]="(action==='view')"
+                  [(ngModel)]="league.leagueTypeIndex"
                   [value]="leagueType.id"/>{{leagueType.name}}
               </td>
             </tr>
@@ -101,7 +101,7 @@
         </table>
         <button *ngIf="((action === 'edit') && !adminBeingAdded)" (click)="addAdmin()">Add Admin</button>
         <div *ngIf="adminBeingAdded">
-          <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)"></selectUserDialog>
+          <app-select-user-dialog [title]="'Search Users'" [actionButtonName]="'Add Admin'" (cancelFunction)="onAdminCancel()" (actionFunction)="onAdminFound($event)"></app-select-user-dialog>
         </div>
       </div> <!-- left-column -->
       <div class="right-column">
@@ -120,7 +120,7 @@
         </table>
         <button *ngIf="((action === 'edit') && !playerBeingAdded)" (click)="addPlayer()">Add Player</button>
         <div *ngIf="playerBeingAdded">
-          <selectUserDialog [title]="'Search Users'" [actionButtonName]="'Add Player'" (cancelFunction)="onPlayerCancel()" (actionFunction)="onPlayerFound($event)"></selectUserDialog>
+          <app-select-user-dialog [title]="'Search Users'" [actionButtonName]="'Add Player'" (cancelFunction)="onPlayerCancel()" (actionFunction)="onPlayerFound($event)"></app-select-user-dialog>
         </div>
       </div> <!-- right-column -->
     </div> <!-- two-column -->

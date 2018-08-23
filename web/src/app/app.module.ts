@@ -11,14 +11,11 @@ import { AppComponent } from './app.component';
 import { WolfeHttp} from './common/wolfe-http';
 
 import { UserDetailComponent } from './user/user-detail.component';
-import { selectUserDialog } from './user/select-user-dialog.component';
-import { UserService } from './user/user-service.service';
+import { SelectUserDialogComponent } from './user/select-user-dialog.component';
 
 import { LeagueDetailComponent} from './league/league-detail.component';
-import { LeagueService } from './league/league-service.service';
 
 import { LoginComponent } from './login/login.component';
-import { LoginService } from './login/login-service.service';
 
 
 @NgModule({
@@ -29,13 +26,9 @@ import { LoginService } from './login/login-service.service';
                   CoreModule],
   declarations: [ AppComponent,
                   UserDetailComponent,
-                  selectUserDialog,
+                  SelectUserDialogComponent,
                   LoginComponent,
                   LeagueDetailComponent ],
-  providers:    [ UserService,
-                  LeagueService,
-                  LoginService,
-                  WolfeHttp ],
   bootstrap:    [ AppComponent ]
 })
 
