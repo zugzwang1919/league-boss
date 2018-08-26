@@ -58,7 +58,7 @@ export class UserService {
   }
 
   updateUser(user: User): Promise<ServiceResponse> {
-    console.log("Inside UpdateService:  Beginning 'Update User' process");
+    console.log("Inside UserService:  Beginning 'Update User' process");
     const updateUserUrl: string = ServiceUtil.buildUrl('/user/' + user.id);
     return this.http.put(updateUserUrl, user)
       .toPromise()
@@ -73,7 +73,7 @@ export class UserService {
   }
 
   getLeaguesPlayingIn(userId: number): Promise<League[]> {
-    console.log("Inside UpdateService:  Beginning 'Retrieving Leagues played in by User' process");
+    console.log("Inside UserService:  Beginning 'Retrieving Leagues played in by User' process");
     const getLeaguesPlayingInUrl: string = ServiceUtil.buildUrl('/user/' + userId + '/leagueAsPlayer');
     return this.http.get(getLeaguesPlayingInUrl)
       .toPromise()
@@ -86,7 +86,7 @@ export class UserService {
   }
 
   getLeaguesAdministering(userId: number): Promise<League[]> {
-    console.log("Inside UpdateService:  Beginning 'Retrieving Leagues administered by User' process");
+    console.log("Inside UserService:  Beginning 'Retrieving Leagues administered by User' process");
     const getLeaguesAdministeringUrl: string = ServiceUtil.buildUrl('/user/' + userId + '/leagueAsAdmin');
     return this.http.get(getLeaguesAdministeringUrl)
       .toPromise()

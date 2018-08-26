@@ -16,7 +16,7 @@ export class SeasonService {
   ) { }
 
   getSeasons(): Promise<Season[]> {
-    console.log("Inside SeasonService: Starting to look for AllSeasonsan id of ");
+    console.log("Inside SeasonService: Starting to look for AllSeasons ");
     const getAllSeasonsUrl: string = ServiceUtil.buildUrl('/season');
     return this.http.get(getAllSeasonsUrl)
       .toPromise()
