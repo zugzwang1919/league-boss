@@ -90,7 +90,8 @@ export class ModelManager {
     let user2: IUserInstance;
     let league1: ILeagueInstance;
     let league2: ILeagueInstance;
-    let createdSeasonId: number;
+    let createdSeasonId1: number;
+    let createdSeasonId2: number;
 
     sequelize.sync({force: true})
       .then((syncResults) => {
@@ -137,7 +138,7 @@ export class ModelManager {
           description: "NFL 2017-18 Regular Season",
         })
           .then((createdSeason: ISeasonInstance) => {
-            createdSeasonId = createdSeason.id;
+            createdSeasonId1 = createdSeason.id;
             return fs.readFileAsync('jmeter_tests\\TestCsvs\\ScheduleOne.csv')
               .then((createdBuffer: Buffer) => {
                 return SeasonLogic.instanceOf().addSchedule(createdSeason.id, createdBuffer);
@@ -147,7 +148,7 @@ export class ModelManager {
             return LeagueModelManager.leagueModel.create({
               leagueName: 'NFL Chumps',
               description: 'The worst collection ever of NFL enthusiasts.',
-              seasonId: createdSeasonId,
+              seasonId: createdSeasonId1,
               leagueTypeIndex: 0,
             });
           });
@@ -159,17 +160,30 @@ export class ModelManager {
         league1.addPlayer(user2);
         league1.addAdmin(user1);
         league1.addAdmin(user2);
-        return LeagueModelManager.leagueModel.create({
-          leagueName: 'Winners not Weiners',
-          description: 'Yeah, we are that good.',
-          seasonId: createdSeasonId,
-          leagueTypeIndex: 2,
-        });
-      })
-      .then((league) => {
+        return SeasonLogic.instanceOf().create({
+          seasonName: 'Second NFL 2017-18',
+          description: 'Second NFL 2017-18 Regular Season',
+        })
+        .then((createdSeason: ISeasonInstance) => {
+          createdSeasonId2 = createdSeason.id;
+          return fs.readFileAsync('jmeter_tests\\TestCsvs\\ScheduleOne.csv')
+            .then((createdBuffer: Buffer) => {
+              return SeasonLogic.instanceOf().addSchedule(createdSeason.id, createdBuffer);
+            });
+        })
+        .then(() => {
+          return LeagueModelManager.leagueModel.create({
+            leagueName: 'Winners not Weiners',
+            description: 'Yeah, we are that good.',
+            seasonId: createdSeasonId2,
+            leagueTypeIndex: 2,
+            });
+        })
+        .then((league) => {
           league2 = league;
           league2.addPlayer(user2);
           return league2.addAdmin(user2);
+        });
       })
       .catch((err) => {
         console.log("error name = " + err.name + ".  Error Message = " + err.message);
