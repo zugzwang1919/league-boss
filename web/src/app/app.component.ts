@@ -9,7 +9,7 @@ import { ServiceResponse } from './common/service-response';
 import { LoginService } from './login/login.service';
 
 @Component({
-  selector: 'app-app',
+  selector: 'lb-app',
   moduleId: module.id,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']

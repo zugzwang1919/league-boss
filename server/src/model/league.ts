@@ -4,8 +4,8 @@ should use when interacting with the server.
 
 export interface ILeague {
   id?: number;
-  leagueName?: string;
-  description?: string;
-  seasonIndex?: number;
-  leagueTypeIndex?: number;
+  leagueName: string;
+  description: string;
+  seasonId: number;
+  leagueTypeIndex: number;
 }

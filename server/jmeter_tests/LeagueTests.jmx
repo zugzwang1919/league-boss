@@ -290,7 +290,7 @@
 	&quot;leagueName&quot;:&quot;NFL Winners&quot;,&#xd;
 	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;,&#xd;
 	&quot;leagueTypeIndex&quot;: 0,&#xd;
-	&quot;seasonIndex&quot;:${createdSeasonId}&#xd;
+	&quot;seasonId&quot;:${createdSeasonId}&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -414,7 +414,7 @@
 	&quot;leagueName&quot;:&quot;NFL Losers&quot;,&#xd;
 	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;,&#xd;
 	&quot;leagueTypeIndex&quot;: 0,&#xd;
-	&quot;seasonIndex&quot;: ${createdSeasonId}&#xd;
+	&quot;seasonId&quot;: ${createdSeasonId}&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>

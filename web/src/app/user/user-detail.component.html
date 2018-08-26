@@ -109,7 +109,7 @@
             <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
           </td>
 
-          <td> {{seasonType[league.seasonTypeIndex].name}} </td>
+          <td> {{retrieveSeasonFromPossibleSeasons(league.seasonId).seasonName}} </td>
           <td> {{leagueType[league.leagueTypeIndex].name}} </td>
 
         </tr>
@@ -129,7 +129,7 @@
           <td>
             <a [routerLink]="['/league/' + league.id]">{{league.leagueName}}</a>
           </td>
-          <td> {{seasonType[league.seasonTypeIndex].name}} </td>
+          <td> {{retrieveSeasonFromPossibleSeasons(league.seasonId).seasonName}} </td>
           <td> {{leagueType[league.leagueTypeIndex].name}} </td>
         </tr>
       </tbody>

@@ -90,6 +90,7 @@ export class ModelManager {
     let user2: IUserInstance;
     let league1: ILeagueInstance;
     let league2: ILeagueInstance;
+    let createdSeasonId: number;
 
     sequelize.sync({force: true})
       .then((syncResults) => {
@@ -129,26 +130,29 @@ export class ModelManager {
           isSuperUser: true,
         });
       })
-      // Create a Season and add a schedule to it
+      // Create our first League (We'll neeed a season to do so)
       .then((createdUser: IUserInstance) => {
         return SeasonLogic.instanceOf().create({
           seasonName: "NFL 2017-18",
           description: "NFL 2017-18 Regular Season",
         })
           .then((createdSeason: ISeasonInstance) => {
+            createdSeasonId = createdSeason.id;
             return fs.readFileAsync('jmeter_tests\\TestCsvs\\ScheduleOne.csv')
               .then((createdBuffer: Buffer) => {
                 return SeasonLogic.instanceOf().addSchedule(createdSeason.id, createdBuffer);
               });
+          })
+          .then(() => {
+            return LeagueModelManager.leagueModel.create({
+              leagueName: 'NFL Chumps',
+              description: 'The worst collection ever of NFL enthusiasts.',
+              seasonId: createdSeasonId,
+              leagueTypeIndex: 0,
+            });
           });
       })
-      .then(() => {
-        return LeagueModelManager.leagueModel.create({
-          leagueName: 'NFL Chumps',
-          description: 'The worst collection ever of NFL enthusiasts.',
-          leagueTypeIndex: 0,
-        });
-      })
+      // Create another League
       .then((createdLeague: ILeagueInstance) => {
         league1 = createdLeague;
         league1.addPlayer(user1);
@@ -158,6 +162,7 @@ export class ModelManager {
         return LeagueModelManager.leagueModel.create({
           leagueName: 'Winners not Weiners',
           description: 'Yeah, we are that good.',
+          seasonId: createdSeasonId,
           leagueTypeIndex: 2,
         });
       })

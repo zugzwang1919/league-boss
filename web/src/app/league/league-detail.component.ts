@@ -9,12 +9,14 @@ import { User } from '../user/user';
 import { CurrentUserService } from '../user/current-user-service.service';
 import { DialogEvent } from '../user/select-user-dialog.component';
 import { LeagueService } from './league.service';
+import { SeasonService } from '../season/season.service';
 import { ServiceResponse } from '../common/service-response';
 import { StringUtil } from '../common/string-util';
 import { AngularUtil } from '../common/angular-util';
 
 import { LeagueType } from '../../../../interface/league-type';
 import { SeasonType } from '../../../../interface/season-type';
+import { Season } from '../season/season';
 
 @Component({
   moduleId: module.id,
@@ -37,7 +39,7 @@ export class LeagueDetailComponent implements OnInit {
   playerBeingAdded: boolean;
 
   // Referential Data
-  possibleSeasons: Object[] = SeasonType;
+  possibleSeasons: Season[];
   possibleLeagueTypes: Object[] = LeagueType;
 
   @ViewChild('leagueBasicInfoForm') leagueBasicInfoForm: FormGroup;
@@ -46,6 +48,7 @@ export class LeagueDetailComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private leagueService: LeagueService,
+    private seasonService: SeasonService,
     public currentUserService: CurrentUserService,
   ) { }
 
@@ -55,6 +58,12 @@ export class LeagueDetailComponent implements OnInit {
     // We'll only execute this code when the user asks for a new UserDetailComponent to be created.
     // Modifications to the UserDetailComponent are handled in the subscribe() below.
     this.setUpEmptyLeague();
+
+    // Get referential data
+    this.seasonService.getSeasons()
+      .then(seasons => {
+        this.possibleSeasons = seasons;
+      });
 
     // Handle the request to begin the "Create", "Edit", (and someday "View") process
     // Based on the subscribe below, we'll constantly monitor changes to the URL
@@ -196,7 +205,7 @@ export class LeagueDetailComponent implements OnInit {
     league.id = null;
     league.leagueName = '';
     league.description = '';
-    league.seasonTypeIndex = 0;
+    league.seasonId = 0;
     league.leagueTypeIndex = 0;
     this.league = league;
     this.leagueAdmins = null;

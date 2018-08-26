@@ -83,7 +83,7 @@ export class LeagueModelManager {
           id: anyObject.id,
           leagueName: anyObject.leagueName,
           description: anyObject.description,
-          seasonIndex: foundSeason ? foundSeason.id : undefined,
+          seasonId: foundSeason ? foundSeason.id : undefined,
           leagueTypeIndex: anyObject.leagueTypeIndex,
         });
       });
@@ -93,7 +93,7 @@ export class LeagueModelManager {
         id: anyObject.id,
         leagueName: anyObject.leagueName,
         description: anyObject.description,
-        seasonIndex: anyObject.seasonIndex,
+        seasonId: anyObject.seasonId,
         leagueTypeIndex: anyObject.leagueTypeIndex,
       });
     }

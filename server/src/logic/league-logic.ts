@@ -35,18 +35,15 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
     }
     let leagueToReturn: ILeagueInstance;
     return super.create(leagueData)
-      // NOTE:  Most logic would just return the call above, but for leagues, we'll go ahead and add the creator as an admin
-      .then((league: ILeagueInstance) => {
-        console.log("  league-logic.create() - Preparing to add admin");
-        leagueToReturn = league;
-        return league.addAdmin(creatingUserId);
+      // Set the Season
+      .then((createdLeague: ILeagueInstance) => {
+        leagueToReturn = createdLeague;
+        return this.setSeason(leagueToReturn.id, leagueData.seasonId);
       })
-      // Add the Season specficied by the caller to the league
+      // Make the user the Admin of the league
       .then(() => {
-        return SeasonLogic.instanceOf().findById(leagueData.seasonIndex)
-          .then((leaguesSeason: ISeasonInstance) => {
-            return leagueToReturn.setSeason(leaguesSeason);
-          });
+        console.log("  league-logic.create() - Preparing to add admin");
+        return leagueToReturn.addAdmin(creatingUserId);
       })
       // Return the League in all its glory
       .then((stuff: any) => {
@@ -65,7 +62,7 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
     }
     return super.findById(leagueData.id)
       .then((leagueToBeUpdated: ILeagueInstance) => {
-        return SeasonLogic.instanceOf().findById(leagueData.seasonIndex)
+        return SeasonLogic.instanceOf().findById(leagueData.seasonId)
           .then((leaguesSeason: ISeasonInstance) => {
             return leagueToBeUpdated.setSeason(leaguesSeason);
           });
@@ -214,7 +211,7 @@ export class LeagueLogic extends Logic<ILeagueInstance> {
       leagueData.leagueName != null &&
       leagueData.description != null &&
       leagueData.leagueTypeIndex != null &&
-      leagueData.seasonIndex != null);
+      leagueData.seasonId != null);
   }
 
   private static buildIncompleteAttributesError(): LogicError {

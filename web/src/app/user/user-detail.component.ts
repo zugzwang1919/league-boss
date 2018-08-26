@@ -13,6 +13,8 @@ import { StringUtil } from '../common/string-util';
 import { AngularUtil } from '../common/angular-util';
 import { LeagueType } from '../../../../interface/league-type';
 import { SeasonType } from '../../../../interface/season-type';
+import { SeasonService } from '../season/season.service';
+import { Season } from '../season/season';
 
 @Component({
   moduleId: module.id,
@@ -22,9 +24,6 @@ import { SeasonType } from '../../../../interface/season-type';
 
 
 export class UserDetailComponent implements OnInit {
-
-  // Referential info
-
 
   user: User;
   confirmPassword: string;
@@ -37,10 +36,14 @@ export class UserDetailComponent implements OnInit {
   leagueType = LeagueType;
   seasonType = SeasonType;
 
+  // Referential info
+  possibleSeasons: Season[];
+
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
     public currentUserService: CurrentUserService,
+    public seasonService: SeasonService,
   ) { }
 
 
@@ -50,6 +53,12 @@ export class UserDetailComponent implements OnInit {
     // Modifications to the UserDetailComponent are handled in the subscribe() below.
     this.user = new User();
     this.action = 'create';
+
+    // Get referential data
+    this.seasonService.getSeasons()
+    .then(seasons => {
+      this.possibleSeasons = seasons;
+    });
 
     // Handle the request to begin the "Create", "Edit", (and someday "View") process
     // Based on the subscribe below, we'll constantly monitor changes to the URL
@@ -127,6 +136,9 @@ export class UserDetailComponent implements OnInit {
   }
 
 
+  retrieveSeasonFromPossibleSeasons(seasonId: number): Season {
+    return this.possibleSeasons.find((s: Season) => s.id === seasonId);
+  }
 
   updateButtonShouldBeDisabled(): boolean {
     const result: boolean =

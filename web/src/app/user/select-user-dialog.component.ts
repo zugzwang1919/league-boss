@@ -11,7 +11,7 @@ import { StringUtil } from '../common/string-util';
 
 
 @Component({
-  selector: 'app-select-user-dialog',
+  selector: 'lb-select-user-dialog',
   moduleId: module.id,
   templateUrl: 'select-user-dialog.component.html',
   styleUrls: ['./select-user-dialog.component.less']
