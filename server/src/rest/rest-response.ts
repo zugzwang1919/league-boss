@@ -44,14 +44,14 @@ export class RestResponse {
   // Private methods
 
   private static sendResponse(res: express.Response, statusCode: number, optionalBody ?: any, optionalHeader ?: any): void {
-    console.log("Building a response with a status code of " + statusCode);
+    console.log("REST LAYER: Building a response with a status code of " + statusCode);
     let body: any = RestResponse.buildJSONfromMessage("Success!!!");
     if (optionalBody) {
-      console.log("A non-default body will be sent.");
+      console.log("REST LAYER: A body other than 'Success!!!' will be sent.");
       body = optionalBody;
     }
     if (optionalHeader) {
-      console.log("A header is being added to the response.");
+      console.log(`REST LAYER: A header of type ${optionalHeader.key} is being added to the response.`);
       res.header(optionalHeader.key, optionalHeader.value);
     }
     res.status(statusCode).json(body);

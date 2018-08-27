@@ -1,3 +1,4 @@
+import * as Promise from 'bluebird';
 import * as express from 'express';
 
 // Rest Layer Classes
@@ -66,4 +67,20 @@ export class RestUtil {
       });
   }
 
+  public static makeLogicRequestAndPackageResult( res: express.Response,
+                                                  actionToLog: string,
+                                                  logicFunction: () => Promise<any>,
+                                                  optionalBodyTransformFunction?: (logicValue: any) => any ): void {
+    console.log(`REST LAYER: Starting to ${actionToLog}`);
+    logicFunction()
+      .then((returnedValue: any) => {
+        const bodyValue: any = optionalBodyTransformFunction ? optionalBodyTransformFunction(returnedValue) : undefined;
+        console.log(`REST LAYER: ${actionToLog} was successful.`);
+        RestResponse.send200(res, bodyValue);
+      })
+      .catch((error: any) => {
+        console.log(`REST LAYER: ${actionToLog} failed. ${error.name} - ${error.message}`);
+        RestResponse.sendAppropriateResponse(res, error);
+      });
+  }
 }
