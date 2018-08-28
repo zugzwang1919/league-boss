@@ -37,10 +37,12 @@ export class Logic<T> {
     const loggingName: any = this.model.getTableName();
     console.log("  logic layer - looking for  all %s ", loggingName);
     return this.model.findAll()
+    /*
       .then((items: T[]) => {
         console.log("  logic layer - %s %s found.", items.length, loggingName);
         return Promise.resolve(items);
       })
+    */
       .catch((err) => {
         return Promise.reject(LogicError.UNKNOWN);
       });

@@ -1,4 +1,5 @@
-import * as  Sequelize from 'sequelize';
+import * as Promise from 'bluebird';
+import * as Sequelize from 'sequelize';
 
 import {ILeague} from './league';
 import {ISeasonInstance} from './season-model-manager';

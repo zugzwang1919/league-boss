@@ -327,7 +327,7 @@
                 <stringProp name="-639717001">&quot;id&quot;:${createdLeagueId}</stringProp>
                 <stringProp name="-184739576">&quot;leagueName&quot;:&quot;NFL Winners&quot;</stringProp>
                 <stringProp name="1423884689">&quot;leagueTypeIndex&quot;:0</stringProp>
-                <stringProp name="852267475">&quot;seasonIndex&quot;:${createdSeasonId}</stringProp>
+                <stringProp name="-752884346">&quot;seasonId&quot;:${createdSeasonId}</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -467,6 +467,49 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="403 Test - Update League (League doesn&apos;t exist, so Admin doesn&apos;t have access, so 403)" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;:4567,&#xd;
+	&quot;leagueName&quot;:&quot;NFL Losers&quot;,&#xd;
+	&quot;description&quot;:&quot;This is the best league in the history of the world&quot;,&#xd;
+	&quot;leagueTypeIndex&quot;: 0,&#xd;
+	&quot;seasonId&quot;: ${createdSeasonId}&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">league/4567</stringProp>
+            <stringProp name="HTTPSampler.method">PUT</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="403 Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51511">403</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve League" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
@@ -492,7 +535,7 @@
                 <stringProp name="-639717001">&quot;id&quot;:${createdLeagueId}</stringProp>
                 <stringProp name="-725333742">&quot;leagueName&quot;:&quot;NFL Losers&quot;</stringProp>
                 <stringProp name="1423884689">&quot;leagueTypeIndex&quot;:0</stringProp>
-                <stringProp name="852267475">&quot;seasonIndex&quot;:${createdSeasonId}</stringProp>
+                <stringProp name="-752884346">&quot;seasonId&quot;:${createdSeasonId}</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>

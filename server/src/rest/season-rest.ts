@@ -37,35 +37,35 @@ export class SeasonRest {
   }
 
   private static retrieveAllSeasons(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "RETRIEVE ALL SEASONS",
+    RestUtil.makeLogicLayerRequest( res, "RETRIEVE ALL SEASONS",
       ((): Promise<ISeasonInstance[]> => SeasonLogic.instanceOf().findAll()),
       ((foundSeasons: ISeasonInstance[]): ISeason[] => foundSeasons.map(SeasonModelManager.createISeasonFromAnything)));
   }
 
   private static retrieveSeasonById(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "RETRIEVE SEASON",
+    RestUtil.makeLogicLayerRequest( res, "RETRIEVE SEASON",
       ((): Promise<ISeasonInstance> => SeasonLogic.instanceOf().findById(req.params.seasonId)),
       ((lotsOfSeasonInfo: ISeasonInstance): ISeason => SeasonModelManager.createISeasonFromAnything(lotsOfSeasonInfo)));
   }
 
   private static createSeason(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "CREATE SEASON",
+    RestUtil.makeLogicLayerRequest( res, "CREATE SEASON",
       ((): Promise<ISeasonInstance> => SeasonLogic.instanceOf().create(SeasonModelManager.createISeasonFromAnything(req.body))),
       ((lotsOfSeasonInfo: ISeasonInstance): any => SeasonModelManager.createISeasonFromAnything(lotsOfSeasonInfo)));
   }
 
   private static updateSeason(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "UPDATE SEASON",
+    RestUtil.makeLogicLayerRequest( res, "UPDATE SEASON",
       ((): Promise<boolean> => SeasonLogic.instanceOf().update(SeasonModelManager.createISeasonFromAnything(req.body))));
   }
 
   private static deleteSeason(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "DELETE SEASON",
+    RestUtil.makeLogicLayerRequest( res, "DELETE SEASON",
       ((): Promise<boolean> => SeasonLogic.instanceOf().deleteById(req.params.seasonId)));
   }
 
   private static addSchedule(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "ADD SCHEDULE TO SEASON",
+    RestUtil.makeLogicLayerRequest( res, "ADD SCHEDULE TO SEASON",
       ((): Promise<boolean> => {
         const uploadedFile: fileUpload.UploadedFile = req.files.uploadFile as fileUpload.UploadedFile;
         return SeasonLogic.instanceOf().addSchedule(req.params.seasonId, uploadedFile.data);
@@ -74,11 +74,11 @@ export class SeasonRest {
 
   // Game Groups
   private static retrieveGameGroups(req: express.Request, res: express.Response): void {
-    RestUtil.makeLogicRequestAndPackageResult( res, "RETRIEVE SEASON'S GAME GROUPS",
+    RestUtil.makeLogicLayerRequest( res, "RETRIEVE SEASON'S GAME GROUPS",
       ((): Promise<IGameGroupAttribute[]> => SeasonLogic.instanceOf().getGameGroups(req.params.seasonId)),
       // Indicate that no transform is required
       // TODO: We probably need a true IGameGroup at some point
-      ((lotsOfGameGroupInfo: IGameGroupAttribute[]): any => lotsOfGameGroupInfo));  // Indicate that no transform is required
+      (gameGroups: IGameGroupAttribute[]) => gameGroups);
   }
 
 }

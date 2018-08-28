@@ -11,12 +11,12 @@ import {ILeague} from '../model/league';
 import {LeagueModelManager} from '../model/league-model-manager';
 import {ILeagueInstance} from '../model/league-model-manager';
 import {ISeason} from '../model/season';
-import {SeasonModelManager} from '../model/season-model-manager';
+import {ISeasonAttribute, SeasonModelManager} from '../model/season-model-manager';
 import {IUser} from '../model/user';
 import {IUserAttribute, IUserInstance, UserModelManager} from '../model/user-model-manager';
 
+import * as Promise from 'bluebird';
 import * as express from 'express';
-import { ISeasonAttribute } from '../model/season-model-manager';
 
 export class LeagueRest {
 
@@ -45,177 +45,102 @@ export class LeagueRest {
 
   }
 
-  private static retrieveLeagueById(req: express.Request, res: express.Response): any {
-    console.log("Request received on server!  Looking for league with an id of " + req.params.leagueId);
-    LeagueLogic.instanceOf().findById(req.params.leagueId)
-      .then((foundLeague: ILeagueInstance) => {
-        // Transform the ILeagueInstance to an ILeague (our form that users of our RESTful service should be using)
-        return LeagueModelManager.createILeagueFromAnything(foundLeague);
-      })
-      .then((returnLeague: ILeague) => {
-        RestResponse.send200(res, returnLeague);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static retrieveLeagueById(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequestWithPromiseBasedTransform( res, "RETRIEVE LEAGUE",
+      ((): Promise<ILeagueInstance> => LeagueLogic.instanceOf().findById(req.params.leagueId)),
+      ((leagueInstance: ILeagueInstance): Promise<ILeague> => LeagueModelManager.createILeagueFromAnything(leagueInstance)));
   }
 
-  private static createLeague(req: express.Request, res: express.Response): any {
-    console.log("league-rest createLeague: leagueName found in body = " + req.body.leagueName);
-    let user: IUserInstance;
-    UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
-      .then((foundUser: IUserInstance) => {
-        // Transform the message body to an ILeague (our form that users of our RESTful service should be using)
-        user = foundUser;
-        return LeagueModelManager.createILeagueFromAnything(req.body);
-      })
-      .then((inputLeague: ILeague) => {
-        // The caller doesn't get to define the id
-        inputLeague.id = undefined;
-        return LeagueLogic.instanceOf().createLeagueWithUserAsAdmin(inputLeague, user.id);
-      })
-      .then((createdLeague: ILeagueInstance) => {
-        // Transform the ILeagueInstance to an ILeague (our form that users of our RESTful service should be using)
-        return LeagueModelManager.createILeagueFromAnything(createdLeague);
-      })
-      .then((returnLeague: ILeague) => {
-        RestResponse.send200(res, returnLeague);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static createLeague(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequestWithPromiseBasedTransform( res, "UPDATE LEAGUE",
+      ((): Promise<ILeagueInstance> => {
+        let adminUser: IUserInstance;
+        return new Promise<ILeagueInstance>((resolve, reject) => {
+          return UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
+            .then((foundUser: IUserInstance) => {
+              adminUser = foundUser;
+              return LeagueModelManager.createILeagueFromAnything(req.body);
+            })
+            .then((leagueToBeCreated: ILeague) => {
+              leagueToBeCreated.id = undefined;
+              return LeagueLogic.instanceOf().createLeagueWithUserAsAdmin(leagueToBeCreated, adminUser.id);
+            })
+            .then((createdLeague: ILeagueInstance) => resolve(createdLeague))
+            .catch((error: any) => reject(error));
+        });
+      }),
+      ((leagueInstance: ILeagueInstance): Promise<ILeague> => LeagueModelManager.createILeagueFromAnything(leagueInstance)));
   }
 
-  private static updateLeague(req: express.Request, res: express.Response): any {
-    console.log("league-rest updateLeague: leagueName found in body = " + req.body.leagueName);
-    // Transform the message body to an ILeague (our form that users of our RESTful service should be using)
-    return LeagueModelManager.createILeagueFromAnything(req.body)
-      .then((inputLeague: ILeague) => {
-        LeagueLogic.instanceOf().update(inputLeague);
-      })
-      .then((success) => {
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static updateLeague(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "UPDATE LEAGUE",
+      ((): Promise<boolean> => {
+        return new Promise<boolean>((resolve, reject) => {
+          return LeagueModelManager.createILeagueFromAnything(req.body)
+          .then((leagueToBeUpdated: ILeague) => LeagueLogic.instanceOf().update(leagueToBeUpdated))
+          .then((result: boolean) => resolve(result))
+          .catch((error: any) => reject(error));
+        });
+      }));
   }
 
-  private static deleteLeague(req: express.Request, res: express.Response): any {
-    console.log("league-rest deleteLeague: leagueId found in url = " + req.params.leagueId);
-
-    LeagueLogic.instanceOf().deleteById(req.params.leagueId)
-      .then((success) => {
-        console.log("league-rest deleteLeague: successful delete for league id " + req.params.leagueId + " has occurred.");
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        console.log("user-rest deleteLeague: an error occurred while deleting league id  " + req.params.leagueId);
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static deleteLeague(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "DELETE LEAGUE",
+      ((): Promise<boolean> => LeagueLogic.instanceOf().deleteById(req.params.leagueId)));
   }
 
   // Players in this league
 
-  private static retrievePlayers(req: express.Request, res: express.Response): any {
-    console.log("league-rest getPlayers:  ");
-    LeagueLogic.instanceOf().getPlayers(req.params.leagueId)
-      .then((players: IUserAttribute[]) => {
-        // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
-        const returnPlayers: IUser[] = players.map(UserModelManager.createIUserFromAnything);
-        RestResponse.send200(res, returnPlayers);
-      })
-      .catch((error) => { RestResponse.sendAppropriateResponse(res, error); });
+  private static retrievePlayers(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "RETRIEVE PLAYERS IN LEAGUE",
+      (): Promise<IUserAttribute[]> => LeagueLogic.instanceOf().getPlayers(req.params.leagueId),
+      (players: IUser[]) => players.map(UserModelManager.createIUserFromAnything));
   }
 
-  private static addPlayer(req: express.Request, res: express.Response): any {
-    console.log("league-rest addPlayer: userId found in body = " + req.body.userId);
-    LeagueLogic.instanceOf().addPlayer(req.params.leagueId, req.body.userId)
-      .then((success) => {
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static addPlayer(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "ADD PLAYER TO LEAGUE",
+      ((): Promise<boolean> => LeagueLogic.instanceOf().addPlayer(req.params.leagueId, req.body.userId)));
   }
 
-  private static removePlayer(req: express.Request, res: express.Response): any {
-    console.log("league-rest removeAdmin: userId found in URL = " + req.params.userId);
-    LeagueLogic.instanceOf().removePlayer(req.params.leagueId, req.params.userId)
-      .then((success) => {
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static removePlayer(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "REMOVE PLAYER FROM LEAGUE",
+      ((): Promise<boolean> => LeagueLogic.instanceOf().removePlayer(req.params.leagueId, req.params.userId)));
   }
 
   // Admins in this league
 
-  private static retrieveAdmins(req: express.Request, res: express.Response): any {
-    console.log("league-rest retrieveAdmins: leagueId found in URL = " + req.params.leagueId);
-    LeagueLogic.instanceOf().getAdmins(req.params.leagueId)
-      .then((admins: IUserAttribute[]) => {
-        // Send back an array of IUsers (our form that users of our RESTful service should be using) rather than IUserInstances
-        const returnPlayers: IUser[] = admins.map(UserModelManager.createIUserFromAnything);
-        RestResponse.send200(res, returnPlayers);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static retrieveAdmins(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "RETRIEVE ADMINS IN LEAGUE",
+      (): Promise<IUserAttribute[]> => LeagueLogic.instanceOf().getAdmins(req.params.leagueId),
+      (admins: IUser[]) => admins.map(UserModelManager.createIUserFromAnything));
   }
 
-  private static addAdmin(req: express.Request, res: express.Response): any {
-    console.log("league-rest addAdmin: userId found in body = " + req.body.userId);
-    LeagueLogic.instanceOf().addAdmin(req.params.leagueId, req.body.userId)
-      .then((success) => {
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static addAdmin(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "ADD ADMIN TO LEAGUE",
+      ((): Promise<boolean> => LeagueLogic.instanceOf().addAdmin(req.params.leagueId, req.body.userId)));
   }
 
-  private static deleteAdmin(req: express.Request, res: express.Response): any {
-    console.log("league-rest deleteAdmin: userId found in URL = " + req.params.userId);
-    LeagueLogic.instanceOf().removeAdmin(req.params.leagueId, req.params.userId)
-      .then((success) => {
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static deleteAdmin(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "REMOVE ADMIN FROM LEAGUE",
+      ((): Promise<boolean> => LeagueLogic.instanceOf().removeAdmin(req.params.leagueId, req.params.userId)));
   }
 
   // Season
 
-  private static retrieveSeason(req: express.Request, res: express.Response): any {
-    console.log("league-rest retrieveSeason: leagueId found in URL = " + req.params.leagueId);
-    return LeagueLogic.instanceOf().getSeason(req.params.leagueId)
-      .then((foundSeason: ISeasonAttribute) => {
-        const returnSeason: ISeason =  SeasonModelManager.createISeasonFromAnything(foundSeason);
-        RestResponse.send200(res, returnSeason);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static retrieveSeason(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "RETRIEVE SEASON IN LEAGUE",
+      ((): Promise<ISeasonAttribute> => LeagueLogic.instanceOf().getSeason(req.params.leagueId)),
+      ((seasonAttribute: ISeasonAttribute) => SeasonModelManager.createISeasonFromAnything(seasonAttribute)));
   }
 
-  private static setSeason(req: express.Request, res: express.Response): any {
-    console.log("league-rest setSeason: leagueId found in URL = " + req.params.leagueId);
-    return LeagueLogic.instanceOf().setSeason(req.params.leagueId, req.body.seasonId)
-      .then((success) => {
-        RestResponse.send200(res);
-      })
-      .catch((error) => {
-        RestResponse.sendAppropriateResponse(res, error);
-      });
+  private static setSeason(req: express.Request, res: express.Response): void {
+    RestUtil.makeLogicLayerRequest( res, "SET SEASON IN LEAGUE",
+      ((): Promise<boolean> => LeagueLogic.instanceOf().setSeason(req.params.leagueId, req.body.seasonId)));
   }
 
   // Utility functions
 
   private static ensureSuperUserLeagueAdminOrPlayer(req: express.Request, res: express.Response, next: express.NextFunction): any {
-
     // Get the user associated with the token
     let foundUser: IUserInstance;
     UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
@@ -235,7 +160,6 @@ export class LeagueRest {
   }
 
   private static ensureSuperUserOrLeagueAdmin(req: express.Request, res: express.Response, next: express.NextFunction): any {
-
     // Get the user associated with the token
     let foundUser: IUserInstance;
     UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
