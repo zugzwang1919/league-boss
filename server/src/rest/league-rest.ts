@@ -140,7 +140,7 @@ export class LeagueRest {
 
   // Utility functions
 
-  private static ensureSuperUserLeagueAdminOrPlayer(req: express.Request, res: express.Response, next: express.NextFunction): any {
+  private static ensureSuperUserLeagueAdminOrPlayer(req: express.Request, res: express.Response, next: express.NextFunction): void {
     // Get the user associated with the token
     let foundUser: IUserInstance;
     UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
@@ -159,7 +159,7 @@ export class LeagueRest {
       });
   }
 
-  private static ensureSuperUserOrLeagueAdmin(req: express.Request, res: express.Response, next: express.NextFunction): any {
+  private static ensureSuperUserOrLeagueAdmin(req: express.Request, res: express.Response, next: express.NextFunction): void {
     // Get the user associated with the token
     let foundUser: IUserInstance;
     UserLogic.instanceOf().findUserByAuthenticationToken(req.header('Wolfe-Authentication-Token'))
